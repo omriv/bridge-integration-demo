@@ -342,6 +342,7 @@ export function WalletOverviewPage() {
                                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">State</th>
                                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Amount</th>
                                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Source</th>
+                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Type</th>
                                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Destination</th>
                                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Fee</th>
                                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Created</th>
@@ -356,7 +357,13 @@ export function WalletOverviewPage() {
                                 const sourceAddrMatch = transfer.source.from_address?.toLowerCase() === walletAddr;
                                 const destAddrMatch = transfer.destination.to_address?.toLowerCase() === walletAddr;
                                 return walletIdMatch || sourceAddrMatch || destAddrMatch;
-                              }).map((transfer) => (
+                              }).map((transfer) => {
+                                // Determine if transfer is outgoing or incoming
+                                const walletAddr = wallet?.address?.toLowerCase();
+                                const isOutgoing = transfer.source.bridge_wallet_id === walletId || 
+                                                  transfer.source.from_address?.toLowerCase() === walletAddr;
+                                
+                                return (
                                 <tr key={transfer.id} className="hover:bg-gray-50">
                                   <td className="px-3 py-3 text-xs font-mono text-gray-600">{transfer.id.substring(0, 8)}...</td>
                                   <td className="px-3 py-3">
@@ -369,7 +376,9 @@ export function WalletOverviewPage() {
                                     </span>
                                   </td>
                                   <td className="px-3 py-3 font-semibold text-gray-900">{transfer.amount} {transfer.currency.toUpperCase()}</td>
-                                  <td className="px-3 py-3">
+                                  <td className={`px-3 py-3 ${
+                                    isOutgoing ? 'bg-red-50 border-l-2 border-red-400' : ''
+                                  }`}>
                                     <div className="space-y-1">
                                       <div className="font-medium text-gray-900">{transfer.source.currency.toUpperCase()}</div>
                                       <div className="text-gray-500 text-xs">{transfer.source.payment_rail}</div>
@@ -416,6 +425,29 @@ export function WalletOverviewPage() {
                                     </div>
                                   </td>
                                   <td className="px-3 py-3">
+                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${
+                                      isOutgoing ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                    }`}>
+                                      {isOutgoing ? (
+                                        <>
+                                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                          </svg>
+                                          OUT
+                                        </>
+                                      ) : (
+                                        <>
+                                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                                          </svg>
+                                          IN
+                                        </>
+                                      )}
+                                    </span>
+                                  </td>
+                                  <td className={`px-3 py-3 ${
+                                    !isOutgoing ? 'bg-green-50 border-l-2 border-green-400' : ''
+                                  }`}>
                                     <div className="space-y-1">
                                       <div className="font-medium text-gray-900">{transfer.destination.currency.toUpperCase()}</div>
                                       <div className="text-gray-500 text-xs">{transfer.destination.payment_rail}</div>
@@ -452,7 +484,8 @@ export function WalletOverviewPage() {
                                     </button>
                                   </td>
                                 </tr>
-                              ))}
+                                );
+                              })}
                             </tbody>
                           </table>
                         </div>
