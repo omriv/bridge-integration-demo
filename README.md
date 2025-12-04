@@ -400,6 +400,59 @@ git push -u origin main
 
 Replace `YOUR_USERNAME` with your actual GitHub username.
 
+**When prompted for credentials:**
+- **Username**: Enter your GitHub username
+- **Password**: Paste your Personal Access Token (NOT your GitHub password)
+
+The token will be automatically saved in Windows Credential Manager, so you won't need to enter it again.
+
+### 5a. Configure Git Authentication (One-Time Setup)
+
+If you haven't already, configure Git to store your credentials:
+
+```powershell
+# 1. Set your Git identity
+git config --global user.name "YourGitHubUsername"
+git config --global user.email "your.email@example.com"
+
+# 2. Enable credential storage in Windows
+git config --global credential.helper wincred
+```
+
+**Using Your Personal Access Token:**
+
+After running the push command, you'll see a credential prompt:
+
+1. **Username**: Type your GitHub username and press Enter
+2. **Password**: Paste your Personal Access Token (the one you generated and saved) and press Enter
+
+Windows will save these credentials automatically. Future pushes won't ask for credentials again.
+
+**If you're not prompted for credentials:**
+
+Git might try to use old cached credentials. Clear them first:
+
+```powershell
+# Remove old GitHub credentials from Windows Credential Manager
+cmdkey /list | Select-String "github" | ForEach-Object { 
+    $target = $_.Line.Split(":")[1].Trim()
+    cmdkey /delete:$target
+}
+
+# Now try pushing again
+git push -u origin main
+# Enter username and token when prompted
+```
+
+**Verifying Stored Credentials:**
+
+To check if your credentials are stored:
+
+1. Press `Win + R`, type `control /name Microsoft.CredentialManager`, press Enter
+2. Click "Windows Credentials"
+3. Look for entries starting with `git:https://github.com`
+4. Your token is securely stored here
+
 ### 6. Set up GitHub Secrets (Optional - for CI/CD)
 
 If you plan to use GitHub Actions or share the repo with collaborators:
