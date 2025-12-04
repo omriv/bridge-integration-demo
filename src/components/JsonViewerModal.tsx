@@ -9,8 +9,14 @@ export function JsonViewerModal({ isOpen, onClose, title, data }: JsonViewerModa
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="bg-gradient-to-r from-gray-700 to-gray-900 p-6 text-white">
           <div className="flex items-center justify-between">

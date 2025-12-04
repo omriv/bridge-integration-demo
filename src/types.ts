@@ -102,7 +102,7 @@ export interface Transfer {
   destination: {
     payment_rail: string;
     currency: string;
-    to_address: string;
+    to_address?: string;
   };
   source_deposit_instructions?: {
     payment_rail: string;
