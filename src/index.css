@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Ensure status badge colors are always available */
+@layer utilities {
+  .bg-green-100 { background-color: rgb(220 252 231); }
+  .text-green-800 { color: rgb(22 101 52); }
+  .bg-yellow-100 { background-color: rgb(254 249 195); }
+  .text-yellow-800 { color: rgb(133 77 14); }
+  .bg-red-100 { background-color: rgb(254 226 226); }
+  .text-red-800 { color: rgb(153 27 27); }
+  .bg-gray-100 { background-color: rgb(243 244 246); }
+  .text-gray-700 { color: rgb(55 65 81); }
+  .text-gray-800 { color: rgb(31 41 55); }
+}
