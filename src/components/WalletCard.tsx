@@ -1,6 +1,7 @@
 import type { Wallet } from '../types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 
 interface WalletCardProps {
   wallet: Wallet;
@@ -8,6 +9,7 @@ interface WalletCardProps {
 
 export function WalletCard({ wallet }: WalletCardProps) {
   const navigate = useNavigate();
+  const { customer } = useData();
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
@@ -55,9 +57,9 @@ export function WalletCard({ wallet }: WalletCardProps) {
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-indigo-300 transition-all">
-      <button
+      <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
+        className="w-full p-6 text-left hover:bg-gray-50 transition-colors cursor-pointer"
       >
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -135,7 +137,9 @@ export function WalletCard({ wallet }: WalletCardProps) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/wallet/${wallet.id}`);
+                    if (customer) {
+                      navigate(`/${customer.id}/${wallet.id}`);
+                    }
                   }}
                   className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-all transform hover:scale-105 active:scale-95 shadow-md"
                 >
@@ -156,7 +160,7 @@ export function WalletCard({ wallet }: WalletCardProps) {
             </svg>
           </div>
         </div>
-      </button>
+      </div>
 
       {isExpanded && (
         <div className="border-t-2 border-gray-100 bg-gradient-to-br from-gray-50 to-white p-6">

@@ -8,7 +8,7 @@ function App() {
     <DataProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/wallet/:walletId" element={<WalletOverviewPage />} />
+        <Route path="/:customerId/:walletId" element={<WalletOverviewPage />} />
       </Routes>
     </DataProvider>
   )

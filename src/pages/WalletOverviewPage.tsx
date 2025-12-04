@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import type { LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory } from '../types';
+import { bridgeAPI } from '../services/bridgeAPI';
+import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory } from '../types';
 import { JsonViewerModal } from '../components/JsonViewerModal';
 
 export function WalletOverviewPage() {
-  const { walletId } = useParams<{ walletId: string }>();
+  const { customerId, walletId } = useParams<{ customerId: string; walletId: string }>();
   const navigate = useNavigate();
-  const { wallets, loadWalletData, refreshAll } = useData();
+  const { wallets, loadWalletData, refreshAll, customer, loadCustomerData } = useData();
   
-  const wallet = wallets.find(w => w.id === walletId);
+  const [wallet, setWallet] = useState<Wallet | null>(null);
+  const [walletNotFound, setWalletNotFound] = useState(false);
   
   const [liquidationAddresses, setLiquidationAddresses] = useState<LiquidationAddress[]>([]);
   const [walletTransactions, setWalletTransactions] = useState<WalletTransaction[]>([]);
@@ -51,17 +53,60 @@ export function WalletOverviewPage() {
   };
 
   useEffect(() => {
-    if (walletId && wallet) {
-      loadData();
-    }
-  }, [walletId]);
+    const initWallet = async () => {
+      if (!walletId || !customerId) return;
+      
+      // Load customer data if not already loaded
+      if (!customer || customer.id !== customerId) {
+        try {
+          setLoading(true);
+          await loadCustomerData(customerId);
+        } catch (error) {
+          console.error('Error loading customer:', error);
+          setWalletNotFound(true);
+          setLoading(false);
+          return;
+        }
+      }
+      
+      // First check if wallet is in context
+      const walletFromContext = wallets.find(w => w.id === walletId);
+      if (walletFromContext) {
+        setWallet(walletFromContext);
+        loadData(walletFromContext);
+        return;
+      }
+      
+      // If not in context, fetch wallet data from API
+      try {
+        setLoading(true);
+        const walletsData = await bridgeAPI.getCustomerWallets(customerId);
+        const foundWallet = walletsData.data.find(w => w.id === walletId);
+        
+        if (foundWallet) {
+          setWallet(foundWallet);
+          await loadData(foundWallet);
+        } else {
+          setWalletNotFound(true);
+        }
+      } catch (error) {
+        console.error('Error fetching wallet:', error);
+        setWalletNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    initWallet();
+  }, [walletId, customerId, wallets, customer]);
 
-  const loadData = async () => {
-    if (!walletId || !wallet) return;
+  const loadData = async (walletToLoad?: Wallet) => {
+    const targetWallet = walletToLoad || wallet;
+    if (!walletId || !targetWallet) return;
     
     try {
       setLoading(true);
-      const data = await loadWalletData(walletId, wallet.address);
+      const data = await loadWalletData(walletId, targetWallet.address);
       
       setLiquidationAddresses(data.liquidationAddresses);
       setWalletTransactions(data.transactions);
@@ -94,7 +139,7 @@ export function WalletOverviewPage() {
     return Array.from(breakdown.entries()).map(([combo, count]) => ({ combo, count }));
   };
 
-  if (!wallet && !loading) {
+  if ((walletNotFound || !wallet) && !loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="text-center">

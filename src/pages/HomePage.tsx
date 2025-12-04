@@ -22,7 +22,7 @@ export function HomePage() {
   const getStatusColor = (status?: string) => {
     if (!status) return 'bg-gray-100 text-gray-700';
     switch (status.toLowerCase()) {
-      case 'approved':
+      case 'active':
       case 'complete':
         return 'bg-green-100 text-green-800';
       case 'pending':

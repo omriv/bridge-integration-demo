@@ -163,10 +163,10 @@ app.get('/api/transfers', async (req, res) => {
 });
 
 // Proxy endpoint for getting liquidation history
-app.get('/api/liquidation-addresses/:liquidationAddressId/drains', async (req, res) => {
+app.get('/api/customers/:customerId/liquidation_addresses/:liquidationAddressId/drains', async (req, res) => {
   try {
     const { liquidationAddressId } = req.params;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/liquidation_addresses/${liquidationAddressId}/drains?limit=50`, {
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=50`, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',
