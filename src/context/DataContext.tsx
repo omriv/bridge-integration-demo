@@ -45,6 +45,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const loadCustomerData = useCallback(async (customerId?: string) => {
     const customerIdToUse = customerId || currentCustomerId;
+    
+    // Skip if no valid customer ID provided
+    if (!customerIdToUse || customerIdToUse === 'your-customer-id-here') {
+      console.log('No valid customer ID, loading customers list...');
+      setCustomer(null);
+      setWallets([]);
+      setLiquidationAddresses([]);
+      await loadCustomers();
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true);
       setError(null);
@@ -65,8 +77,19 @@ export function DataProvider({ children }: { children: ReactNode }) {
         loadCustomers();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Error loading customer data:', err);
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      
+      // If customer not found (404), load customers list instead of showing error
+      if (errorMessage.includes('404') || errorMessage.includes('Not Found') || errorMessage.includes('Failed to fetch customer')) {
+        console.log('Customer not found, loading customers list...');
+        setCustomer(null);
+        setWallets([]);
+        setLiquidationAddresses([]);
+        await loadCustomers();
+      } else {
+        setError(errorMessage);
+        console.error('Error loading customer data:', err);
+      }
     } finally {
       setLoading(false);
     }

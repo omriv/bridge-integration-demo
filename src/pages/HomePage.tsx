@@ -70,6 +70,54 @@ export function HomePage() {
     )
   }
 
+  // Show customer selector if no customer is loaded but we have customers list
+  if (!customer && customers.length > 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full bg-white rounded-xl shadow-lg p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Select a Customer</h2>
+            <p className="text-gray-600 mb-6">
+              Choose a customer from the list below to view their details and wallets.
+            </p>
+          </div>
+          <div className="max-h-96 overflow-y-auto border-2 border-gray-300 rounded-lg">
+            {customers.map((cust) => (
+              <button
+                key={cust.id}
+                onClick={() => handleCustomerChange(cust.id)}
+                className="w-full px-4 py-3 text-left hover:bg-indigo-50 transition-colors border-b border-gray-200 last:border-b-0"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-gray-900 truncate">
+                      {cust.full_name || cust.email || 'Unnamed Customer'}
+                    </div>
+                    <div className="font-mono text-xs text-gray-600 truncate">
+                      {cust.id}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
+                    {cust.status && (
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.status)}`}>
+                        {cust.status.replace(/_/g, ' ').toUpperCase()}
+                      </span>
+                    )}
+                    {cust.kyc_status && (
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.kyc_status)}`}>
+                        KYC: {cust.kyc_status.replace(/_/g, ' ').toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
