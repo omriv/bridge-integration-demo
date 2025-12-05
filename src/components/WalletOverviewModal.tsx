@@ -84,7 +84,7 @@ export function WalletOverviewModal({ isOpen, onClose, walletId, walletAddress, 
 
       // Fetch liquidation history for all liquidation addresses
       const liquidationHistoryPromises = filteredLiquidation.map((la) =>
-        bridgeAPI.getLiquidationHistory(la.id).catch(() => ({ count: 0, data: [] }))
+        bridgeAPI.getLiquidationHistory(la.customer_id, la.id).catch(() => ({ count: 0, data: [] }))
       );
       const liquidationHistoryResponses = await Promise.all(liquidationHistoryPromises);
       
