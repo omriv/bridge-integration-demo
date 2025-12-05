@@ -79,6 +79,11 @@ A modern, feature-rich web application built with React, TypeScript, and Tailwin
 - **Activity Integration** - Virtual accounts passed to wallet overview for activity tracking
 
 ### Developer Tools
+- **Mock Data Mode** - Toggle between real Bridge API and local mock data
+  - No API key required for mock mode
+  - Realistic test data with connected relationships
+  - Instant switching via UI toggle
+  - Persistent mode selection (localStorage)
 - **JSON Viewer** - View full API responses for any data element
   - Syntax-highlighted JSON
   - Dedicated modal for easy inspection
@@ -178,11 +183,41 @@ If you want to change the default customer ID or update currency conversion rate
 
 ## 🎮 Running the Application
 
-### Important: Set Environment Variable First
+### Quick Start with Mock Data (No API Key Required)
+
+The easiest way to get started is using mock data mode:
+
+1. **Install Dependencies:**
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+
+2. **Start Mock Server:**
+   ```bash
+   npm run mock-server
+   ```
+   The mock server will start on `http://localhost:3002`
+
+3. **Start Frontend (in a new terminal):**
+   ```bash
+   npm run dev
+   ```
+   The frontend will start on `http://localhost:5173`
+
+4. **Toggle to Mock Mode:**
+   - Open `http://localhost:5173` in your browser
+   - Click the toggle switch in the top-right corner to switch to "🎭 Mock Data" mode
+   - The app will load with realistic test data
+
+### Running with Real Bridge API
+
+If you have a Bridge API key and want to use real data:
+
+#### Important: Set Environment Variable First
 
 Make sure you've set the `BRIDGE_API_KEY` environment variable before starting the backend server. The server will not start without it.
 
-### Start Both Frontend and Backend
+#### Start Both Frontend and Backend
 
 You need to run both the backend proxy server and the frontend development server simultaneously.
 
@@ -195,11 +230,15 @@ The backend will start on `http://localhost:3001`
 
 #### Terminal 2: Start Frontend Development Server
 ```bash
-npm install
 npm run dev
 ```
 
 The frontend will start on `http://localhost:5173`
+
+#### Terminal 3: Toggle to Real Data Mode
+- Open `http://localhost:5173` in your browser
+- The toggle should show "🌐 Real Data" (green badge) by default
+- If it shows "🎭 Mock Data", click the toggle to switch to real mode
 
 ### Access the Application
 
@@ -217,6 +256,7 @@ Bridge Integration Demo/
 │   │   ├── CustomerDetails.tsx           # Customer information display
 │   │   ├── WalletCard.tsx               # Individual wallet card component
 │   │   ├── VirtualAccountCard.tsx       # Virtual account card component
+│   │   ├── MockToggle.tsx               # Mock/Real data toggle switch
 │   │   ├── JsonViewerModal.tsx          # JSON viewer modal
 │   │   ├── DynamicTransactionsTable.tsx # Reusable transaction table component
 │   │   ├── LiquidationAddressCard.tsx   # Individual liquidation address card
@@ -241,14 +281,26 @@ Bridge Integration Demo/
 │   │   ├── HomePage.tsx                 # Main page with customer/wallet/virtual account display
 │   │   └── WalletOverviewPage.tsx       # Detailed wallet view with 4 transaction tables
 │   ├── services/
-│   │   └── bridgeAPI.ts                 # API service layer (11+ endpoints)
+│   │   └── bridgeAPI.ts                 # API service layer (9 endpoints)
 │   ├── types.ts                         # TypeScript interfaces
 │   ├── config.ts                        # API configuration & conversion rates (not in git)
 │   ├── config.example.ts                # Example configuration template
 │   ├── App.tsx                          # Main app component with routing
 │   ├── main.tsx                         # Application entry point
 │   └── index.css                        # Global styles with Tailwind
-├── server.js                            # Express backend proxy server (11+ endpoints)
+├── mock/
+│   ├── data/                            # Mock JSON data files
+│   │   ├── customers.json               # 5 customers with varying statuses
+│   │   ├── wallets.json                 # 8 wallets linked to customers
+│   │   ├── liquidation-addresses.json   # 6 liquidation addresses
+│   │   ├── wallet-transactions.json     # 20 wallet transactions
+│   │   ├── transfers.json               # 15 transfers
+│   │   ├── liquidation-history.json     # 12 drain events
+│   │   ├── virtual-accounts.json        # 6 virtual accounts
+│   │   └── virtual-account-activity.json # 25 virtual account activities
+│   └── server/
+│       └── mockServer.js                # Express mock server (port 3002)
+├── server.js                            # Express backend proxy server (port 3001)
 ├── package.json                         # Dependencies and scripts
 ├── tsconfig.json                        # TypeScript configuration
 ├── vite.config.ts                      # Vite configuration
