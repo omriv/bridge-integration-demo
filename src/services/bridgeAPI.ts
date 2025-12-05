@@ -87,7 +87,6 @@ export const bridgeAPI = {
   },
 
   async getLiquidationHistory(customerId: string, liquidationAddressId: string): Promise<LiquidationHistoryResponse> {
-    debugger;
     const response = await fetch(`${config.baseUrl}/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains`, {
       headers,
     });

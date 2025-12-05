@@ -6,6 +6,7 @@ import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, Liquidati
 import { JsonViewerModal } from '../components/JsonViewerModal';
 import { DynamicTransactionsTable } from '../components/DynamicTransactionsTable';
 import { createTransfersTableColumns } from '../components/tableConfigs/transfersTableConfig';
+import { createLiquidationHistoryTableColumns } from '../components/tableConfigs/liquidationHistoryTableConfig';
 
 // Helper function to filter transfers related to a wallet
 function filterWalletTransfers(
@@ -45,7 +46,6 @@ export function WalletOverviewPage() {
   const [isLiquidationCollapsed, setIsLiquidationCollapsed] = useState(false);
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
   const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(false);
-  const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(false);
   
   // JSON viewer modal state
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
@@ -338,86 +338,18 @@ export function WalletOverviewPage() {
                   />
 
                   {/* Liquidation History */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <button
-                        onClick={() => setIsLiquidationHistoryCollapsed(!isLiquidationHistoryCollapsed)}
-                        className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                      >
-                        <h3 className="text-sm font-semibold text-gray-700 flex items-center">
-                          <span className="mr-1.5">💧</span>
-                          Liquidation History ({liquidationHistory.length})
-                        </h3>
-                        <svg
-                          className={`w-4 h-4 text-gray-600 transition-transform ${isLiquidationHistoryCollapsed ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                      {liquidationHistory.length > 0 && (
-                        <button
-                          onClick={() => openJsonModal('Liquidation History - Full Response', liquidationHistoryRaw)}
-                          className="px-2 py-1 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"
-                        >
-                          View Full JSON
-                        </button>
-                      )}
-                    </div>
-                    {!isLiquidationHistoryCollapsed && (
-                      liquidationHistory.length === 0 ? (
-                        <p className="text-gray-500 text-sm italic">No liquidation history found</p>
-                      ) : (
-                        <div className="overflow-x-auto">
-                          <table className="min-w-full bg-white border border-gray-200 rounded text-sm">
-                            <thead className="bg-gray-50">
-                              <tr>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">ID</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">State</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Amount</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Currency</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Source Rail</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">From Address</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Deposit TX</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Created</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                              {liquidationHistory.map((lh) => (
-                                <tr key={lh.id} className="hover:bg-gray-50">
-                                  <td className="px-3 py-2 text-xs font-mono text-gray-600">{lh.id.substring(0, 8)}...</td>
-                                  <td className="px-3 py-2">
-                                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${
-                                      lh.state === 'payment_processed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                    }`}>
-                                      {lh.state.replace(/_/g, ' ').toUpperCase()}
-                                    </span>
-                                  </td>
-                                  <td className="px-3 py-2 font-semibold text-gray-900">{lh.amount}</td>
-                                  <td className="px-3 py-2 font-medium text-gray-900">{lh.currency.toUpperCase()}</td>
-                                  <td className="px-3 py-2 text-gray-700">{lh.source_payment_rail}</td>
-                                  <td className="px-3 py-2 text-xs font-mono text-gray-600">{lh.from_address.substring(0, 12)}...</td>
-                                  <td className="px-3 py-2 text-xs font-mono text-gray-600">{lh.deposit_tx_hash.substring(0, 12)}...</td>
-                                  <td className="px-3 py-2 text-gray-600 text-xs">{new Date(lh.created_at).toLocaleString()}</td>
-                                  <td className="px-3 py-2">
-                                    <button
-                                      onClick={() => openJsonModal(`Liquidation ${lh.id.substring(0, 8)}`, lh)}
-                                      className="px-2 py-0.5 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"
-                                    >
-                                      JSON
-                                    </button>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )
-                    )}
-                  </div>
+                  <DynamicTransactionsTable
+                    title="Liquidation History"
+                    icon="💧"
+                    items={liquidationHistory}
+                    columns={createLiquidationHistoryTableColumns(openJsonModal)}
+                    onViewRawJson={() => openJsonModal('Liquidation History - Full Response', liquidationHistoryRaw)}
+                    onReload={async () => {
+                      if (wallet) {
+                        await loadData();
+                      }
+                    }}
+                  />
                 </div>
               )}
             </div>
