@@ -12,7 +12,7 @@ export function DynamicTransactionsTable<T>({
   isLoading = false,
   emptyMessage = 'No data found',
   onViewRawJson,
-  initialCollapsed = false,
+  initialCollapsed = true,
   collapsed,
   onCollapsedChange,
 }: DynamicTransactionsTableProps<T>) {

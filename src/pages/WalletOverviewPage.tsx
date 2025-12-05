@@ -46,9 +46,14 @@ export function WalletOverviewPage() {
   const [loading, setLoading] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
-  const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(false);
-  const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(false);
-  const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(false);
+  const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(true);
+  const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(true);
+  const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(true);
+  
+  // Individual loading states for each table
+  const [isWalletTxLoading, setIsWalletTxLoading] = useState(false);
+  const [isTransfersLoading, setIsTransfersLoading] = useState(false);
+  const [isLiquidationHistoryLoading, setIsLiquidationHistoryLoading] = useState(false);
   
   // JSON viewer modal state
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
@@ -118,6 +123,52 @@ export function WalletOverviewPage() {
     
     initWallet();
   }, [walletId, customerId, wallets, customer]);
+
+  // Load liquidation history when liquidation addresses change
+  useEffect(() => {
+    const loadLiquidationHistory = async () => {
+      if (!wallet || !customerId || liquidationAddresses.length === 0) {
+        setLiquidationHistory([]);
+        setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
+        return;
+      }
+
+      // Filter liquidation addresses for this wallet
+      const filteredLiquidation = liquidationAddresses.filter(
+        (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
+      );
+
+      if (filteredLiquidation.length === 0) {
+        setLiquidationHistory([]);
+        setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
+        return;
+      }
+
+      try {
+        // Fetch liquidation history for all liquidation addresses
+        const liquidationHistoryPromises = filteredLiquidation.map((la) =>
+          bridgeAPI.getLiquidationHistory(la.customer_id, la.id).catch(() => ({ count: 0, data: [] }))
+        );
+        const liquidationHistoryResponses = await Promise.all(liquidationHistoryPromises);
+
+        // Combine and sort by date
+        const allLiquidationHistory = liquidationHistoryResponses
+          .flatMap((response) => response.data)
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+        setLiquidationHistory(allLiquidationHistory);
+        setLiquidationHistoryRaw({
+          count: allLiquidationHistory.length,
+          data: allLiquidationHistory,
+          responses: liquidationHistoryResponses
+        });
+      } catch (error) {
+        console.error('Error loading liquidation history:', error);
+      }
+    };
+
+    loadLiquidationHistory();
+  }, [liquidationAddresses, wallet, customerId]);
 
   const loadData = async (walletToLoad?: Wallet) => {
     const targetWallet = walletToLoad || wallet;
@@ -242,10 +293,33 @@ export function WalletOverviewPage() {
                     columns={createWalletTransactionsTableColumns(openJsonModal)}
                     onViewRawJson={() => openJsonModal('Wallet Transactions - Full Response', walletTransactionsRaw)}
                     onReload={async () => {
-                      if (wallet) {
-                        await loadData();
+                      if (!wallet || !walletId) return;
+                      
+                      const previousData = walletTransactions;
+                      const previousRaw = walletTransactionsRaw;
+                      setIsWalletTxCollapsed(false); // Expand the table
+                      setWalletTransactions([]); // Clear items first
+                      
+                      // Use setTimeout to ensure state update is flushed
+                      await new Promise(resolve => setTimeout(resolve, 0));
+                      setIsWalletTxLoading(true);
+                      
+                      try {
+                        // Fetch directly from API (bypass cache)
+                        const txResponse = await bridgeAPI.getWalletTransactions(walletId).catch(() => ({ count: 0, data: [] }));
+                        setWalletTransactions(txResponse.data);
+                        setWalletTransactionsRaw(txResponse);
+                        console.log('✅ Wallet transactions reloaded successfully:', txResponse.data.length, 'items');
+                      } catch (error) {
+                        console.error('❌ Error reloading wallet transactions:', error);
+                        setWalletTransactions(previousData);
+                        setWalletTransactionsRaw(previousRaw);
+                      } finally {
+                        setIsWalletTxLoading(false);
+                        // Keep table expanded after loading
                       }
                     }}
+                    isLoading={isWalletTxLoading}
                     collapsed={isWalletTxCollapsed}
                     onCollapsedChange={setIsWalletTxCollapsed}
                   />
@@ -264,10 +338,33 @@ export function WalletOverviewPage() {
                     )}
                     onViewRawJson={() => openJsonModal('Transfers - Full Response', transfersRaw)}
                     onReload={async () => {
-                      if (wallet) {
-                        await loadData();
+                      if (!wallet || !walletId || !customerId) return;
+                      
+                      const previousData = transfers;
+                      const previousRaw = transfersRaw;
+                      setIsTransfersCollapsed(false); // Expand the table
+                      setTransfers([]); // Clear items first
+                      
+                      // Use setTimeout to ensure state update is flushed
+                      await new Promise(resolve => setTimeout(resolve, 0));
+                      setIsTransfersLoading(true);
+                      
+                      try {
+                        // Fetch directly from API (bypass cache)
+                        const transfersResponse = await bridgeAPI.getTransfers(customerId);
+                        setTransfers(transfersResponse.data);
+                        setTransfersRaw(transfersResponse);
+                        console.log('✅ Transfers reloaded successfully:', transfersResponse.data.length, 'items');
+                      } catch (error) {
+                        console.error('❌ Error reloading transfers:', error);
+                        setTransfers(previousData);
+                        setTransfersRaw(previousRaw);
+                      } finally {
+                        setIsTransfersLoading(false);
+                        // Keep table expanded after loading
                       }
                     }}
+                    isLoading={isTransfersLoading}
                     collapsed={isTransfersCollapsed}
                     onCollapsedChange={setIsTransfersCollapsed}
                   />
@@ -280,10 +377,30 @@ export function WalletOverviewPage() {
                     columns={createLiquidationHistoryTableColumns(openJsonModal)}
                     onViewRawJson={() => openJsonModal('Liquidation History - Full Response', liquidationHistoryRaw)}
                     onReload={async () => {
-                      if (wallet) {
-                        await loadData();
+                      if (!wallet || !walletId || !customerId) return;
+                      
+                      const previousAddresses = liquidationAddresses;
+                      setIsLiquidationHistoryCollapsed(false); // Expand the table
+                      setLiquidationHistory([]); // Clear items first
+                      
+                      // Use setTimeout to ensure state update is flushed
+                      await new Promise(resolve => setTimeout(resolve, 0));
+                      setIsLiquidationHistoryLoading(true);
+                      
+                      try {
+                        // Fetch fresh liquidation addresses (this will trigger the useEffect)
+                        const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId);
+                        setLiquidationAddresses(liquidationData.data);
+                        console.log('✅ Liquidation addresses refreshed, history will auto-load');
+                      } catch (error) {
+                        console.error('❌ Error reloading liquidation addresses:', error);
+                        setLiquidationAddresses(previousAddresses);
+                      } finally {
+                        setIsLiquidationHistoryLoading(false);
+                        // Keep table expanded after loading
                       }
                     }}
+                    isLoading={isLiquidationHistoryLoading}
                     collapsed={isLiquidationHistoryCollapsed}
                     onCollapsedChange={setIsLiquidationHistoryCollapsed}
                   />
