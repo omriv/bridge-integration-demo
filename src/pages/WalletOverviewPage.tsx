@@ -4,6 +4,23 @@ import { useData } from '../context/DataContext';
 import { bridgeAPI } from '../services/bridgeAPI';
 import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory } from '../types';
 import { JsonViewerModal } from '../components/JsonViewerModal';
+import { DynamicTransactionsTable } from '../components/DynamicTransactionsTable';
+import { createTransfersTableColumns } from '../components/tableConfigs/transfersTableConfig';
+
+// Helper function to filter transfers related to a wallet
+function filterWalletTransfers(
+  transfers: Transfer[], 
+  walletId: string | undefined, 
+  walletAddress: string | undefined
+): Transfer[] {
+  return transfers.filter((transfer) => {
+    const walletAddr = walletAddress?.toLowerCase();
+    const walletIdMatch = transfer.source.bridge_wallet_id === walletId;
+    const sourceAddrMatch = transfer.source.from_address?.toLowerCase() === walletAddr;
+    const destAddrMatch = transfer.destination.to_address?.toLowerCase() === walletAddr;
+    return walletIdMatch || sourceAddrMatch || destAddrMatch;
+  });
+}
 
 export function WalletOverviewPage() {
   const { customerId, walletId } = useParams<{ customerId: string; walletId: string }>();
@@ -28,7 +45,6 @@ export function WalletOverviewPage() {
   const [isLiquidationCollapsed, setIsLiquidationCollapsed] = useState(false);
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
   const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(false);
-  const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(false);
   const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(false);
   
   // JSON viewer modal state
@@ -301,197 +317,25 @@ export function WalletOverviewPage() {
                     )}
                   </div>
 
-                  {/* Transfer History */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <button
-                        onClick={() => setIsTransfersCollapsed(!isTransfersCollapsed)}
-                        className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                      >
-                        <h3 className="text-sm font-semibold text-gray-700 flex items-center">
-                          <span className="mr-1.5">🔄</span>
-                          Transfers ({transfers.length})
-                        </h3>
-                        <svg
-                          className={`w-4 h-4 text-gray-600 transition-transform ${isTransfersCollapsed ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                      {transfers.length > 0 && (
-                        <button
-                          onClick={() => openJsonModal('Transfers - Full Response', transfersRaw)}
-                          className="px-2 py-1 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"
-                        >
-                          View Full JSON
-                        </button>
-                      )}
-                    </div>
-                    {!isTransfersCollapsed && (
-                      transfers.length === 0 ? (
-                        <p className="text-gray-500 text-sm italic">No transfers found</p>
-                      ) : (
-                        <div className="overflow-x-auto">
-                          <table className="min-w-full bg-white border border-gray-200 rounded text-sm">
-                            <thead className="bg-gray-50">
-                              <tr>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">ID</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">State</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Amount</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Source</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Type</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Destination</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Fee</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Created</th>
-                                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700">Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                              {transfers.filter((transfer) => {
-                                // Filter transfers related to this wallet
-                                const walletAddr = wallet?.address?.toLowerCase();
-                                const walletIdMatch = transfer.source.bridge_wallet_id === walletId;
-                                const sourceAddrMatch = transfer.source.from_address?.toLowerCase() === walletAddr;
-                                const destAddrMatch = transfer.destination.to_address?.toLowerCase() === walletAddr;
-                                return walletIdMatch || sourceAddrMatch || destAddrMatch;
-                              }).map((transfer) => {
-                                // Determine if transfer is outgoing or incoming
-                                const walletAddr = wallet?.address?.toLowerCase();
-                                const isOutgoing = transfer.source.bridge_wallet_id === walletId || 
-                                                  transfer.source.from_address?.toLowerCase() === walletAddr;
-                                
-                                return (
-                                <tr key={transfer.id} className="hover:bg-gray-50">
-                                  <td className="px-3 py-3 text-xs font-mono text-gray-600">{transfer.id.substring(0, 8)}...</td>
-                                  <td className="px-3 py-3">
-                                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${
-                                      transfer.state === 'payment_processed' ? 'bg-green-100 text-green-800' :
-                                      transfer.state === 'awaiting_funds' ? 'bg-yellow-100 text-yellow-800' :
-                                      'bg-gray-100 text-gray-800'
-                                    }`}>
-                                      {transfer.state.replace(/_/g, ' ').toUpperCase()}
-                                    </span>
-                                  </td>
-                                  <td className="px-3 py-3 font-semibold text-gray-900">{transfer.amount} {transfer.currency.toUpperCase()}</td>
-                                  <td className={`px-3 py-3 ${
-                                    isOutgoing ? 'bg-red-50 border-l-2 border-red-400' : ''
-                                  }`}>
-                                    <div className="space-y-1">
-                                      <div className="font-medium text-gray-900">{transfer.source.currency.toUpperCase()}</div>
-                                      <div className="text-gray-500 text-xs">{transfer.source.payment_rail}</div>
-                                      {transfer.source.bridge_wallet_id && (
-                                        <div className="flex items-center gap-1">
-                                          <span className="text-xs text-gray-500">Wallet:</span>
-                                          <span className="text-xs font-mono text-gray-700">{transfer.source.bridge_wallet_id.substring(0, 8)}...</span>
-                                          <button
-                                            onClick={() => copyToClipboard(transfer.source.bridge_wallet_id!, `src-wallet-${transfer.id}`)}
-                                            className="p-0.5 text-gray-600 hover:text-indigo-600 flex-shrink-0"
-                                          >
-                                            {copiedField === `src-wallet-${transfer.id}` ? (
-                                              <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                              </svg>
-                                            ) : (
-                                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                              </svg>
-                                            )}
-                                          </button>
-                                        </div>
-                                      )}
-                                      {transfer.source.from_address && (
-                                        <div className="flex items-center gap-1">
-                                          <span className="text-xs text-gray-500">From:</span>
-                                          <span className="text-xs font-mono text-gray-700">{transfer.source.from_address.substring(0, 10)}...</span>
-                                          <button
-                                            onClick={() => copyToClipboard(transfer.source.from_address!, `src-from-${transfer.id}`)}
-                                            className="p-0.5 text-gray-600 hover:text-indigo-600 flex-shrink-0"
-                                          >
-                                            {copiedField === `src-from-${transfer.id}` ? (
-                                              <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                              </svg>
-                                            ) : (
-                                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                              </svg>
-                                            )}
-                                          </button>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </td>
-                                  <td className="px-3 py-3">
-                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${
-                                      isOutgoing ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                                    }`}>
-                                      {isOutgoing ? (
-                                        <>
-                                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                          </svg>
-                                          OUT
-                                        </>
-                                      ) : (
-                                        <>
-                                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                                          </svg>
-                                          IN
-                                        </>
-                                      )}
-                                    </span>
-                                  </td>
-                                  <td className={`px-3 py-3 ${
-                                    !isOutgoing ? 'bg-green-50 border-l-2 border-green-400' : ''
-                                  }`}>
-                                    <div className="space-y-1">
-                                      <div className="font-medium text-gray-900">{transfer.destination.currency.toUpperCase()}</div>
-                                      <div className="text-gray-500 text-xs">{transfer.destination.payment_rail}</div>
-                                      {transfer.destination.to_address && (
-                                        <div className="flex items-center gap-1">
-                                          <span className="text-xs text-gray-500">To:</span>
-                                          <span className="text-xs font-mono text-gray-700">{transfer.destination.to_address.substring(0, 10)}...</span>
-                                          <button
-                                            onClick={() => copyToClipboard(transfer.destination.to_address!, `dest-to-${transfer.id}`)}
-                                            className="p-0.5 text-gray-600 hover:text-indigo-600 flex-shrink-0"
-                                          >
-                                            {copiedField === `dest-to-${transfer.id}` ? (
-                                              <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                              </svg>
-                                            ) : (
-                                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                              </svg>
-                                            )}
-                                          </button>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </td>
-                                  <td className="px-3 py-3 text-gray-900">{transfer.developer_fee}</td>
-                                  <td className="px-3 py-3 text-gray-600 text-xs">{new Date(transfer.created_at).toLocaleString()}</td>
-                                  <td className="px-3 py-3">
-                                    <button
-                                      onClick={() => openJsonModal(`Transfer ${transfer.id.substring(0, 8)}`, transfer)}
-                                      className="px-2 py-0.5 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"
-                                    >
-                                      JSON
-                                    </button>
-                                  </td>
-                                </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      )
+                  {/* Dynamic Transfers Table */}
+                  <DynamicTransactionsTable
+                    title="Transfers"
+                    icon="🔄"
+                    items={filterWalletTransfers(transfers, walletId, wallet?.address)}
+                    columns={createTransfersTableColumns(
+                      walletId,
+                      wallet?.address,
+                      copiedField,
+                      copyToClipboard,
+                      openJsonModal
                     )}
-                  </div>
+                    onViewRawJson={() => openJsonModal('Transfers - Full Response', transfersRaw)}
+                    onReload={async () => {
+                      if (wallet) {
+                        await loadData();
+                      }
+                    }}
+                  />
 
                   {/* Liquidation History */}
                   <div>

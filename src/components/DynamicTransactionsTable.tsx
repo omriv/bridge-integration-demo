@@ -1,32 +1,7 @@
 import { useState } from 'react';
-import type { ComponentType } from 'react';
+import type { DynamicTransactionsTableProps, ColumnConfig } from './DynamicTransactionsTable.types';
 
-// Column configuration interface
-export interface ColumnConfig<T> {
-  key: string;
-  label: string;
-  // The actual cell component to render
-  CellComponent: ComponentType<any>;
-  // Function to get props for the cell component
-  getCellProps: (item: T, index: number) => Record<string, any>;
-  // Optional: CSS classes for the column
-  className?: string;
-}
-
-export interface DynamicTransactionsTableProps<T> {
-  title: string;
-  icon?: string;
-  items: T[];
-  columns: ColumnConfig<T>[];
-  onReload?: () => void | Promise<void>;
-  isLoading?: boolean;
-  emptyMessage?: string;
-  // Optional: Raw data for "View Full JSON" button
-  rawData?: unknown;
-  onViewRawJson?: () => void;
-  // Initial collapsed state
-  initialCollapsed?: boolean;
-}
+export type { CellTypeProps, ColumnConfig, DynamicTransactionsTableProps } from './DynamicTransactionsTable.types';
 
 export function DynamicTransactionsTable<T>({
   title,
@@ -133,7 +108,7 @@ export function DynamicTransactionsTable<T>({
                     {columns.map((column) => (
                       <th
                         key={column.key}
-                        className={`px-3 py-2 text-left text-xs font-semibold text-gray-700 ${column.className || ''}`}
+                        className={`px-3 py-3 text-left text-xs font-semibold text-gray-700 ${column.className || ''}`}
                       >
                         {column.label}
                       </th>
@@ -142,11 +117,11 @@ export function DynamicTransactionsTable<T>({
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {items.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr key={(item as any).id || index} className="hover:bg-gray-50">
                       {columns.map((column) => (
                         <td
                           key={column.key}
-                          className={`px-3 py-2 ${column.className || ''}`}
+                          className={`px-3 py-3 ${column.className || ''}`}
                         >
                           {renderCell(column, item, index)}
                         </td>
