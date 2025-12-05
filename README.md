@@ -9,26 +9,19 @@ A modern, feature-rich web application built with React, TypeScript, and Tailwin
 ### Customer Management
 - **Multi-Customer Support** - Switch between multiple customers using an intuitive dropdown selector
 - **Status Tracking** - Visual color-coded badges for customer status, KYC status, and ToS status
-  - 🟢 Green: Approved/Complete
-  - 🟡 Yellow: Pending/Under Review
-  - 🔴 Red: Rejected/Incomplete
-  - ⚪ Gray: Unknown/Not Set
 - **Customer Details Display** - View comprehensive customer information including:
-  - Customer ID
-  - Email
-  - Full Name
-  - Type
-  - Status fields with color indicators
-  - Creation timestamp
-- **Collapsible Sections** - Customer details section collapsed by default for cleaner UI
-
+  
 ### Wallet Management
-- **Wallet Overview** - Display all wallets associated with a customer
-- **Multi-Chain Support** - View wallets across different blockchain networks (Ethereum, Polygon, Solana, etc.)
-- **Address Management** - Quick copy-to-clipboard functionality for wallet addresses
+- **Wallet Cards** - Streamlined wallet display with reduced padding and optimized spacing
+- **USD Total Value** - Real-time calculation of total wallet value in USD
+  - Automatic conversion from multiple currencies (USDC, USDB, EURC, PYUDC, ETH, BTC, etc.)
+  - Conversion rates configurable in `config.ts`
+- **Multi-Chain Support** - View wallets across different blockchain networks (Ethereum, Polygon, Base, Arbitrum, Optimism, Solana, etc.)
+- **Address Management** - Quick copy-to-clipboard functionality for wallet addresses and IDs
 - **Wallet Details Page** - Dedicated full-screen page for each wallet with comprehensive data
 
 ### Transaction Tracking
+- **Dynamic Transaction Tables** - Reusable table component system with consistent UI across all transaction types
 - **Wallet Transactions** - View all transactions for a specific wallet
   - Source and destination currencies
   - Payment rails information
@@ -38,18 +31,52 @@ A modern, feature-rich web application built with React, TypeScript, and Tailwin
   - Real-time state tracking (payment processed, awaiting funds, etc.)
   - Source to destination flow visualization
   - Developer fee tracking
+  - Copyable transaction hashes and addresses
 - **Liquidation History** - Track liquidation events
-  - Deposit transaction hashes
+  - Deposit transaction hashes with copy-to-clipboard
   - Source addresses
-  - State monitoring
-- **Collapsible Tables** - Each transaction type can be collapsed independently for better navigation
+  - Payment rail tracking
+  - State monitoring with color-coded badges
+- **Virtual Account Activity** - Monitor virtual account transactions
+  - Event type tracking (payment_processed, payment_submitted, funds_received, funds_scheduled)
+  - Currency and amount display
+  - Developer fee tracking
+  - Source and destination payment rails
+  - Sender name information
+  - Deposit ID and Virtual Account ID with copy functionality
+  - Destination transaction hash with copy-to-clipboard
+- **Reload Functionality** - Each table has individual reload capability
+  - Clear → Loading → Fresh data flow
+  - Bypasses cache for latest data
+  - Error handling with data restoration
+  - Visual loading indicators
 
 ### Liquidation Addresses
 - **Address Listing** - View all liquidation addresses for a wallet
-- **Chain + Currency Breakdown** - Visual summary of address distribution
+- **Dedicated Component** - LiquidationAddressesSection with collapsible display
+- **Chain + Currency Breakdown** - Visual summary badges showing address distribution by chain and currency
 - **Multi-Currency Support** - Support for various cryptocurrencies and chains
-- **Copy-to-Clipboard** - Quick copy functionality for addresses and IDs
+- **Copy-to-Clipboard** - Quick copy functionality for addresses and IDs with visual confirmation
 - **State Indicators** - Color-coded status badges (active, inactive, etc.)
+- **Individual Cards** - Each address displayed in a detailed card with all metadata
+
+### Virtual Accounts
+- **Virtual Account Display** - View all virtual accounts associated with a customer
+- **Compact Card Layout** - Efficient two-column grid layout matching wallet cards
+- **Status Indicators** - Visual badges for activated/deactivated status
+- **Currency Conversion Flow** - Clear display of source → destination currency conversion (e.g., USD → USDC)
+- **Bank Deposit Instructions** - Expandable section showing:
+  - Bank name and address
+  - Account number with copy functionality
+  - Routing number with copy functionality
+  - Beneficiary name and address
+  - Supported payment rails (ACH, Wire, etc.)
+- **Destination Details** - Blockchain destination information
+  - Payment rail (e.g., Polygon)
+  - Destination address with copy-to-clipboard
+  - Target currency
+- **Developer Fee Display** - Fee percentage clearly shown
+- **Activity Integration** - Virtual accounts passed to wallet overview for activity tracking
 
 ### Developer Tools
 - **JSON Viewer** - View full API responses for any data element
@@ -62,11 +89,19 @@ A modern, feature-rich web application built with React, TypeScript, and Tailwin
 ### UI/UX Features
 - **Responsive Design** - Fully responsive layout that works on desktop, tablet, and mobile
 - **Modern Interface** - Gradient backgrounds, smooth transitions, and polished animations
+- **Compact Design** - Optimized spacing and padding for efficient use of screen space
 - **Dark Code Editor** - JSON viewer with professional dark theme
-- **Loading States** - Elegant loading animations
-- **Smart Navigation** - React Router for seamless page transitions
+- **Loading States** - Elegant loading animations with individual table loading indicators
+- **Smart Navigation** - React Router for seamless page transitions with state preservation
+- **Navigation State Passing** - Virtual accounts passed from home page to wallet overview
 - **Data Caching** - Intelligent caching system to minimize API calls
-- **Copy Feedback** - Visual confirmation when copying to clipboard
+- **Copy Feedback** - Visual confirmation when copying to clipboard with checkmark indicators
+- **Conditional UI Elements** - Smart hiding of copy buttons when no data available (shows N/A instead)
+- **Color-Coded States** - Comprehensive color system for all status types:
+  - Green: Success states (payment_processed, funds_received, complete)
+  - Yellow: In-progress states (payment_submitted, funds_scheduled, awaiting_funds, in_review)
+  - Gray: Unknown/other states
+  - Red: Error/rejected states
 
 ## 🚀 Installation
 
@@ -106,39 +141,32 @@ npm install --legacy-peer-deps
 
 The application loads the API key from the `BRIDGE_API_KEY` environment variable for security.
 
-**On Windows 11:**
+**Update Customer ID and Conversion Rates (Optional):**
 
-**Option 1: Set for current PowerShell session (temporary)**
-```powershell
-$env:BRIDGE_API_KEY="your-api-key-here"
-npm run server
-```
+If you want to change the default customer ID or update currency conversion rates:
 
-**Option 2: Set permanently for your user account**
-```powershell
-[System.Environment]::SetEnvironmentVariable('BRIDGE_API_KEY', 'your-api-key-here', 'User')
-```
-Then restart your terminal and run `npm run server`
+1. Go to the config file ```src/config.ts```
 
-**Option 3: Set system-wide (requires administrator privileges)**
-```powershell
-[System.Environment]::SetEnvironmentVariable('BRIDGE_API_KEY', 'your-api-key-here', 'Machine')
-```
-Then restart your terminal and run `npm run server`
-
-**Update Customer ID (Optional):**
-
-If you want to change the default customer ID:
-
-1. Copy the example config file:
-   ```bash
-   cp src/config.example.ts src/config.ts
-   ```
-
-2. Edit `src/config.ts` with your customer ID:
+2. Edit `src/config.ts` with your settings:
    ```typescript
    export const config = {
+     baseUrl: 'http://localhost:3001/api',
      customerId: 'YOUR_CUSTOMER_ID_HERE',
+     
+     // Conversion rates to USD (update as needed)
+     conversionRates: {
+       usdc: 1.00,    // USD Coin
+       usdb: 1.00,    // USD Base
+       pyudc: 1.00,   // PayPal USD Coin
+       eurc: 1.05,    // Euro Coin
+       usdt: 1.00,    // Tether USD
+       dai: 1.00,     // DAI
+       eth: 3800.00,  // Ethereum
+       weth: 3800.00, // Wrapped Ethereum
+       btc: 42000.00, // Bitcoin
+       wbtc: 42000.00,// Wrapped Bitcoin
+       // Add more as needed
+     }
    };
    ```
 
@@ -146,17 +174,7 @@ If you want to change the default customer ID:
 - Never commit your API key to version control
 - The API key is only stored in environment variables and used by the backend server
 - The frontend never has direct access to the API key
-- `src/config.ts` is already in `.gitignore` to prevent accidental commits
 
-### Step 4: Verify Environment Variable
-
-Before starting the server, verify your environment variable is set:
-
-```powershell
-echo $env:BRIDGE_API_KEY
-```
-
-You should see your API key. If not, set it using one of the methods in Step 3.
 
 ## 🎮 Running the Application
 
@@ -177,6 +195,7 @@ The backend will start on `http://localhost:3001`
 
 #### Terminal 2: Start Frontend Development Server
 ```bash
+npm install
 npm run dev
 ```
 
@@ -195,27 +214,46 @@ http://localhost:5173
 Bridge Integration Demo/
 ├── src/
 │   ├── components/
-│   │   ├── CustomerDetails.tsx    # Customer information display
-│   │   ├── WalletCard.tsx        # Individual wallet card component
-│   │   └── JsonViewerModal.tsx   # JSON viewer modal
+│   │   ├── CustomerDetails.tsx           # Customer information display
+│   │   ├── WalletCard.tsx               # Individual wallet card component
+│   │   ├── VirtualAccountCard.tsx       # Virtual account card component
+│   │   ├── JsonViewerModal.tsx          # JSON viewer modal
+│   │   ├── DynamicTransactionsTable.tsx # Reusable transaction table component
+│   │   ├── LiquidationAddressCard.tsx   # Individual liquidation address card
+│   │   ├── LiquidationAddressesSection.tsx # Liquidation addresses section
+│   │   ├── tableCells/                  # Cell component library (17+ components)
+│   │   │   ├── IdCell.tsx
+│   │   │   ├── StateCell.tsx
+│   │   │   ├── AmountCell.tsx
+│   │   │   ├── CurrencyCell.tsx
+│   │   │   ├── DateTimeCell.tsx
+│   │   │   ├── CopyableFieldCell.tsx
+│   │   │   ├── TxHashCell.tsx
+│   │   │   └── ...                      # And more specialized cells
+│   │   └── tableConfigs/                # Table column configurations
+│   │       ├── transfersTableConfig.tsx
+│   │       ├── liquidationHistoryTableConfig.tsx
+│   │       ├── walletTransactionsTableConfig.tsx
+│   │       └── virtualAccountActivityTableConfig.tsx
 │   ├── context/
-│   │   └── DataContext.tsx       # Global state management & caching
+│   │   └── DataContext.tsx              # Global state management & caching
 │   ├── pages/
-│   │   ├── HomePage.tsx          # Main page with customer selector
-│   │   └── WalletOverviewPage.tsx # Detailed wallet view
+│   │   ├── HomePage.tsx                 # Main page with customer/wallet/virtual account display
+│   │   └── WalletOverviewPage.tsx       # Detailed wallet view with 4 transaction tables
 │   ├── services/
-│   │   └── bridgeAPI.ts          # API service layer
-│   ├── types.ts                  # TypeScript interfaces
-│   ├── config.ts                 # API configuration (not in git)
-│   ├── App.tsx                   # Main app component with routing
-│   ├── main.tsx                  # Application entry point
-│   └── index.css                 # Global styles with Tailwind
-├── server.js                     # Express backend proxy server
-├── package.json                  # Dependencies and scripts
-├── tsconfig.json                 # TypeScript configuration
-├── vite.config.ts               # Vite configuration
-├── postcss.config.js            # PostCSS configuration for Tailwind
-└── README.md                    # This file
+│   │   └── bridgeAPI.ts                 # API service layer (11+ endpoints)
+│   ├── types.ts                         # TypeScript interfaces
+│   ├── config.ts                        # API configuration & conversion rates (not in git)
+│   ├── config.example.ts                # Example configuration template
+│   ├── App.tsx                          # Main app component with routing
+│   ├── main.tsx                         # Application entry point
+│   └── index.css                        # Global styles with Tailwind
+├── server.js                            # Express backend proxy server (11+ endpoints)
+├── package.json                         # Dependencies and scripts
+├── tsconfig.json                        # TypeScript configuration
+├── vite.config.ts                      # Vite configuration
+├── postcss.config.js                   # PostCSS configuration for Tailwind
+└── README.md                           # This file
 ```
 
 ## 🔧 Available Scripts
@@ -252,10 +290,17 @@ The application uses an intelligent color-coding system for all status fields:
 
 | Status | Color | Use Case |
 |--------|-------|----------|
-| 🟢 **Green** | `bg-green-100 text-green-800` | Approved, Complete, Active, Payment Processed |
-| 🟡 **Yellow** | `bg-yellow-100 text-yellow-800` | Pending, Under Review, Awaiting Funds |
-| 🔴 **Red** | `bg-red-100 text-red-800` | Rejected, Incomplete, Failed |
-| ⚪ **Gray** | `bg-gray-100 text-gray-700` | Unknown, Not Set, Other States |
+| 🟢 **Green** | `bg-green-100 text-green-800` | Approved, Complete, Active, Payment Processed, Funds Received |
+| 🟡 **Yellow** | `bg-yellow-100 text-yellow-800` | Pending, Under Review, Awaiting Funds, Payment Submitted, Funds Scheduled, In Review |
+| 🔴 **Red** | `bg-red-100 text-red-800` | Rejected, Incomplete, Failed, Deactivated |
+| ⚪ **Gray** | `bg-gray-100 text-gray-700/400` | Unknown, Not Set, Other States, N/A |
+
+**State Cell Component Features:**
+- Automatic color assignment based on status value
+- Handles virtual account event types (payment_processed, funds_received, payment_submitted, funds_scheduled)
+- Shows "N/A" for empty values
+- Underscores replaced with spaces for better readability
+- All text automatically uppercased
 
 ## 📊 Data Caching Strategy
 
@@ -317,28 +362,31 @@ This reduces API calls by ~70% during normal usage while maintaining data freshn
 
 The application integrates with the following Bridge API endpoints:
 
-1. **GET /customers** - List all customers
-2. **GET /customers/:id** - Get customer details
-3. **GET /wallets** - List customer wallets
-4. **GET /liquidation_addresses** - Get liquidation addresses
-5. **GET /wallets/:id/transactions** - Get wallet transactions
-6. **GET /transfers** - List transfers
-7. **GET /liquidation_addresses/:id/drains** - Get liquidation history
+### Customer Management
+1. **GET /v0/customers** - List all customers
+2. **GET /v0/customers/:id** - Get customer details
+
+### Wallet & Address Management
+3. **GET /v0/wallets** - List customer wallets
+4. **GET /v0/liquidation_addresses** - Get liquidation addresses
+
+### Transaction History
+5. **GET /v0/wallets/:id/history** - Get wallet transaction history
+6. **GET /v0/transfers** - List transfers
+7. **GET /v0/customers/:customerId/liquidation_addresses/:addressId/drains** - Get liquidation history
+
+### Virtual Accounts
+8. **GET /v0/customers/:customerId/virtual_accounts** - List virtual accounts
+9. **GET /v0/customers/:customerId/virtual_accounts/:accountId/history** - Get virtual account activity
 
 All endpoints are proxied through the Express backend at `http://localhost:3001/api/`
 
-## 🚀 Future Enhancements
-
-Potential features for future versions:
-
-- [ ] Real-time WebSocket updates for transactions
-- [ ] Advanced filtering and sorting for transactions
-- [ ] Export data to CSV/JSON
-- [ ] Transaction analytics and charts
-- [ ] Multi-language support
-- [ ] Dark mode toggle
-- [ ] Wallet creation and management
-- [ ] Transaction initiation
+**Backend Proxy Features:**
+- CORS handling for local development
+- API key security (never exposed to frontend)
+- Consistent error handling
+- Request/response logging
+- Limit parameter support (default: 50 items per request)
 
 ## 📄 License
 
@@ -355,142 +403,3 @@ For application issues, check the troubleshooting section above or review the co
 **Built with ❤️ using React, TypeScript, and Tailwind CSS**
 
 ---
-
-## 🔧 Setting Up GitHub Repository
-
-If you want to host this project on GitHub:
-
-### 1. Initialize Git (if not already initialized)
-
-```powershell
-git init
-```
-
-### 2. Create src/config.ts from the example
-
-```powershell
-cp src/config.example.ts src/config.ts
-```
-
-Edit `src/config.ts` with your actual customer ID. This file is in `.gitignore` and won't be committed.
-
-### 3. Stage and commit your files
-
-```powershell
-git add .
-git commit -m "Initial commit: Bridge Integration Demo"
-```
-
-### 4. Create a new repository on GitHub
-
-1. Go to [GitHub](https://github.com) and log in
-2. Click the "+" icon in the top right → "New repository"
-3. Name it (e.g., `bridge-integration-demo`)
-4. Choose Public or Private
-5. **Do NOT** initialize with README, .gitignore, or license (you already have these)
-6. Click "Create repository"
-
-### 5. Link your local repository to GitHub
-
-```powershell
-git remote add origin https://github.com/YOUR_USERNAME/bridge-integration-demo.git
-git branch -M main
-git push -u origin main
-```
-
-Replace `YOUR_USERNAME` with your actual GitHub username.
-
-**When prompted for credentials:**
-- **Username**: Enter your GitHub username
-- **Password**: Paste your Personal Access Token (NOT your GitHub password)
-
-The token will be automatically saved in Windows Credential Manager, so you won't need to enter it again.
-
-### 5a. Configure Git Authentication (One-Time Setup)
-
-If you haven't already, configure Git to store your credentials:
-
-```powershell
-# 1. Set your Git identity
-git config --global user.name "YourGitHubUsername"
-git config --global user.email "your.email@example.com"
-
-# 2. Enable credential storage in Windows
-git config --global credential.helper wincred
-```
-
-**Using Your Personal Access Token:**
-
-After running the push command, you'll see a credential prompt:
-
-1. **Username**: Type your GitHub username and press Enter
-2. **Password**: Paste your Personal Access Token (the one you generated and saved) and press Enter
-
-Windows will save these credentials automatically. Future pushes won't ask for credentials again.
-
-**If you're not prompted for credentials:**
-
-Git might try to use old cached credentials. Clear them first:
-
-```powershell
-# Remove old GitHub credentials from Windows Credential Manager
-cmdkey /list | Select-String "github" | ForEach-Object { 
-    $target = $_.Line.Split(":")[1].Trim()
-    cmdkey /delete:$target
-}
-
-# Now try pushing again
-git push -u origin main
-# Enter username and token when prompted
-```
-
-**Verifying Stored Credentials:**
-
-To check if your credentials are stored:
-
-1. Press `Win + R`, type `control /name Microsoft.CredentialManager`, press Enter
-2. Click "Windows Credentials"
-3. Look for entries starting with `git:https://github.com`
-4. Your token is securely stored here
-
-### 6. Set up GitHub Secrets (Optional - for CI/CD)
-
-If you plan to use GitHub Actions or share the repo with collaborators:
-
-1. Go to your repository on GitHub
-2. Click "Settings" → "Secrets and variables" → "Actions"
-3. Click "New repository secret"
-4. Add `BRIDGE_API_KEY` with your API key value
-
-### 7. Important: Before Committing
-
-**Always verify these files are NOT committed:**
-- `src/config.ts` (contains customer ID)
-- `node_modules/` (dependencies)
-- `.env` files (if you create any)
-
-Check what will be committed:
-```powershell
-git status
-```
-
-If you see sensitive files, add them to `.gitignore` immediately:
-```powershell
-echo "src/config.ts" >> .gitignore
-git rm --cached src/config.ts  # Remove if already staged
-```
-
-### 8. Cloning on Another Machine
-
-When you or someone else clones the repo:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/bridge-integration-demo.git
-cd bridge-integration-demo
-npm install --legacy-peer-deps
-cp src/config.example.ts src/config.ts
-# Edit src/config.ts with actual customer ID
-# Set BRIDGE_API_KEY environment variable
-npm run server  # In one terminal
-npm run dev     # In another terminal
-```
