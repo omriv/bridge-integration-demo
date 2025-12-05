@@ -46,6 +46,9 @@ export function WalletOverviewPage() {
   const [loading, setLoading] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
+  const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(false);
+  const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(false);
+  const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(false);
   
   // JSON viewer modal state
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
@@ -243,6 +246,8 @@ export function WalletOverviewPage() {
                         await loadData();
                       }
                     }}
+                    collapsed={isWalletTxCollapsed}
+                    onCollapsedChange={setIsWalletTxCollapsed}
                   />
 
                   {/* Transfers */}
@@ -263,6 +268,8 @@ export function WalletOverviewPage() {
                         await loadData();
                       }
                     }}
+                    collapsed={isTransfersCollapsed}
+                    onCollapsedChange={setIsTransfersCollapsed}
                   />
 
                   {/* Liquidation History */}
@@ -277,6 +284,8 @@ export function WalletOverviewPage() {
                         await loadData();
                       }
                     }}
+                    collapsed={isLiquidationHistoryCollapsed}
+                    onCollapsedChange={setIsLiquidationHistoryCollapsed}
                   />
                 </div>
               )}

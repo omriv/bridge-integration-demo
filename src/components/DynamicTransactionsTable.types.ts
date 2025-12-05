@@ -32,4 +32,7 @@ export interface DynamicTransactionsTableProps<T> {
   onViewRawJson?: () => void;
   // Initial collapsed state
   initialCollapsed?: boolean;
+  // Controlled collapse state
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }

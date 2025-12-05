@@ -13,8 +13,14 @@ export function DynamicTransactionsTable<T>({
   emptyMessage = 'No data found',
   onViewRawJson,
   initialCollapsed = false,
+  collapsed,
+  onCollapsedChange,
 }: DynamicTransactionsTableProps<T>) {
-  const [isCollapsed, setIsCollapsed] = useState(initialCollapsed);
+  const [internalCollapsed, setInternalCollapsed] = useState(initialCollapsed);
+  
+  // Use controlled state if provided, otherwise use internal state
+  const isCollapsed = collapsed !== undefined ? collapsed : internalCollapsed;
+  const setIsCollapsed = onCollapsedChange || setInternalCollapsed;
   const [isReloading, setIsReloading] = useState(false);
 
   const handleReload = async () => {
