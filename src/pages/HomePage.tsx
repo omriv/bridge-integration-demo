@@ -12,6 +12,7 @@ export function HomePage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
   const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
+  const [showModeTransition, setShowModeTransition] = useState(false);
 
   useEffect(() => {
     if (!customer) {
@@ -47,6 +48,14 @@ export function HomePage() {
     await loadCustomerData(customerId);
   };
 
+  const handleMockToggle = (newUseMock: boolean) => {
+    setShowModeTransition(true);
+    toggleMock();
+    setTimeout(() => {
+      setShowModeTransition(false);
+    }, 2000);
+  };
+
   const getStatusColor = (status?: string) => {
     if (!status) return 'bg-gray-100 text-gray-700';
     switch (status.toLowerCase()) {
@@ -66,10 +75,29 @@ export function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading customer data...</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header - Always Visible */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1"></div>
+              <h1 className="text-4xl font-bold text-gray-800 flex-1">
+                Bridge Integration <span className="text-indigo-600">Demo</span>
+              </h1>
+              <div className="flex-1 flex justify-end">
+                <MockToggle useMock={useMock} onToggle={handleMockToggle} />
+              </div>
+            </div>
+            <p className="text-gray-600">Customer Details & Wallet Management</p>
+          </div>
+
+          {/* Loading State */}
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+              <p className="text-gray-600 text-lg">Loading customer data...</p>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -77,22 +105,39 @@ export function HomePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-          <div className="text-center mb-6">
-            <div className="text-red-500 text-5xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Data</h2>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <p className="text-sm text-gray-500 mb-6">
-              Please make sure you've configured your API key and customer ID in the config.ts file.
-            </p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header - Always Visible */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1"></div>
+              <h1 className="text-4xl font-bold text-gray-800 flex-1">
+                Bridge Integration <span className="text-indigo-600">Demo</span>
+              </h1>
+              <div className="flex-1 flex justify-end">
+                <MockToggle useMock={useMock} onToggle={handleMockToggle} />
+              </div>
+            </div>
+            <p className="text-gray-600">Customer Details & Wallet Management</p>
           </div>
-          <button
-            onClick={refreshAll}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
-          >
-            Retry
-          </button>
+
+          {/* Error State */}
+          <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
+            <div className="text-center mb-6">
+              <div className="text-red-500 text-5xl mb-4">⚠️</div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Data</h2>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <p className="text-sm text-gray-500 mb-6">
+                Please make sure you've configured your API key and customer ID in the config.ts file.
+              </p>
+            </div>
+            <button
+              onClick={refreshAll}
+              className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -101,15 +146,31 @@ export function HomePage() {
   // Show customer selector if no customer is loaded but we have customers list
   if (!customer && customers.length > 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full bg-white rounded-xl shadow-lg p-8">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Select a Customer</h2>
-            <p className="text-gray-600 mb-6">
-              Choose a customer from the list below to view their details and wallets.
-            </p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header - Always Visible */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1"></div>
+              <h1 className="text-4xl font-bold text-gray-800 flex-1">
+                Bridge Integration <span className="text-indigo-600">Demo</span>
+              </h1>
+              <div className="flex-1 flex justify-end">
+                <MockToggle useMock={useMock} onToggle={handleMockToggle} />
+              </div>
+            </div>
+            <p className="text-gray-600">Customer Details & Wallet Management</p>
           </div>
-          <div className="max-h-96 overflow-y-auto border-2 border-gray-300 rounded-lg">
+
+          {/* Customer Selector */}
+          <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">Select a Customer</h2>
+              <p className="text-gray-600 mb-6">
+                Choose a customer from the list below to view their details and wallets.
+              </p>
+            </div>
+            <div className="max-h-96 overflow-y-auto border-2 border-gray-300 rounded-lg">
             {customers.map((cust) => (
               <button
                 key={cust.id}
@@ -142,6 +203,7 @@ export function HomePage() {
             ))}
           </div>
         </div>
+        </div>
       </div>
     )
   }
@@ -157,10 +219,26 @@ export function HomePage() {
               Bridge Integration <span className="text-indigo-600">Demo</span>
             </h1>
             <div className="flex-1 flex justify-end">
-              <MockToggle useMock={useMock} onToggle={toggleMock} />
+              <MockToggle useMock={useMock} onToggle={handleMockToggle} />
             </div>
           </div>
           <p className="text-gray-600">Customer Details & Wallet Management</p>
+
+          {/* Mode Transition Notification */}
+          {showModeTransition && (
+            <div className="mt-4 max-w-md mx-auto">
+              <div className={`px-4 py-3 rounded-lg border-2 flex items-center gap-3 animate-pulse ${
+                useMock 
+                  ? 'bg-orange-50 border-orange-300 text-orange-800' 
+                  : 'bg-green-50 border-green-300 text-green-800'
+              }`}>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
+                <span className="font-semibold">
+                  {useMock ? 'Switching to Mock Data...' : 'Switching to Real Data...'}
+                </span>
+              </div>
+            </div>
+          )}
           
           {/* Customer Selector Dropdown */}
           {customers.length > 0 && (
