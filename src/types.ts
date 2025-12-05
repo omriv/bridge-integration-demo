@@ -164,3 +164,35 @@ export interface LiquidationHistoryResponse {
   count: number;
   data: LiquidationHistory[];
 }
+
+export interface VirtualAccountSourceDepositInstructions {
+  currency: string;
+  payment_rails: string[];
+  bank_name: string;
+  bank_address: string;
+  bank_beneficiary_name: string;
+  bank_beneficiary_address: string;
+  bank_account_number: string;
+  bank_routing_number: string;
+}
+
+export interface VirtualAccountDestination {
+  currency: string;
+  payment_rail: string;
+  address: string;
+}
+
+export interface VirtualAccount {
+  id: string;
+  status: string;
+  developer_fee_percent: string;
+  customer_id: string;
+  created_at: string;
+  source_deposit_instructions: VirtualAccountSourceDepositInstructions;
+  destination: VirtualAccountDestination;
+}
+
+export interface VirtualAccountsResponse {
+  count: number;
+  data: VirtualAccount[];
+}

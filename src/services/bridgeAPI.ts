@@ -6,7 +6,8 @@ import type {
   LiquidationAddressesResponse,
   WalletTransactionsResponse,
   TransfersResponse,
-  LiquidationHistoryResponse
+  LiquidationHistoryResponse,
+  VirtualAccountsResponse
 } from '../types';
 
 const headers = {
@@ -93,6 +94,18 @@ export const bridgeAPI = {
 
     if (!response.ok) {
       throw new Error(`Failed to fetch liquidation history: ${response.statusText}`);
+    }
+
+    return response.json();
+  },
+
+  async getVirtualAccounts(customerId: string): Promise<VirtualAccountsResponse> {
+    const response = await fetch(`${config.baseUrl}/customers/${customerId}/virtual_accounts`, {
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch virtual accounts: ${response.statusText}`);
     }
 
     return response.json();

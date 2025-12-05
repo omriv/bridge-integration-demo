@@ -68,44 +68,44 @@ export function WalletCard({ wallet }: WalletCardProps) {
   const totalUSD = calculateTotalUSD();
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-indigo-300 transition-all">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all">
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-6 text-left hover:bg-gray-50 transition-colors cursor-pointer"
+        className="w-full p-3 text-left hover:bg-gray-50 transition-colors cursor-pointer"
       >
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-3">
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold border-2 ${getChainColor(wallet.chain)}`}>
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className={`px-2 py-0.5 rounded text-xs font-semibold ${getChainColor(wallet.chain)}`}>
                 {wallet.chain.toUpperCase()}
               </span>
               {wallet.tags.length > 0 && (
-                <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">
                   {wallet.tags.join(', ')}
                 </span>
               )}
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {/* Wallet ID */}
               <div>
-                <p className="text-xs text-gray-500 mb-1">Wallet ID</p>
-                <div className="flex items-center gap-2">
+                <p className="text-xs text-gray-500 mb-0.5">Wallet ID</p>
+                <div className="flex items-center gap-1">
                   <p className="font-mono text-xs text-gray-900 break-all flex-1">{wallet.id}</p>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       copyToClipboard(wallet.id, `id-${wallet.id}`);
                     }}
-                    className="p-1.5 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all flex-shrink-0"
+                    className="p-1 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all flex-shrink-0"
                     title="Copy wallet ID"
                   >
                     {copiedField === `id-${wallet.id}` ? (
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     )}
@@ -115,23 +115,23 @@ export function WalletCard({ wallet }: WalletCardProps) {
 
               {/* Wallet Address */}
               <div>
-                <p className="text-xs text-gray-500 mb-1">Wallet Address</p>
-                <div className="flex items-center gap-2">
-                  <p className="font-mono text-sm text-gray-900 break-all flex-1">{wallet.address}</p>
+                <p className="text-xs text-gray-500 mb-0.5">Wallet Address</p>
+                <div className="flex items-center gap-1">
+                  <p className="font-mono text-xs text-gray-900 break-all flex-1">{wallet.address}</p>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       copyToClipboard(wallet.address, `address-${wallet.id}`);
                     }}
-                    className="p-1.5 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all flex-shrink-0"
+                    className="p-1 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all flex-shrink-0"
                     title="Copy address"
                   >
                     {copiedField === `address-${wallet.id}` ? (
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     )}
@@ -145,17 +145,17 @@ export function WalletCard({ wallet }: WalletCardProps) {
               </div>
               
               {/* Total USD Value */}
-              <div className="mt-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg">
+              <div className="mt-2 p-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-green-700">💵 Total Value</span>
-                  <span className="text-lg font-bold text-green-900">
+                  <span className="text-sm font-bold text-green-900">
                     ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
               
               {/* Overview Button */}
-              <div className="mt-3">
+              <div className="mt-2">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -163,7 +163,7 @@ export function WalletCard({ wallet }: WalletCardProps) {
                       navigate(`/${customer.id}/${wallet.id}`);
                     }
                   }}
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-all transform hover:scale-105 active:scale-95 shadow-md"
+                  className="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"
                 >
                   📋 View Overview
                 </button>
@@ -185,8 +185,8 @@ export function WalletCard({ wallet }: WalletCardProps) {
       </div>
 
       {isExpanded && (
-        <div className="border-t-2 border-gray-100 bg-gradient-to-br from-gray-50 to-white p-6">
-          <h4 className="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+        <div className="border-t border-gray-100 bg-gradient-to-br from-gray-50 to-white p-3">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
             <span className="mr-2">💰</span>
             Wallet Balances
           </h4>
@@ -194,15 +194,15 @@ export function WalletCard({ wallet }: WalletCardProps) {
           {wallet.balances.length === 0 ? (
             <p className="text-gray-500 text-sm italic">No balances available</p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {wallet.balances.map((balance, index) => (
                 <div
                   key={index}
-                  className={`p-4 rounded-lg border-2 transition-colors ${getCurrencyColor(balance.currency)}`}
+                  className={`p-2 rounded border transition-colors ${getCurrencyColor(balance.currency)}`}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-lg uppercase">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-sm uppercase">
                         {balance.currency}
                       </span>
                       <button
@@ -221,7 +221,7 @@ export function WalletCard({ wallet }: WalletCardProps) {
                         )}
                       </button>
                     </div>
-                    <span className="text-xl font-bold">
+                    <span className="text-base font-bold">
                       {parseFloat(balance.balance).toLocaleString()}
                     </span>
                   </div>

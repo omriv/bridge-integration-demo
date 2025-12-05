@@ -2,16 +2,43 @@ import { useEffect, useState } from 'react'
 import { useData } from '../context/DataContext'
 import { CustomerDetails } from '../components/CustomerDetails'
 import { WalletCard } from '../components/WalletCard'
+import { VirtualAccountCard } from '../components/VirtualAccountCard'
+import { bridgeAPI } from '../services/bridgeAPI'
+import type { VirtualAccount } from '../types'
 
 export function HomePage() {
   const { customer, customers, currentCustomerId, wallets, loading, error, loadCustomerData, setCurrentCustomerId, refreshAll } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
+  const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
 
   useEffect(() => {
     if (!customer) {
       loadCustomerData();
     }
   }, [customer, loadCustomerData]);
+
+  useEffect(() => {
+    const loadVirtualAccounts = async () => {
+      if (!customer) {
+        setVirtualAccounts([]);
+        return;
+      }
+      
+      try {
+        setVirtualAccountsLoading(true);
+        const response = await bridgeAPI.getVirtualAccounts(customer.id);
+        setVirtualAccounts(response.data);
+      } catch (error) {
+        console.error('Error loading virtual accounts:', error);
+        setVirtualAccounts([]);
+      } finally {
+        setVirtualAccountsLoading(false);
+      }
+    };
+    
+    loadVirtualAccounts();
+  }, [customer]);
 
   const handleCustomerChange = async (customerId: string) => {
     setCurrentCustomerId(customerId);
@@ -233,6 +260,35 @@ export function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {wallets.map((wallet) => (
                 <WalletCard key={wallet.id} wallet={wallet} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Virtual Accounts Section */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <span className="text-indigo-600 mr-2">🏦</span>
+            Virtual Accounts
+            <span className="ml-3 text-sm font-normal text-gray-600">
+              ({virtualAccounts.length} {virtualAccounts.length === 1 ? 'account' : 'accounts'})
+            </span>
+          </h2>
+
+          {virtualAccountsLoading ? (
+            <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading virtual accounts...</p>
+            </div>
+          ) : virtualAccounts.length === 0 ? (
+            <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+              <div className="text-gray-400 text-5xl mb-4">📭</div>
+              <p className="text-gray-600">No virtual accounts found for this customer</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {virtualAccounts.map((account) => (
+                <VirtualAccountCard key={account.id} virtualAccount={account} />
               ))}
             </div>
           )}
