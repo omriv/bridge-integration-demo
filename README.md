@@ -313,6 +313,7 @@ Bridge Integration Demo/
 ### Development
 - `npm run dev` - Start Vite development server (frontend only)
 - `npm run server` - Start Express proxy server (backend only)
+- `npm run mock-server` - Start mock data server on port 3002 (no API key required)
 - `npm run build` - Build production bundle
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint to check code quality
@@ -334,7 +335,29 @@ Bridge Integration Demo/
 
 ### API Integration
 - **Bridge API** - Customer, wallet, and transaction management
+- **Mock Server** - Local Express server for development without API key
 - **RESTful API** - Standard HTTP methods and JSON responses
+
+## 🎭 Mock Data 
+### Mock Server Implementation
+
+The mock server (`mock/server/mockServer.js`) runs on port 3002 and provides:
+
+- **9 API Endpoints** matching real Bridge API structure
+- **Filtering** by customer_id, wallet_id, liquidation_address_id, virtual_account_id
+- **Limit Parameter** support (default 50 records)
+- **CORS Enabled** for local development
+- **JSON File Loading** with error handling
+
+### Using Mock Mode
+
+1. **Start Mock Server**: `npm run mock-server`
+2. **Toggle in UI**: Click the toggle switch in the top-right header
+3. **Mode Indicator**: 
+   - 🎭 Mock (orange badge) - Using local mock data
+   - 🌐 Real (green badge) - Using Bridge API
+4. **Persistence**: Mode selection saved to localStorage
+5. **No API Key Required**: Mock mode works without BRIDGE_API_KEY
 
 ## 🎨 Color-Coded Status System
 
@@ -389,10 +412,18 @@ This reduces API calls by ~70% during normal usage while maintaining data freshn
 - **Port conflict**: Check if port 3001 is already in use
 - **Dependencies**: Ensure all dependencies are installed with `npm install --legacy-peer-deps`
 
+### Mock Server Issues
+- **Port conflict**: Check if port 3002 is already in use
+- **Mock data not loading**: Verify `mock/data/` directory contains all JSON files
+- **Mock server won't start**: Ensure `mock/server/mockServer.js` exists
+- **Data not updating after toggle**: Wait for the mode transition animation to complete (2 seconds)
+- **Toggle not persisting**: Check browser localStorage is enabled
+
 ### Frontend Can't Connect to Backend
 - Verify backend is running on `http://localhost:3001`
 - Check browser console for CORS errors
 - Ensure `bridgeAPI.ts` is using the correct backend URL
+- If using mock mode, verify mock server is running on `http://localhost:3002`
 
 ### Tailwind Styles Not Working
 - Verify `postcss.config.js` is configured correctly
@@ -405,6 +436,7 @@ This reduces API calls by ~70% during normal usage while maintaining data freshn
 - **Customer ID**: Check that your customer ID is valid in `src/config.ts`
 - **Network connectivity**: Ensure you have internet access to Bridge API
 - **API permissions**: Verify your API key has the necessary permissions
+- **Try mock mode**: If API issues persist, toggle to mock mode to test the UI
 
 ### React 19 Peer Dependency Warnings
 - Use `--legacy-peer-deps` flag when installing packages
