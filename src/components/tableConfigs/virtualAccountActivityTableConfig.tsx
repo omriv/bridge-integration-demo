@@ -6,6 +6,7 @@ import { CurrencyCell } from '../tableCells/CurrencyCell';
 import { StateCell } from '../tableCells/StateCell';
 import { CopyableFieldCell } from '../tableCells/CopyableFieldCell';
 import { JsonButtonCell } from '../tableCells/JsonButtonCell';
+import { DateTimeCell } from '../tableCells/DateTimeCell';
 
 export function createVirtualAccountActivityTableColumns(
   copiedField: string | null,
@@ -13,6 +14,48 @@ export function createVirtualAccountActivityTableColumns(
   openJsonModal: (title: string, data: unknown) => void
 ): ColumnConfig<VirtualAccountActivity>[] {
   return [
+    {
+      key: 'type',
+      label: 'State',
+      CellComponent: StateCell,
+      getCellProps: (activity) => ({
+        data: { state: activity.type }
+      }),
+      className: 'min-w-[150px]'
+    },
+    {
+      key: 'deposit_id',
+      label: 'Deposit ID',
+      CellComponent: CopyableFieldCell,
+      getCellProps: (activity) => ({
+        data: {
+          value: activity.deposit_id || '',
+          fieldId: `deposit-${activity.id}`,
+          copiedField,
+          truncateLength: 12
+        },
+        onCopy: copyToClipboard
+      }),
+      className: 'min-w-[160px]'
+    },
+    {
+      key: 'amount',
+      label: 'Amount',
+      CellComponent: AmountCell,
+      getCellProps: (activity) => ({
+        data: { amount: activity.amount }
+      }),
+      className: 'min-w-[80px]'
+    },
+    {
+      key: 'developer_fee_amount',
+      label: 'Developer Fee',
+      CellComponent: AmountCell,
+      getCellProps: (activity) => ({
+        data: { amount: activity.developer_fee_amount }
+      }),
+      className: 'min-w-[80px]'
+    },
     {
       key: 'currency',
       label: 'Currency',
@@ -23,29 +66,20 @@ export function createVirtualAccountActivityTableColumns(
       className: 'min-w-[100px]'
     },
     {
-      key: 'event_type',
-      label: 'Type',
-      CellComponent: StateCell,
+      key: 'source_payment_rail',
+      label: 'Source Payment Rail',
+      CellComponent: TextCell,
       getCellProps: (activity) => ({
-        data: { state: activity.event_type }
-      }),
-      className: 'min-w-[150px]'
-    },
-    {
-      key: 'amount',
-      label: 'Amount',
-      CellComponent: AmountCell,
-      getCellProps: (activity) => ({
-        data: { amount: activity.amount }
+        data: { text: activity.source?.payment_rail?.toUpperCase() || 'N/A' }
       }),
       className: 'min-w-[120px]'
     },
     {
-      key: 'developer_fee_amount',
-      label: 'Developer Fee',
-      CellComponent: AmountCell,
+      key: 'destination_payment_rail',
+      label: 'Dest Payment Rail',
+      CellComponent: TextCell,
       getCellProps: (activity) => ({
-        data: { amount: activity.developer_fee_amount }
+        data: { text: activity.destination_payment_rail?.toUpperCase() || 'N/A' }
       }),
       className: 'min-w-[120px]'
     },
@@ -62,64 +96,15 @@ export function createVirtualAccountActivityTableColumns(
         },
         onCopy: copyToClipboard
       }),
-      className: 'min-w-[200px]'
+      className: 'min-w-[160px]'
     },
     {
-      key: 'deposit_id',
-      label: 'Deposit ID',
-      CellComponent: CopyableFieldCell,
-      getCellProps: (activity) => ({
-        data: {
-          value: activity.deposit_id || '',
-          fieldId: `deposit-${activity.id}`,
-          copiedField,
-          truncateLength: 12
-        },
-        onCopy: copyToClipboard
-      }),
-      className: 'min-w-[200px]'
-    },
-    {
-      key: 'source_payment_rail',
-      label: 'Source Payment Rail',
-      CellComponent: TextCell,
-      getCellProps: (activity) => ({
-        data: { text: activity.source?.payment_rail?.toUpperCase() || 'N/A' }
-      }),
-      className: 'min-w-[140px]'
-    },
-    {
-      key: 'destination_payment_rail',
-      label: 'Dest Payment Rail',
-      CellComponent: TextCell,
-      getCellProps: (activity) => ({
-        data: { text: activity.destination_payment_rail?.toUpperCase() || 'N/A' }
-      }),
-      className: 'min-w-[140px]'
-    },
-    {
-      key: 'sender_name',
-      label: 'Sender Name',
-      CellComponent: TextCell,
-      getCellProps: (activity) => ({
-        data: { text: (activity as any).source?.sender_name || activity.sender_name || 'N/A' }
-      }),
-      className: 'min-w-[150px]'
-    },
-    {
-      key: 'destination_tx_hash',
-      label: 'Destination TX Hash',
-      CellComponent: CopyableFieldCell,
-      getCellProps: (activity) => ({
-        data: {
-          value: (activity as any).destination?.tx_hash || activity.destination_tx_hash || '',
-          fieldId: `dest-tx-${activity.id}`,
-          copiedField,
-          truncateLength: 12
-        },
-        onCopy: copyToClipboard
-      }),
-      className: 'min-w-[180px]'
+        key: 'created',
+        label: 'Created',
+        CellComponent: DateTimeCell,
+        getCellProps: (activity) => ({
+        data: { dateTime: activity.created_at }
+        })
     },
     {
       key: 'json',
