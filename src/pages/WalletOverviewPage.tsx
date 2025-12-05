@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { bridgeAPI } from '../services/bridgeAPI';
@@ -16,6 +16,14 @@ function filterWalletTransfers(
   walletId: string | undefined, 
   walletAddress: string | undefined
 ): Transfer[] {
+  let leftovers = transfers.filter((transfer) => {
+    const walletAddr = walletAddress?.toLowerCase();
+    const walletIdMatch = transfer.source.bridge_wallet_id === walletId;
+    const sourceAddrMatch = transfer.source.from_address?.toLowerCase() === walletAddr;
+    const destAddrMatch = transfer.destination.to_address?.toLowerCase() === walletAddr;
+    return !(walletIdMatch || sourceAddrMatch || destAddrMatch);
+  });
+  console.log('Leftover transfers after filtering:', leftovers);
   return transfers.filter((transfer) => {
     const walletAddr = walletAddress?.toLowerCase();
     const walletIdMatch = transfer.source.bridge_wallet_id === walletId;
@@ -59,6 +67,10 @@ export function WalletOverviewPage() {
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
   const [jsonModalTitle, setJsonModalTitle] = useState('');
   const [jsonModalData, setJsonModalData] = useState<unknown>(null);
+  
+  // Track if initial load is complete to prevent duplicate API calls
+  const hasLoadedRef = useRef(false);
+  const isLoadingLiquidationHistoryRef = useRef(false);
 
   const copyToClipboard = async (text: string, fieldId: string) => {
     try {
@@ -79,6 +91,10 @@ export function WalletOverviewPage() {
   useEffect(() => {
     const initWallet = async () => {
       if (!walletId || !customerId) return;
+      
+      // Prevent duplicate loads
+      if (hasLoadedRef.current) return;
+      hasLoadedRef.current = true;
       
       // Load customer data if not already loaded
       if (!customer || customer.id !== customerId) {
@@ -122,11 +138,19 @@ export function WalletOverviewPage() {
     };
     
     initWallet();
-  }, [walletId, customerId, wallets, customer]);
+    
+    // Cleanup function to reset on unmount
+    return () => {
+      hasLoadedRef.current = false;
+    };
+  }, [walletId, customerId]);
 
   // Load liquidation history when liquidation addresses change
   useEffect(() => {
     const loadLiquidationHistory = async () => {
+      // Prevent duplicate loads
+      if (isLoadingLiquidationHistoryRef.current) return;
+      
       if (!wallet || !customerId || liquidationAddresses.length === 0) {
         setLiquidationHistory([]);
         setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
@@ -145,6 +169,7 @@ export function WalletOverviewPage() {
       }
 
       try {
+        isLoadingLiquidationHistoryRef.current = true;
         // Fetch liquidation history for all liquidation addresses
         const liquidationHistoryPromises = filteredLiquidation.map((la) =>
           bridgeAPI.getLiquidationHistory(la.customer_id, la.id).catch(() => ({ count: 0, data: [] }))
@@ -164,6 +189,8 @@ export function WalletOverviewPage() {
         });
       } catch (error) {
         console.error('Error loading liquidation history:', error);
+      } finally {
+        isLoadingLiquidationHistoryRef.current = false;
       }
     };
 
@@ -171,6 +198,7 @@ export function WalletOverviewPage() {
   }, [liquidationAddresses, wallet, customerId]);
 
   const loadData = async (walletToLoad?: Wallet) => {
+    debugger;
     const targetWallet = walletToLoad || wallet;
     if (!walletId || !targetWallet) return;
     

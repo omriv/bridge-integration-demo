@@ -114,8 +114,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
 
+      // Fetch fresh liquidation addresses
+      const liquidationData = await bridgeAPI.getLiquidationAddresses(config.customerId);
+      const allLiquidationAddresses = liquidationData.data;
+      
       // Filter liquidation addresses for this wallet
-      const filteredLiquidation = liquidationAddresses.filter(
+      const filteredLiquidation = allLiquidationAddresses.filter(
         (la) => la.destination_address.toLowerCase() === walletAddress.toLowerCase()
       );
 
@@ -164,7 +168,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [liquidationAddresses, walletDataCache]);
+  }, [walletDataCache]);
 
   const refreshAll = useCallback(async () => {
     // Clear cache
