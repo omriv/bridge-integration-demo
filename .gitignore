@@ -23,9 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Sensitive configuration files
-src/config.ts
-
 # Environment variables (if you add .env later)
 .env
 .env.local

@@ -2,6 +2,7 @@ import type { Wallet } from '../types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { config } from '../config';
 
 interface WalletCardProps {
   wallet: Wallet;
@@ -54,6 +55,17 @@ export function WalletCard({ wallet }: WalletCardProps) {
     };
     return colors[currency.toLowerCase()] || 'bg-gray-50 border-gray-200 text-gray-900';
   };
+
+  // Calculate total USD value of all balances
+  const calculateTotalUSD = () => {
+    return wallet.balances.reduce((total, balance) => {
+      const amount = parseFloat(balance.balance);
+      const rate = config.conversionRates[balance.currency.toLowerCase()] || 0;
+      return total + (amount * rate);
+    }, 0);
+  };
+
+  const totalUSD = calculateTotalUSD();
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-indigo-300 transition-all">
@@ -130,6 +142,16 @@ export function WalletCard({ wallet }: WalletCardProps) {
               <div className="flex gap-4 text-xs text-gray-600">
                 <span>Created: {new Date(wallet.created_at).toLocaleDateString()}</span>
                 <span>Balances: {wallet.balances.length}</span>
+              </div>
+              
+              {/* Total USD Value */}
+              <div className="mt-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-green-700">💵 Total Value</span>
+                  <span className="text-lg font-bold text-green-900">
+                    ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
               </div>
               
               {/* Overview Button */}
