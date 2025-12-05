@@ -196,3 +196,33 @@ export interface VirtualAccountsResponse {
   count: number;
   data: VirtualAccount[];
 }
+
+export interface VirtualAccountActivity {
+  id: string;
+  event_type: string;
+  virtual_account_id: string;
+  deposit_id?: string;
+  amount?: string;
+  currency?: string;
+  created_at: string;
+  updated_at?: string;
+  tx_hash?: string;
+  from_address?: string;
+  to_address?: string;
+  payment_rail?: string;
+  state?: string;
+  developer_fee_amount?: string;
+  destination_tx_hash?: string;
+  destination_payment_rail?: string;
+  sender_name?: string;
+  source?: {
+    payment_rail?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+export interface VirtualAccountActivityResponse {
+  count: number;
+  data: VirtualAccountActivity[];
+}

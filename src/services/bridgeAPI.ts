@@ -7,7 +7,8 @@ import type {
   WalletTransactionsResponse,
   TransfersResponse,
   LiquidationHistoryResponse,
-  VirtualAccountsResponse
+  VirtualAccountsResponse,
+  VirtualAccountActivityResponse
 } from '../types';
 
 const headers = {
@@ -106,6 +107,18 @@ export const bridgeAPI = {
 
     if (!response.ok) {
       throw new Error(`Failed to fetch virtual accounts: ${response.statusText}`);
+    }
+
+    return response.json();
+  },
+
+  async getVirtualAccountActivity(customerId: string, virtualAccountId: string): Promise<VirtualAccountActivityResponse> {
+    const response = await fetch(`${config.baseUrl}/customers/${customerId}/virtual_accounts/${virtualAccountId}/history`, {
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch virtual account activity: ${response.statusText}`);
     }
 
     return response.json();

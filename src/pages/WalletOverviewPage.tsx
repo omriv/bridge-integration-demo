@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { bridgeAPI } from '../services/bridgeAPI';
-import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory } from '../types';
+import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity } from '../types';
 import { JsonViewerModal } from '../components/JsonViewerModal';
 import { DynamicTransactionsTable } from '../components/DynamicTransactionsTable';
 import { createTransfersTableColumns } from '../components/tableConfigs/transfersTableConfig';
 import { createLiquidationHistoryTableColumns } from '../components/tableConfigs/liquidationHistoryTableConfig';
 import { createWalletTransactionsTableColumns } from '../components/tableConfigs/walletTransactionsTableConfig';
+import { createVirtualAccountActivityTableColumns } from '../components/tableConfigs/virtualAccountActivityTableConfig';
 import { LiquidationAddressesSection } from '../components/LiquidationAddressesSection';
 
 // Helper function to filter transfers related to a wallet
@@ -36,7 +37,11 @@ function filterWalletTransfers(
 export function WalletOverviewPage() {
   const { customerId, walletId } = useParams<{ customerId: string; walletId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { wallets, loadWalletData, refreshAll, customer, loadCustomerData } = useData();
+  
+  // Get virtual accounts from navigation state
+  const virtualAccountsFromState = (location.state as { virtualAccounts?: VirtualAccount[] })?.virtualAccounts || [];
   
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletNotFound, setWalletNotFound] = useState(false);
@@ -45,11 +50,13 @@ export function WalletOverviewPage() {
   const [walletTransactions, setWalletTransactions] = useState<WalletTransaction[]>([]);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [liquidationHistory, setLiquidationHistory] = useState<LiquidationHistory[]>([]);
+  const [virtualAccountActivity, setVirtualAccountActivity] = useState<VirtualAccountActivity[]>([]);
   
   // Store raw API responses for JSON viewer
   const [walletTransactionsRaw, setWalletTransactionsRaw] = useState<unknown>(null);
   const [transfersRaw, setTransfersRaw] = useState<unknown>(null);
   const [liquidationHistoryRaw, setLiquidationHistoryRaw] = useState<unknown>(null);
+  const [virtualAccountActivityRaw, setVirtualAccountActivityRaw] = useState<unknown>(null);
   
   const [loading, setLoading] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -57,11 +64,13 @@ export function WalletOverviewPage() {
   const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(true);
   const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(true);
   const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(true);
+  const [isVirtualAccountActivityCollapsed, setIsVirtualAccountActivityCollapsed] = useState(true);
   
   // Individual loading states for each table
   const [isWalletTxLoading, setIsWalletTxLoading] = useState(false);
   const [isTransfersLoading, setIsTransfersLoading] = useState(false);
   const [isLiquidationHistoryLoading, setIsLiquidationHistoryLoading] = useState(false);
+  const [isVirtualAccountActivityLoading, setIsVirtualAccountActivityLoading] = useState(false);
   
   // JSON viewer modal state
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
@@ -197,8 +206,57 @@ export function WalletOverviewPage() {
     loadLiquidationHistory();
   }, [liquidationAddresses, wallet, customerId]);
 
+  // Load virtual account activity when wallet or virtual accounts change
+  useEffect(() => {
+    const loadVirtualAccountActivity = async () => {
+      if (!wallet || !customerId || virtualAccountsFromState.length === 0) {
+        setVirtualAccountActivity([]);
+        setVirtualAccountActivityRaw({ count: 0, data: [], responses: [] });
+        return;
+      }
+
+      // Filter virtual accounts where destination address matches wallet address
+      const filteredVirtualAccounts = virtualAccountsFromState.filter(
+        (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
+      );
+
+      if (filteredVirtualAccounts.length === 0) {
+        setVirtualAccountActivity([]);
+        setVirtualAccountActivityRaw({ count: 0, data: [], responses: [] });
+        return;
+      }
+
+      try {
+        setIsVirtualAccountActivityLoading(true);
+        // Fetch activity for all filtered virtual accounts
+        const activityPromises = filteredVirtualAccounts.map((va) =>
+          bridgeAPI.getVirtualAccountActivity(customerId, va.id).catch(() => ({ count: 0, data: [] }))
+        );
+        const activityResponses = await Promise.all(activityPromises);
+
+        // Combine and sort by created_at
+        const allActivity = activityResponses
+          .flatMap((response) => response.data)
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+        setVirtualAccountActivity(allActivity);
+        setVirtualAccountActivityRaw({
+          count: allActivity.length,
+          data: allActivity,
+          responses: activityResponses
+        });
+        console.log('✅ Loaded virtual account activity:', allActivity.length, 'items');
+      } catch (error) {
+        console.error('❌ Error loading virtual account activity:', error);
+      } finally {
+        setIsVirtualAccountActivityLoading(false);
+      }
+    };
+
+    loadVirtualAccountActivity();
+  }, [wallet, customerId, virtualAccountsFromState]);
+
   const loadData = async (walletToLoad?: Wallet) => {
-    debugger;
     const targetWallet = walletToLoad || wallet;
     if (!walletId || !targetWallet) return;
     
@@ -431,6 +489,63 @@ export function WalletOverviewPage() {
                     isLoading={isLiquidationHistoryLoading}
                     collapsed={isLiquidationHistoryCollapsed}
                     onCollapsedChange={setIsLiquidationHistoryCollapsed}
+                  />
+
+                  {/* Virtual Account Activity */}
+                  <DynamicTransactionsTable
+                    title="Virtual Account Activity"
+                    icon="🏦"
+                    items={virtualAccountActivity}
+                    columns={createVirtualAccountActivityTableColumns(copiedField, copyToClipboard, openJsonModal)}
+                    onViewRawJson={() => openJsonModal('Virtual Account Activity - Full Response', virtualAccountActivityRaw)}
+                    onReload={async () => {
+                      if (!wallet || !customerId || virtualAccountsFromState.length === 0) return;
+                      
+                      const previousActivity = virtualAccountActivity;
+                      setIsVirtualAccountActivityCollapsed(false); // Expand the table
+                      setVirtualAccountActivity([]); // Clear items first
+                      
+                      // Use setTimeout to ensure state update is flushed
+                      await new Promise(resolve => setTimeout(resolve, 0));
+                      setIsVirtualAccountActivityLoading(true);
+                      
+                      try {
+                        // Filter virtual accounts by destination address
+                        const filteredVirtualAccounts = virtualAccountsFromState.filter(
+                          (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
+                        );
+                        
+                        if (filteredVirtualAccounts.length > 0) {
+                          // Fetch activity for all filtered virtual accounts
+                          const activityPromises = filteredVirtualAccounts.map((va) =>
+                            bridgeAPI.getVirtualAccountActivity(customerId, va.id).catch(() => ({ count: 0, data: [] }))
+                          );
+                          const activityResponses = await Promise.all(activityPromises);
+                          
+                          // Combine and sort by created_at
+                          const allActivity = activityResponses
+                            .flatMap((response) => response.data)
+                            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+                          
+                          setVirtualAccountActivity(allActivity);
+                          setVirtualAccountActivityRaw({
+                            count: allActivity.length,
+                            data: allActivity,
+                            responses: activityResponses
+                          });
+                          console.log('✅ Virtual account activity reloaded successfully:', allActivity.length, 'items');
+                        }
+                      } catch (error) {
+                        console.error('❌ Error reloading virtual account activity:', error);
+                        setVirtualAccountActivity(previousActivity);
+                      } finally {
+                        setIsVirtualAccountActivityLoading(false);
+                        // Keep table expanded after loading
+                      }
+                    }}
+                    isLoading={isVirtualAccountActivityLoading}
+                    collapsed={isVirtualAccountActivityCollapsed}
+                    onCollapsedChange={setIsVirtualAccountActivityCollapsed}
                   />
                 </div>
               )}

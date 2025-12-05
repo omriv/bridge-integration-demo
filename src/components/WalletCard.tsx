@@ -1,4 +1,4 @@
-import type { Wallet } from '../types';
+import type { Wallet, VirtualAccount } from '../types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
@@ -6,9 +6,10 @@ import { config } from '../config';
 
 interface WalletCardProps {
   wallet: Wallet;
+  virtualAccounts?: VirtualAccount[];
 }
 
-export function WalletCard({ wallet }: WalletCardProps) {
+export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
   const navigate = useNavigate();
   const { customer } = useData();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -160,7 +161,7 @@ export function WalletCard({ wallet }: WalletCardProps) {
                   onClick={(e) => {
                     e.stopPropagation();
                     if (customer) {
-                      navigate(`/${customer.id}/${wallet.id}`);
+                      navigate(`/${customer.id}/${wallet.id}`, { state: { virtualAccounts } });
                     }
                   }}
                   className="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"

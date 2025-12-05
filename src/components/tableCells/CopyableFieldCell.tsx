@@ -12,6 +12,16 @@ export function CopyableFieldCell({ data, className, onCopy }: CellTypeProps) {
   const truncateLength = data?.truncateLength || 10;
   const copiedField = data?.copiedField;
   
+  // If no value, show N/A without copy button
+  if (!value) {
+    return (
+      <div className={className || "flex items-center gap-1 text-xs"}>
+        <span className="text-gray-500">{label}</span>
+        <span className="text-gray-400">N/A</span>
+      </div>
+    );
+  }
+  
   const truncated = value.length > truncateLength 
     ? `${value.substring(0, truncateLength)}...` 
     : value;

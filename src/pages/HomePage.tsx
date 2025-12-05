@@ -259,7 +259,7 @@ export function HomePage() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {wallets.map((wallet) => (
-                <WalletCard key={wallet.id} wallet={wallet} />
+                <WalletCard key={wallet.id} wallet={wallet} virtualAccounts={virtualAccounts} />
               ))}
             </div>
           )}
