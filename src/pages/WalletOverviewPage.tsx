@@ -7,6 +7,8 @@ import { JsonViewerModal } from '../components/JsonViewerModal';
 import { DynamicTransactionsTable } from '../components/DynamicTransactionsTable';
 import { createTransfersTableColumns } from '../components/tableConfigs/transfersTableConfig';
 import { createLiquidationHistoryTableColumns } from '../components/tableConfigs/liquidationHistoryTableConfig';
+import { createWalletTransactionsTableColumns } from '../components/tableConfigs/walletTransactionsTableConfig';
+import { LiquidationAddressCard } from '../components/LiquidationAddressCard';
 
 // Helper function to filter transfers related to a wallet
 function filterWalletTransfers(
@@ -45,7 +47,6 @@ export function WalletOverviewPage() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isLiquidationCollapsed, setIsLiquidationCollapsed] = useState(false);
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
-  const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(false);
   
   // JSON viewer modal state
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
@@ -241,83 +242,21 @@ export function WalletOverviewPage() {
 
               {!isTransactionsCollapsed && (
                 <div className="p-4 space-y-4 border-t border-gray-200">
-                  {/* Wallet Transaction History */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <button
-                        onClick={() => setIsWalletTxCollapsed(!isWalletTxCollapsed)}
-                        className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                      >
-                        <h3 className="text-sm font-semibold text-gray-700 flex items-center">
-                          <span className="mr-1.5">💳</span>
-                          Wallet Transactions ({walletTransactions.length})
-                        </h3>
-                        <svg
-                          className={`w-4 h-4 text-gray-600 transition-transform ${isWalletTxCollapsed ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                      {walletTransactions.length > 0 && (
-                        <button
-                          onClick={() => openJsonModal('Wallet Transactions - Full Response', walletTransactionsRaw)}
-                          className="px-2 py-1 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"
-                        >
-                          View Full JSON
-                        </button>
-                      )}
-                    </div>
-                    {!isWalletTxCollapsed && (
-                      walletTransactions.length === 0 ? (
-                        <p className="text-gray-500 text-sm italic">No wallet transactions found</p>
-                      ) : (
-                        <div className="overflow-x-auto">
-                          <table className="min-w-full bg-white border border-gray-200 rounded text-sm">
-                            <thead className="bg-gray-50">
-                              <tr>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Amount</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Source</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Destination</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Fee</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Created</th>
-                                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                              {walletTransactions.map((tx, idx) => (
-                                <tr key={idx} className="hover:bg-gray-50">
-                                  <td className="px-3 py-2 font-semibold text-gray-900">{tx.amount}</td>
-                                  <td className="px-3 py-2">
-                                    <div className="font-medium text-gray-900">{tx.source.currency.toUpperCase()}</div>
-                                    <div className="text-gray-500 text-xs">{tx.source.payment_rail}</div>
-                                  </td>
-                                  <td className="px-3 py-2">
-                                    <div className="font-medium text-gray-900">{tx.destination.currency.toUpperCase()}</div>
-                                    <div className="text-gray-500 text-xs">{tx.destination.payment_rail}</div>
-                                  </td>
-                                  <td className="px-3 py-2 text-gray-900">{tx.developer_fee}</td>
-                                  <td className="px-3 py-2 text-gray-600 text-xs">{new Date(tx.created_at).toLocaleString()}</td>
-                                  <td className="px-3 py-2">
-                                    <button
-                                      onClick={() => openJsonModal(`Transaction #${idx + 1}`, tx)}
-                                      className="px-2 py-0.5 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"
-                                    >
-                                      JSON
-                                    </button>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )
-                    )}
-                  </div>
+                  {/* Wallet Transactions */}
+                  <DynamicTransactionsTable
+                    title="Wallet Transactions"
+                    icon="💳"
+                    items={walletTransactions}
+                    columns={createWalletTransactionsTableColumns(openJsonModal)}
+                    onViewRawJson={() => openJsonModal('Wallet Transactions - Full Response', walletTransactionsRaw)}
+                    onReload={async () => {
+                      if (wallet) {
+                        await loadData();
+                      }
+                    }}
+                  />
 
-                  {/* Dynamic Transfers Table */}
+                  {/* Transfers */}
                   <DynamicTransactionsTable
                     title="Transfers"
                     icon="🔄"
@@ -399,88 +338,12 @@ export function WalletOverviewPage() {
 
                       {/* Liquidation Address Cards - Compact */}
                       {liquidationAddresses.map((la) => (
-                        <div
+                        <LiquidationAddressCard
                           key={la.id}
-                          className="bg-white rounded border border-gray-200 hover:border-indigo-300 transition-colors p-3"
-                        >
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                            <div>
-                              <p className="text-gray-500 mb-0.5">ID</p>
-                              <div className="flex items-center gap-1">
-                                <p className="font-mono text-gray-900 truncate flex-1">{la.id.substring(0, 12)}...</p>
-                                <button
-                                  onClick={() => copyToClipboard(la.id, `la-id-${la.id}`)}
-                                  className="p-0.5 text-gray-600 hover:text-indigo-600 flex-shrink-0"
-                                >
-                                  {copiedField === `la-id-${la.id}` ? (
-                                    <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                  ) : (
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                    </svg>
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">Address</p>
-                              <div className="flex items-center gap-1">
-                                <p className="font-mono text-gray-900 truncate flex-1">{la.address.substring(0, 12)}...</p>
-                                <button
-                                  onClick={() => copyToClipboard(la.address, `la-addr-${la.id}`)}
-                                  className="p-0.5 text-gray-600 hover:text-indigo-600 flex-shrink-0"
-                                >
-                                  {copiedField === `la-addr-${la.id}` ? (
-                                    <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                  ) : (
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                    </svg>
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">Chain</p>
-                              <p className="font-semibold text-gray-900 uppercase">{la.chain}</p>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">Currency</p>
-                              <p className="font-semibold text-gray-900 uppercase">{la.currency}</p>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">Dest. Rail</p>
-                              <p className="font-semibold text-gray-900 uppercase">{la.destination_payment_rail}</p>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">Dest. Currency</p>
-                              <p className="font-semibold text-gray-900 uppercase">{la.destination_currency}</p>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">State</p>
-                              <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${
-                                la.state === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                              }`}>
-                                {la.state.toUpperCase()}
-                              </span>
-                            </div>
-
-                            <div>
-                              <p className="text-gray-500 mb-0.5">Created</p>
-                              <p className="text-gray-900">{new Date(la.created_at).toLocaleDateString()}</p>
-                            </div>
-                          </div>
-                        </div>
+                          liquidationAddress={la}
+                          copiedField={copiedField}
+                          onCopy={copyToClipboard}
+                        />
                       ))}
                     </div>
                   )}
