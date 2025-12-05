@@ -2,8 +2,13 @@
 // Copy this file to config.ts and update with your actual customer ID
 
 export const config = {
-  // Backend proxy server URL
+  // Backend proxy server URLs
   baseUrl: 'http://localhost:3001/api',
+  mockBaseUrl: 'http://localhost:3002/api',
+  
+  // Mock mode flag (defaults to false - real data)
+  // Can be toggled via UI, persisted in localStorage
+  useMock: false,
   
   // Your default Bridge customer ID for testing
   // You can find this in your Bridge dashboard or API responses
@@ -29,4 +34,9 @@ export const config = {
     avax: 38.00,   // Avalanche (approximate)
     bnb: 310.00,   // Binance Coin (approximate)
   } as Record<string, number>,
+};
+
+// Helper function to get the appropriate base URL based on mock mode
+export const getBaseUrl = (useMock: boolean = config.useMock): string => {
+  return useMock ? config.mockBaseUrl : config.baseUrl;
 };

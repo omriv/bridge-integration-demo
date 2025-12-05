@@ -1,4 +1,4 @@
-import { config } from '../config';
+import { config, getBaseUrl } from '../config';
 import type { 
   Customer,
   CustomersResponse,
@@ -15,9 +15,17 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
+// Helper to get current base URL (supports dynamic mock toggling)
+const getCurrentBaseUrl = () => {
+  // Check localStorage for useMock preference
+  const storedUseMock = localStorage.getItem('useMock');
+  const useMock = storedUseMock !== null ? storedUseMock === 'true' : config.useMock;
+  return getBaseUrl(useMock);
+};
+
 export const bridgeAPI = {
   async getAllCustomers(): Promise<CustomersResponse> {
-    const response = await fetch(`${config.baseUrl}/customers`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers`, {
       headers,
     });
 
@@ -29,7 +37,7 @@ export const bridgeAPI = {
   },
 
   async getCustomer(customerId: string): Promise<Customer> {
-    const response = await fetch(`${config.baseUrl}/customers/${customerId}`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}`, {
       headers,
     });
 
@@ -41,7 +49,7 @@ export const bridgeAPI = {
   },
 
   async getCustomerWallets(customerId: string): Promise<WalletsResponse> {
-    const response = await fetch(`${config.baseUrl}/wallets?customer_id=${customerId}`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/wallets?customer_id=${customerId}`, {
       headers,
     });
 
@@ -53,7 +61,7 @@ export const bridgeAPI = {
   },
 
   async getLiquidationAddresses(customerId: string): Promise<LiquidationAddressesResponse> {
-    const response = await fetch(`${config.baseUrl}/liquidation-addresses?customer_id=${customerId}`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/liquidation-addresses?customer_id=${customerId}`, {
       headers,
     });
 
@@ -65,7 +73,7 @@ export const bridgeAPI = {
   },
 
   async getWalletTransactions(walletId: string): Promise<WalletTransactionsResponse> {
-    const response = await fetch(`${config.baseUrl}/wallets/${walletId}/transactions`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/wallets/${walletId}/transactions`, {
       headers,
     });
 
@@ -77,7 +85,7 @@ export const bridgeAPI = {
   },
 
   async getTransfers(customerId: string): Promise<TransfersResponse> {
-    const response = await fetch(`${config.baseUrl}/transfers?customer_id=${customerId}`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/transfers?customer_id=${customerId}`, {
       headers,
     });
 
@@ -89,7 +97,7 @@ export const bridgeAPI = {
   },
 
   async getLiquidationHistory(customerId: string, liquidationAddressId: string): Promise<LiquidationHistoryResponse> {
-    const response = await fetch(`${config.baseUrl}/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains`, {
       headers,
     });
 
@@ -101,7 +109,7 @@ export const bridgeAPI = {
   },
 
   async getVirtualAccounts(customerId: string): Promise<VirtualAccountsResponse> {
-    const response = await fetch(`${config.baseUrl}/customers/${customerId}/virtual_accounts`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts`, {
       headers,
     });
 
@@ -113,7 +121,7 @@ export const bridgeAPI = {
   },
 
   async getVirtualAccountActivity(customerId: string, virtualAccountId: string): Promise<VirtualAccountActivityResponse> {
-    const response = await fetch(`${config.baseUrl}/customers/${customerId}/virtual_accounts/${virtualAccountId}/history`, {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts/${virtualAccountId}/history`, {
       headers,
     });
 

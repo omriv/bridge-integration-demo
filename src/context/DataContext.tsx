@@ -24,10 +24,12 @@ interface DataContextType {
   liquidationAddresses: LiquidationAddress[];
   loading: boolean;
   error: string | null;
+  useMock: boolean;
   loadCustomerData: (customerId?: string) => Promise<void>;
   loadCustomers: () => Promise<void>;
   loadWalletData: (walletId: string, walletAddress: string) => Promise<WalletData>;
   setCurrentCustomerId: (customerId: string) => void;
+  toggleMock: () => void;
   refreshAll: () => Promise<void>;
 }
 
@@ -42,6 +44,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [liquidationAddresses, setLiquidationAddresses] = useState<LiquidationAddress[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Mock mode state - initialize from localStorage or config
+  const [useMock, setUseMock] = useState<boolean>(() => {
+    const stored = localStorage.getItem('useMock');
+    return stored !== null ? stored === 'true' : config.useMock;
+  });
 
   const loadCustomerData = useCallback(async (customerId?: string) => {
     const customerIdToUse = customerId || currentCustomerId;
@@ -114,12 +122,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
 
-      // Fetch fresh liquidation addresses
-      const liquidationData = await bridgeAPI.getLiquidationAddresses(config.customerId);
-      const allLiquidationAddresses = liquidationData.data;
-      
       // Filter liquidation addresses for this wallet
-      const filteredLiquidation = allLiquidationAddresses.filter(
+      const filteredLiquidation = liquidationAddresses.filter(
         (la) => la.destination_address.toLowerCase() === walletAddress.toLowerCase()
       );
 
@@ -168,7 +172,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [walletDataCache]);
+  }, [liquidationAddresses, walletDataCache]);
 
   const refreshAll = useCallback(async () => {
     // Clear cache
@@ -179,6 +183,24 @@ export function DataProvider({ children }: { children: ReactNode }) {
       loadCustomers(),
     ]);
   }, [loadCustomerData, loadCustomers]);
+
+  const toggleMock = useCallback(() => {
+    const newUseMock = !useMock;
+    setUseMock(newUseMock);
+    localStorage.setItem('useMock', String(newUseMock));
+    
+    // Clear all cached data when switching modes
+    setWalletDataCache(new Map());
+    setCustomer(null);
+    setWallets([]);
+    setLiquidationAddresses([]);
+    setCustomers([]);
+    
+    // Reload data with new mode
+    setTimeout(() => {
+      loadCustomerData();
+    }, 100);
+  }, [useMock, loadCustomerData]);
 
   return (
     <DataContext.Provider
@@ -191,10 +213,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
         liquidationAddresses,
         loading,
         error,
+        useMock,
         loadCustomerData,
         loadCustomers,
         loadWalletData,
         setCurrentCustomerId,
+        toggleMock,
         refreshAll,
       }}
     >

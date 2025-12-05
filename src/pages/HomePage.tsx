@@ -3,11 +3,12 @@ import { useData } from '../context/DataContext'
 import { CustomerDetails } from '../components/CustomerDetails'
 import { WalletCard } from '../components/WalletCard'
 import { VirtualAccountCard } from '../components/VirtualAccountCard'
+import { MockToggle } from '../components/MockToggle'
 import { bridgeAPI } from '../services/bridgeAPI'
 import type { VirtualAccount } from '../types'
 
 export function HomePage() {
-  const { customer, customers, currentCustomerId, wallets, loading, error, loadCustomerData, setCurrentCustomerId, refreshAll } = useData();
+  const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, toggleMock, refreshAll } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
   const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
@@ -148,11 +149,17 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Bridge Integration <span className="text-indigo-600">Demo</span>
-          </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex-1"></div>
+            <h1 className="text-4xl font-bold text-gray-800 flex-1">
+              Bridge Integration <span className="text-indigo-600">Demo</span>
+            </h1>
+            <div className="flex-1 flex justify-end">
+              <MockToggle useMock={useMock} onToggle={toggleMock} />
+            </div>
+          </div>
           <p className="text-gray-600">Customer Details & Wallet Management</p>
           
           {/* Customer Selector Dropdown */}
