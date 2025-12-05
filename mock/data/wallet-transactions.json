@@ -1,0 +1,325 @@
+{
+  "count": 20,
+  "data": [
+    {
+      "wallet_id": "wallet_mock_001",
+      "amount": "500.00",
+      "developer_fee": "2.50",
+      "created_at": "2024-11-01T10:30:00Z",
+      "updated_at": "2024-11-01T10:31:00Z",
+      "customer_id": "cust_mock_001",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "ach"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_001",
+      "amount": "250.00",
+      "developer_fee": "1.25",
+      "created_at": "2024-11-05T14:15:00Z",
+      "updated_at": "2024-11-05T14:16:00Z",
+      "customer_id": "cust_mock_001",
+      "source": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      },
+      "destination": {
+        "currency": "USD",
+        "payment_rail": "ach"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_001",
+      "amount": "1000.00",
+      "developer_fee": "5.00",
+      "created_at": "2024-11-15T09:45:00Z",
+      "updated_at": "2024-11-15T09:46:00Z",
+      "customer_id": "cust_mock_001",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_002",
+      "amount": "500.00",
+      "developer_fee": "2.50",
+      "created_at": "2024-11-10T11:20:00Z",
+      "updated_at": "2024-11-10T11:21:00Z",
+      "customer_id": "cust_mock_001",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "ach"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "polygon"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_003",
+      "amount": "10000.00",
+      "developer_fee": "50.00",
+      "created_at": "2024-10-15T08:30:00Z",
+      "updated_at": "2024-10-15T08:31:00Z",
+      "customer_id": "cust_mock_002",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_003",
+      "amount": "5000.00",
+      "developer_fee": "25.00",
+      "created_at": "2024-10-20T13:45:00Z",
+      "updated_at": "2024-10-20T13:46:00Z",
+      "customer_id": "cust_mock_002",
+      "source": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      },
+      "destination": {
+        "currency": "USDB",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_003",
+      "amount": "15000.00",
+      "developer_fee": "75.00",
+      "created_at": "2024-11-01T16:00:00Z",
+      "updated_at": "2024-11-01T16:01:00Z",
+      "customer_id": "cust_mock_002",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_003",
+      "amount": "2.0",
+      "developer_fee": "0.01",
+      "created_at": "2024-11-10T10:15:00Z",
+      "updated_at": "2024-11-10T10:16:00Z",
+      "customer_id": "cust_mock_002",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "ETH",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_004",
+      "amount": "8500.00",
+      "developer_fee": "42.50",
+      "created_at": "2024-11-12T12:30:00Z",
+      "updated_at": "2024-11-12T12:31:00Z",
+      "customer_id": "cust_mock_002",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "base"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_005",
+      "amount": "100.00",
+      "developer_fee": "0.50",
+      "created_at": "2024-10-06T14:00:00Z",
+      "updated_at": "2024-10-06T14:01:00Z",
+      "customer_id": "cust_mock_003",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "ach"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "20000.00",
+      "developer_fee": "100.00",
+      "created_at": "2024-09-15T09:00:00Z",
+      "updated_at": "2024-09-15T09:01:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "10000.00",
+      "developer_fee": "50.00",
+      "created_at": "2024-10-01T11:30:00Z",
+      "updated_at": "2024-10-01T11:31:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "20000.00",
+      "developer_fee": "100.00",
+      "created_at": "2024-11-01T13:15:00Z",
+      "updated_at": "2024-11-01T13:16:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "5000.00",
+      "developer_fee": "25.00",
+      "created_at": "2024-11-15T15:45:00Z",
+      "updated_at": "2024-11-15T15:46:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "EUR",
+        "payment_rail": "sepa"
+      },
+      "destination": {
+        "currency": "EURC",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "1.5",
+      "developer_fee": "0.0075",
+      "created_at": "2024-11-20T10:00:00Z",
+      "updated_at": "2024-11-20T10:01:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "ETH",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "3000.00",
+      "developer_fee": "15.00",
+      "created_at": "2024-11-25T14:20:00Z",
+      "updated_at": "2024-11-25T14:21:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      },
+      "destination": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_007",
+      "amount": "12000.00",
+      "developer_fee": "60.00",
+      "created_at": "2024-10-10T12:00:00Z",
+      "updated_at": "2024-10-10T12:01:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "polygon"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_001",
+      "amount": "0.1234",
+      "developer_fee": "0.00062",
+      "created_at": "2024-11-20T16:30:00Z",
+      "updated_at": "2024-11-20T16:31:00Z",
+      "customer_id": "cust_mock_001",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      },
+      "destination": {
+        "currency": "ETH",
+        "payment_rail": "ethereum"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_003",
+      "amount": "500.00",
+      "developer_fee": "2.50",
+      "created_at": "2024-11-22T09:15:00Z",
+      "updated_at": "2024-11-22T09:16:00Z",
+      "customer_id": "cust_mock_002",
+      "source": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      },
+      "destination": {
+        "currency": "USD",
+        "payment_rail": "wire"
+      }
+    },
+    {
+      "wallet_id": "wallet_mock_006",
+      "amount": "1500.00",
+      "developer_fee": "7.50",
+      "created_at": "2024-12-01T11:00:00Z",
+      "updated_at": "2024-12-01T11:01:00Z",
+      "customer_id": "cust_mock_004",
+      "source": {
+        "currency": "USD",
+        "payment_rail": "ach"
+      },
+      "destination": {
+        "currency": "USDC",
+        "payment_rail": "ethereum"
+      }
+    }
+  ]
+}

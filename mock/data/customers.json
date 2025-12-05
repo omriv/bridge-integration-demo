@@ -1,0 +1,55 @@
+{
+  "count": 5,
+  "data": [
+    {
+      "id": "cust_mock_001",
+      "type": "individual",
+      "status": "active",
+      "email": "alice.johnson@example.com",
+      "kyc_status": "approved",
+      "tos_status": "accepted",
+      "created_at": "2024-01-15T10:30:00Z",
+      "full_name": "Alice Johnson"
+    },
+    {
+      "id": "cust_mock_002",
+      "type": "business",
+      "status": "active",
+      "email": "bob.smith@techcorp.com",
+      "kyc_status": "approved",
+      "tos_status": "accepted",
+      "created_at": "2024-02-20T14:45:00Z",
+      "full_name": "Bob Smith"
+    },
+    {
+      "id": "cust_mock_003",
+      "type": "individual",
+      "status": "pending",
+      "email": "charlie.davis@example.com",
+      "kyc_status": "under_review",
+      "tos_status": "accepted",
+      "created_at": "2024-10-05T09:15:00Z",
+      "full_name": "Charlie Davis"
+    },
+    {
+      "id": "cust_mock_004",
+      "type": "business",
+      "status": "active",
+      "email": "diana.wong@globalfinance.com",
+      "kyc_status": "approved",
+      "tos_status": "accepted",
+      "created_at": "2024-03-12T16:20:00Z",
+      "full_name": "Diana Wong"
+    },
+    {
+      "id": "cust_mock_005",
+      "type": "individual",
+      "status": "incomplete",
+      "email": "evan.miller@example.com",
+      "kyc_status": "rejected",
+      "tos_status": "pending",
+      "created_at": "2024-11-22T11:00:00Z",
+      "full_name": "Evan Miller"
+    }
+  ]
+}
