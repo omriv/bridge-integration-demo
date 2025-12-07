@@ -43,6 +43,10 @@ export function WalletOverviewPage() {
   // Get virtual accounts from navigation state
   const virtualAccountsFromState = (location.state as { virtualAccounts?: VirtualAccount[] })?.virtualAccounts || [];
   
+  // Limit state
+  const [limit, setLimit] = useState<number>(10);
+  const [limitInput, setLimitInput] = useState<string>('10');
+  
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletNotFound, setWalletNotFound] = useState(false);
   
@@ -95,6 +99,107 @@ export function WalletOverviewPage() {
     setJsonModalTitle(title);
     setJsonModalData(data);
     setJsonModalOpen(true);
+  };
+
+  const handleLimitChange = (value: string) => {
+    setLimitInput(value);
+    const numValue = parseInt(value, 10);
+    if (!isNaN(numValue) && numValue >= 10 && numValue <= 100) {
+      setLimit(numValue);
+    }
+  };
+
+  const handleLimitBlur = () => {
+    const numValue = parseInt(limitInput, 10);
+    if (isNaN(numValue) || numValue < 10) {
+      setLimitInput('10');
+      setLimit(10);
+    } else if (numValue > 100) {
+      setLimitInput('100');
+      setLimit(100);
+    }
+  };
+
+  // Reload all data when limit changes
+  useEffect(() => {
+    if (wallet && walletId && customerId && hasLoadedRef.current) {
+      loadAllWalletData();
+    }
+  }, [limit]);
+
+  const loadAllWalletData = async () => {
+    if (!wallet || !walletId || !customerId) return;
+    
+    setIsWalletTxLoading(true);
+    setIsTransfersLoading(true);
+    setIsLiquidationHistoryLoading(true);
+    setIsVirtualAccountActivityLoading(true);
+    
+    try {
+      // Load wallet transactions
+      const txResponse = await bridgeAPI.getWalletTransactions(walletId, limit).catch(() => ({ count: 0, data: [] }));
+      setWalletTransactions(txResponse.data);
+      setWalletTransactionsRaw(txResponse);
+      
+      // Load transfers
+      const transfersResponse = await bridgeAPI.getTransfers(customerId, limit);
+      setTransfers(transfersResponse.data);
+      setTransfersRaw(transfersResponse);
+      
+      // Load liquidation addresses and history
+      const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId);
+      setLiquidationAddresses(liquidationData.data);
+      
+      const filteredLiquidation = liquidationData.data.filter(
+        (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
+      );
+      
+      if (filteredLiquidation.length > 0) {
+        const liquidationHistoryPromises = filteredLiquidation.map((la) =>
+          bridgeAPI.getLiquidationHistory(la.customer_id, la.id, limit).catch(() => ({ count: 0, data: [] }))
+        );
+        const liquidationHistoryResponses = await Promise.all(liquidationHistoryPromises);
+        const allLiquidationHistory = liquidationHistoryResponses
+          .flatMap((response) => response.data)
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        
+        setLiquidationHistory(allLiquidationHistory);
+        setLiquidationHistoryRaw({
+          count: allLiquidationHistory.length,
+          data: allLiquidationHistory,
+          responses: liquidationHistoryResponses
+        });
+      }
+      
+      // Load virtual account activity
+      const filteredVirtualAccounts = virtualAccountsFromState.filter(
+        (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
+      );
+      
+      if (filteredVirtualAccounts.length > 0) {
+        const activityPromises = filteredVirtualAccounts.map((va) =>
+          bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit).catch(() => ({ count: 0, data: [] }))
+        );
+        const activityResponses = await Promise.all(activityPromises);
+        const allActivity = activityResponses
+          .flatMap((response) => response.data)
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        
+        setVirtualAccountActivity(allActivity);
+        setVirtualAccountActivityRaw({
+          count: allActivity.length,
+          data: allActivity,
+          responses: activityResponses
+        });
+      }
+    } catch (error) {
+      console.error('Error loading wallet data:', error);
+    } finally {
+      setIsWalletTxLoading(false);
+      setIsTransfersLoading(false);
+      setIsLiquidationHistoryLoading(false);
+      setIsVirtualAccountActivityLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -181,10 +286,9 @@ export function WalletOverviewPage() {
         isLoadingLiquidationHistoryRef.current = true;
         // Fetch liquidation history for all liquidation addresses
         const liquidationHistoryPromises = filteredLiquidation.map((la) =>
-          bridgeAPI.getLiquidationHistory(la.customer_id, la.id).catch(() => ({ count: 0, data: [] }))
+          bridgeAPI.getLiquidationHistory(la.customer_id, la.id, limit).catch(() => ({ count: 0, data: [] }))
         );
         const liquidationHistoryResponses = await Promise.all(liquidationHistoryPromises);
-
         // Combine and sort by date
         const allLiquidationHistory = liquidationHistoryResponses
           .flatMap((response) => response.data)
@@ -204,7 +308,7 @@ export function WalletOverviewPage() {
     };
 
     loadLiquidationHistory();
-  }, [liquidationAddresses, wallet, customerId]);
+  }, [liquidationAddresses, wallet, customerId, limit]);
 
   // Load virtual account activity when wallet or virtual accounts change
   useEffect(() => {
@@ -230,7 +334,7 @@ export function WalletOverviewPage() {
         setIsVirtualAccountActivityLoading(true);
         // Fetch activity for all filtered virtual accounts
         const activityPromises = filteredVirtualAccounts.map((va) =>
-          bridgeAPI.getVirtualAccountActivity(customerId, va.id).catch(() => ({ count: 0, data: [] }))
+          bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit).catch(() => ({ count: 0, data: [] }))
         );
         const activityResponses = await Promise.all(activityPromises);
 
@@ -254,7 +358,7 @@ export function WalletOverviewPage() {
     };
 
     loadVirtualAccountActivity();
-  }, [wallet, customerId, virtualAccountsFromState]);
+  }, [wallet, customerId, virtualAccountsFromState, limit]);
 
   const loadData = async (walletToLoad?: Wallet) => {
     const targetWallet = walletToLoad || wallet;
@@ -327,16 +431,35 @@ export function WalletOverviewPage() {
             )}
           </div>
 
-          <button
-            onClick={handleRefresh}
-            className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/20 rounded-lg transition-colors"
-            title="Refresh all data"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <span className="font-semibold">Refresh</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Limit Input */}
+            <div className="flex items-center gap-2 bg-white/20 rounded-lg px-3 py-1.5">
+              <label htmlFor="limit-input" className="text-sm font-semibold whitespace-nowrap">
+                Max Items:
+              </label>
+              <input
+                id="limit-input"
+                type="number"
+                min="10"
+                max="100"
+                value={limitInput}
+                onChange={(e) => handleLimitChange(e.target.value)}
+                onBlur={handleLimitBlur}
+                className="w-16 px-2 py-1 text-sm text-gray-900 bg-white rounded border-0 focus:ring-2 focus:ring-white/50 outline-none"
+              />
+            </div>
+
+            <button
+              onClick={handleRefresh}
+              className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/20 rounded-lg transition-colors"
+              title="Refresh all data"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span className="font-semibold">Refresh</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -392,7 +515,7 @@ export function WalletOverviewPage() {
                       
                       try {
                         // Fetch directly from API (bypass cache)
-                        const txResponse = await bridgeAPI.getWalletTransactions(walletId).catch(() => ({ count: 0, data: [] }));
+                        const txResponse = await bridgeAPI.getWalletTransactions(walletId, limit).catch(() => ({ count: 0, data: [] }));
                         setWalletTransactions(txResponse.data);
                         setWalletTransactionsRaw(txResponse);
                         console.log('✅ Wallet transactions reloaded successfully:', txResponse.data.length, 'items');
@@ -437,7 +560,7 @@ export function WalletOverviewPage() {
                       
                       try {
                         // Fetch directly from API (bypass cache)
-                        const transfersResponse = await bridgeAPI.getTransfers(customerId);
+                        const transfersResponse = await bridgeAPI.getTransfers(customerId, limit);
                         setTransfers(transfersResponse.data);
                         setTransfersRaw(transfersResponse);
                         console.log('✅ Transfers reloaded successfully:', transfersResponse.data.length, 'items');
@@ -475,7 +598,7 @@ export function WalletOverviewPage() {
                       
                       try {
                         // Fetch fresh liquidation addresses (this will trigger the useEffect)
-                        const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId);
+                        const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId, limit);
                         setLiquidationAddresses(liquidationData.data);
                         console.log('✅ Liquidation addresses refreshed, history will auto-load');
                       } catch (error) {
@@ -518,7 +641,7 @@ export function WalletOverviewPage() {
                         if (filteredVirtualAccounts.length > 0) {
                           // Fetch activity for all filtered virtual accounts
                           const activityPromises = filteredVirtualAccounts.map((va) =>
-                            bridgeAPI.getVirtualAccountActivity(customerId, va.id).catch(() => ({ count: 0, data: [] }))
+                            bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit).catch(() => ({ count: 0, data: [] }))
                           );
                           const activityResponses = await Promise.all(activityPromises);
                           

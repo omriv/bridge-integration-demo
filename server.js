@@ -118,7 +118,8 @@ app.get('/api/liquidation-addresses', async (req, res) => {
 app.get('/api/wallets/:walletId/transactions', async (req, res) => {
   try {
     const { walletId } = req.params;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/wallets/${walletId}/history?limit=50`, {
+    const { limit = 10 } = req.query;
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/wallets/${walletId}/history?limit=${limit}`, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',
@@ -141,8 +142,8 @@ app.get('/api/wallets/:walletId/transactions', async (req, res) => {
 // Proxy endpoint for getting transfer history
 app.get('/api/transfers', async (req, res) => {
   try {
-    const { customer_id } = req.query;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/transfers?customer_id=${customer_id}&limit=50`, {
+    const { customer_id, limit = 10 } = req.query;
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/transfers?customer_id=${customer_id}&limit=${limit}`, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',
@@ -166,7 +167,8 @@ app.get('/api/transfers', async (req, res) => {
 app.get('/api/customers/:customerId/liquidation_addresses/:liquidationAddressId/drains', async (req, res) => {
   try {
     const { customerId, liquidationAddressId } = req.params;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=50`, {
+    const { limit = 10 } = req.query;
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=${limit}`, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',
@@ -190,7 +192,7 @@ app.get('/api/customers/:customerId/liquidation_addresses/:liquidationAddressId/
 app.get('/api/customers/:customerId/virtual_accounts', async (req, res) => {
   try {
     const { customerId } = req.params;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts?limit=50`, {
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts?limit=10`, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',
@@ -214,7 +216,8 @@ app.get('/api/customers/:customerId/virtual_accounts', async (req, res) => {
 app.get('/api/customers/:customerId/virtual_accounts/:virtualAccountId/history', async (req, res) => {
   try {
     const { customerId, virtualAccountId } = req.params;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts/${virtualAccountId}/history?limit=50`, {
+    const { limit = 10 } = req.query;
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts/${virtualAccountId}/history?limit=${limit}&event_type=payment_processed`, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',

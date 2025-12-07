@@ -166,7 +166,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                   }}
                   className="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"
                 >
-                  📋 View Overview
+                  📋 Overview
                 </button>
               </div>
             </div>

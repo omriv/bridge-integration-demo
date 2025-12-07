@@ -60,8 +60,8 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getLiquidationAddresses(customerId: string): Promise<LiquidationAddressesResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/liquidation-addresses?customer_id=${customerId}`, {
+  async getLiquidationAddresses(customerId: string, limit: number = 10): Promise<LiquidationAddressesResponse> {
+    const response = await fetch(`${getCurrentBaseUrl()}/liquidation-addresses?customer_id=${customerId}&limit=${limit}`, {
       headers,
     });
 
@@ -72,8 +72,8 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getWalletTransactions(walletId: string): Promise<WalletTransactionsResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/wallets/${walletId}/transactions`, {
+  async getWalletTransactions(walletId: string, limit: number = 10): Promise<WalletTransactionsResponse> {
+    const response = await fetch(`${getCurrentBaseUrl()}/wallets/${walletId}/transactions?limit=${limit}`, {
       headers,
     });
 
@@ -84,8 +84,8 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getTransfers(customerId: string): Promise<TransfersResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/transfers?customer_id=${customerId}`, {
+  async getTransfers(customerId: string, limit: number = 10): Promise<TransfersResponse> {
+    const response = await fetch(`${getCurrentBaseUrl()}/transfers?customer_id=${customerId}&limit=${limit}`, {
       headers,
     });
 
@@ -96,8 +96,8 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getLiquidationHistory(customerId: string, liquidationAddressId: string): Promise<LiquidationHistoryResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains`, {
+  async getLiquidationHistory(customerId: string, liquidationAddressId: string, limit: number = 10): Promise<LiquidationHistoryResponse> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=${limit}`, {
       headers,
     });
 
@@ -120,8 +120,8 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getVirtualAccountActivity(customerId: string, virtualAccountId: string): Promise<VirtualAccountActivityResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts/${virtualAccountId}/history`, {
+  async getVirtualAccountActivity(customerId: string, virtualAccountId: string, limit: number = 10): Promise<VirtualAccountActivityResponse> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts/${virtualAccountId}/history?limit=${limit}`, {
       headers,
     });
 
