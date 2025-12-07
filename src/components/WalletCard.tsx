@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { config } from '../config';
+import { CreateTransferModal } from './CreateTransferModal';
 
 interface WalletCardProps {
   wallet: Wallet;
@@ -14,6 +15,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
   const { customer } = useData();
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [showCreateTransferModal, setShowCreateTransferModal] = useState(false);
 
   const copyToClipboard = async (text: string, fieldId: string) => {
     try {
@@ -156,7 +158,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
               </div>
               
               {/* Overview Button */}
-              <div className="mt-2">
+              <div className="mt-2 flex gap-2">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -164,9 +166,18 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                       navigate(`/${customer.id}/${wallet.id}`, { state: { virtualAccounts } });
                     }
                   }}
-                  className="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"
+                  className="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"
                 >
                   📋 Overview
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowCreateTransferModal(true);
+                  }}
+                  className="flex-1 bg-green-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-green-700 transition-all shadow-sm"
+                >
+                  💸 Create Transfer
                 </button>
               </div>
             </div>
@@ -263,6 +274,19 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
             </div>
           )}
         </div>
+      )}
+
+      {/* Create Transfer Modal */}
+      {customer && (
+        <CreateTransferModal
+          isOpen={showCreateTransferModal}
+          onClose={() => setShowCreateTransferModal(false)}
+          walletId={wallet.id}
+          customerId={customer.id}
+          walletAddress={wallet.address}
+          walletChain={wallet.chain}
+          walletBalances={wallet.balances}
+        />
       )}
     </div>
   );

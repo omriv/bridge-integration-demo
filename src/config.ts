@@ -34,6 +34,40 @@ export const config = {
     avax: 38.00,   // Avalanche (approximate)
     bnb: 310.00,   // Binance Coin (approximate)
   } as Record<string, number>,
+  
+  // Payment rail options for transfers
+  paymentRails: [
+    'ach',
+    'ach_push',
+    'ach_same_day',
+    'arbitrum',
+    'avalanche_c_chain',
+    'base',
+    'bridge_wallet',
+    'ethereum',
+    'optimism',
+    'polygon',
+    'sepa',
+    'solana',
+    'spei',
+    'stellar',
+    'swift',
+    'tron',
+    'wire',
+  ] as const,
+  
+  // Currency options for transfers
+  currencies: [
+    'dai',
+    'eur',
+    'eurc',
+    'mxn',
+    'pyusd',
+    'usd',
+    'usdb',
+    'usdc',
+    'usdt',
+  ] as const,
 };
 
 // Helper function to get the appropriate base URL based on mock mode

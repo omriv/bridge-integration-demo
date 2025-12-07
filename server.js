@@ -237,6 +237,37 @@ app.get('/api/customers/:customerId/virtual_accounts/:virtualAccountId/history',
   }
 });
 
+// Proxy endpoint for creating a transfer
+app.post('/api/transfers', async (req, res) => {
+  try {
+    const transferData = req.body;
+    
+    // Generate a unique idempotency key
+    const idempotencyKey = `transfer_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/transfers`, {
+      method: 'POST',
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(transferData),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating transfer:', error);
+    res.status(500).json({ error: 'Failed to create transfer' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`\n🚀 Backend server running on http://localhost:${PORT}`);
   console.log(`📡 Proxying Bridge API requests to avoid CORS issues\n`);
