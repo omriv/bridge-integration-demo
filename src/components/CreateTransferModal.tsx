@@ -33,9 +33,10 @@ export function CreateTransferModal({
   const [formData, setFormData] = useState({
     amount: '',
     source_currency: defaultCurrency,
-    source_payment_rail: walletChain,
+    source_payment_rail: 'bridge_wallet',
     source_external_account_id: '',
-    source_from_address: walletAddress,
+    source_bridge_wallet_id: walletId,
+    source_from_address: '',
     destination_currency: 'usdc',
     destination_payment_rail: walletChain,
     destination_external_account_id: '',
@@ -73,7 +74,7 @@ export function CreateTransferModal({
   // Fetch available routes when source changes
   useEffect(() => {
     const fetchRoutes = async () => {
-      const routes = await getAvailableRoutes(walletChain, formData.source_currency);
+      const routes = await getAvailableRoutes(formData.source_payment_rail, formData.source_currency);
       setAvailableRoutes(routes);
       
       // Get distinct destination rails
@@ -94,10 +95,10 @@ export function CreateTransferModal({
       }
     };
     
-    if (isOpen && walletChain && formData.source_currency) {
+    if (isOpen && formData.source_payment_rail && formData.source_currency) {
       fetchRoutes();
     }
-  }, [walletChain, formData.source_currency, isOpen]);
+  }, [formData.source_payment_rail, formData.source_currency, isOpen]);
   
   // Update destination currencies when destination rail changes
   useEffect(() => {
@@ -114,6 +115,23 @@ export function CreateTransferModal({
       }
     }
   }, [formData.destination_payment_rail, availableRoutes]);
+  
+  // Update source fields when payment rail changes
+  useEffect(() => {
+    if (formData.source_payment_rail === 'bridge_wallet') {
+      setFormData(prev => ({
+        ...prev,
+        source_bridge_wallet_id: walletId,
+        source_from_address: ''
+      }));
+    } else if (formData.source_payment_rail === 'solana') {
+      setFormData(prev => ({
+        ...prev,
+        source_bridge_wallet_id: '',
+        source_from_address: walletAddress
+      }));
+    }
+  }, [formData.source_payment_rail, walletId, walletAddress]);
 
   if (!isOpen) return null;
   
@@ -160,6 +178,18 @@ export function CreateTransferModal({
     }
 
     // Source validation
+    if (formData.source_payment_rail === 'bridge_wallet') {
+      if (!formData.source_bridge_wallet_id) {
+        newErrors.source_bridge_wallet_id = 'Bridge Wallet ID is required when using bridge_wallet';
+      }
+    }
+    
+    if (formData.source_payment_rail === 'solana') {
+      if (!formData.source_from_address) {
+        newErrors.source_from_address = 'From address is required when using solana';
+      }
+    }
+    
     if (formData.source_payment_rail === 'ethereum' || formData.source_payment_rail === 'polygon' || formData.source_payment_rail === 'base') {
       if (!formData.source_from_address && !formData.allow_any_from_address) {
         newErrors.source_from_address = 'From address is required for crypto sources (or enable allow_any_from_address)';
@@ -197,7 +227,16 @@ export function CreateTransferModal({
       };
 
       if (formData.source_external_account_id) source.external_account_id = formData.source_external_account_id;
-      if (formData.source_from_address) source.from_address = formData.source_from_address;
+      
+      // Only include bridge_wallet_id if source rail is bridge_wallet
+      if (formData.source_payment_rail === 'bridge_wallet' && formData.source_bridge_wallet_id) {
+        source.bridge_wallet_id = formData.source_bridge_wallet_id;
+      }
+      
+      // Only include from_address if source rail is solana
+      if (formData.source_payment_rail === 'solana' && formData.source_from_address) {
+        source.from_address = formData.source_from_address;
+      }
 
       // Build destination object
       const destination: Record<string, unknown> = {
@@ -368,13 +407,15 @@ export function CreateTransferModal({
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Payment Rail <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      value={walletChain.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                      disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed"
-                      title="Payment rail is fixed to the wallet's chain"
-                    />
+                    <select
+                      name="source_payment_rail"
+                      value={formData.source_payment_rail}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="bridge_wallet">Bridge Wallet</option>
+                      <option value="solana">Solana</option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -401,6 +442,25 @@ export function CreateTransferModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Bridge Wallet ID {formData.source_payment_rail === 'bridge_wallet' && <span className="text-red-500">*</span>}
+                    </label>
+                    <input
+                      type="text"
+                      name="source_bridge_wallet_id"
+                      value={formData.source_bridge_wallet_id}
+                      onChange={handleChange}
+                      disabled={formData.source_payment_rail !== 'bridge_wallet'}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 font-mono text-sm ${
+                        formData.source_payment_rail !== 'bridge_wallet' 
+                          ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
+                          : errors.source_bridge_wallet_id ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder={walletId}
+                    />
+                    {errors.source_bridge_wallet_id && <p className="text-red-500 text-xs mt-1">{errors.source_bridge_wallet_id}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       External Account ID
                     </label>
                     <input
@@ -413,15 +473,22 @@ export function CreateTransferModal({
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      From Address
+                      From Address {formData.source_payment_rail === 'solana' && <span className="text-red-500">*</span>}
                     </label>
                     <input
                       type="text"
-                      value={walletAddress}
-                      disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed font-mono text-sm"
-                      title="Pre-populated with selected wallet address"
+                      name="source_from_address"
+                      value={formData.source_from_address}
+                      onChange={handleChange}
+                      disabled={formData.source_payment_rail !== 'solana'}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 font-mono text-sm ${
+                        formData.source_payment_rail !== 'solana'
+                          ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                          : errors.source_from_address ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder={walletAddress}
                     />
+                    {errors.source_from_address && <p className="text-red-500 text-xs mt-1">{errors.source_from_address}</p>}
                   </div>
                 </div>
               </div>
@@ -431,7 +498,7 @@ export function CreateTransferModal({
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Destination</h3>
                 {destinationRails.length === 0 && (
                   <p className="text-sm text-amber-600 mb-3 p-2 bg-amber-50 border border-amber-200 rounded">
-                    ⚠️ No available routes found for {walletChain.toUpperCase()} {formData.source_currency.toUpperCase()}
+                    ⚠️ No available routes found for {formData.source_payment_rail.toUpperCase()} {formData.source_currency.toUpperCase()}
                   </p>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
