@@ -131,4 +131,19 @@ export const bridgeAPI = {
 
     return response.json();
   },
+
+  async createTransfer(transferData: Record<string, unknown>): Promise<unknown> {
+    const response = await fetch(`${getCurrentBaseUrl()}/transfers`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(transferData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
 };

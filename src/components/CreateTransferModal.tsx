@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { JsonViewerModal } from './JsonViewerModal';
-import { config } from '../config';
 import type { WalletBalance } from '../types';
+import { getAvailableRoutes, getDestinationRails, getDestinationCurrencies, railToApiFormat, type Route } from '../utils/routingHelper';
+import { bridgeAPI } from '../services/bridgeAPI';
 
 interface CreateTransferModalProps {
   isOpen: boolean;
@@ -34,7 +35,6 @@ export function CreateTransferModal({
     source_currency: defaultCurrency,
     source_payment_rail: walletChain,
     source_external_account_id: '',
-    source_bridge_wallet_id: walletId,
     source_from_address: walletAddress,
     destination_currency: 'usdc',
     destination_payment_rail: walletChain,
@@ -64,8 +64,64 @@ export function CreateTransferModal({
   const [errorMessage, setErrorMessage] = useState('');
   const [responseData, setResponseData] = useState<Record<string, unknown> | null>(null);
   const [showJsonModal, setShowJsonModal] = useState(false);
+  
+  // Routing state
+  const [availableRoutes, setAvailableRoutes] = useState<Route[]>([]);
+  const [destinationRails, setDestinationRails] = useState<string[]>([]);
+  const [destinationCurrencies, setDestinationCurrencies] = useState<string[]>([]);
+
+  // Fetch available routes when source changes
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const routes = await getAvailableRoutes(walletChain, formData.source_currency);
+      setAvailableRoutes(routes);
+      
+      // Get distinct destination rails
+      const rails = getDestinationRails(routes);
+      setDestinationRails(rails);
+      
+      // Set default destination rail if available
+      if (rails.length > 0) {
+        const defaultRail = rails[0];
+        const currencies = getDestinationCurrencies(routes, defaultRail);
+        setDestinationCurrencies(currencies);
+        
+        setFormData(prev => ({
+          ...prev,
+          destination_payment_rail: railToApiFormat(defaultRail),
+          destination_currency: currencies.length > 0 ? currencies[0].toLowerCase() : prev.destination_currency
+        }));
+      }
+    };
+    
+    if (isOpen && walletChain && formData.source_currency) {
+      fetchRoutes();
+    }
+  }, [walletChain, formData.source_currency, isOpen]);
+  
+  // Update destination currencies when destination rail changes
+  useEffect(() => {
+    if (availableRoutes.length > 0 && formData.destination_payment_rail) {
+      const currencies = getDestinationCurrencies(availableRoutes, formData.destination_payment_rail);
+      setDestinationCurrencies(currencies);
+      
+      // Set first currency as default if current one is not available
+      if (currencies.length > 0 && !currencies.includes(formData.destination_currency.toUpperCase())) {
+        setFormData(prev => ({
+          ...prev,
+          destination_currency: currencies[0].toLowerCase()
+        }));
+      }
+    }
+  }, [formData.destination_payment_rail, availableRoutes]);
 
   if (!isOpen) return null;
+  
+  // Get current balance for selected currency
+  const selectedBalance = walletBalances.find(
+    balance => balance.currency.toLowerCase() === formData.source_currency.toLowerCase()
+  );
+  const availableBalance = selectedBalance ? parseFloat(selectedBalance.balance) : 0;
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -105,7 +161,7 @@ export function CreateTransferModal({
 
     // Source validation
     if (formData.source_payment_rail === 'ethereum' || formData.source_payment_rail === 'polygon' || formData.source_payment_rail === 'base') {
-      if (!formData.source_from_address && !formData.allow_any_from_address && !formData.source_bridge_wallet_id) {
+      if (!formData.source_from_address && !formData.allow_any_from_address) {
         newErrors.source_from_address = 'From address is required for crypto sources (or enable allow_any_from_address)';
       }
     }
@@ -141,7 +197,6 @@ export function CreateTransferModal({
       };
 
       if (formData.source_external_account_id) source.external_account_id = formData.source_external_account_id;
-      if (formData.source_bridge_wallet_id) source.bridge_wallet_id = formData.source_bridge_wallet_id;
       if (formData.source_from_address) source.from_address = formData.source_from_address;
 
       // Build destination object
@@ -153,14 +208,33 @@ export function CreateTransferModal({
       if (formData.destination_external_account_id) destination.external_account_id = formData.destination_external_account_id;
       if (formData.destination_bridge_wallet_id) destination.bridge_wallet_id = formData.destination_bridge_wallet_id;
       if (formData.destination_to_address) destination.to_address = formData.destination_to_address;
-      if (formData.destination_wire_message) destination.wire_message = formData.destination_wire_message;
-      if (formData.destination_sepa_reference) destination.sepa_reference = formData.destination_sepa_reference;
-      if (formData.destination_swift_reference) destination.swift_reference = formData.destination_swift_reference;
-      if (formData.destination_spei_reference) destination.spei_reference = formData.destination_spei_reference;
+      
+      // Payment rail specific fields
+      if (formData.destination_payment_rail === 'wire' && formData.destination_wire_message) {
+        destination.wire_message = formData.destination_wire_message;
+      }
+      if (formData.destination_payment_rail === 'sepa' && formData.destination_sepa_reference) {
+        destination.sepa_reference = formData.destination_sepa_reference;
+      }
+      if (formData.destination_payment_rail === 'swift') {
+        if (formData.destination_swift_reference) destination.swift_reference = formData.destination_swift_reference;
+        if (formData.destination_swift_charges) destination.swift_charges = formData.destination_swift_charges;
+      }
+      if (formData.destination_payment_rail === 'spei' && formData.destination_spei_reference) {
+        destination.spei_reference = formData.destination_spei_reference;
+      }
+      if (formData.destination_payment_rail === 'ach' && formData.destination_ach_reference) {
+        destination.ach_reference = formData.destination_ach_reference;
+      }
+      
+      // Blockchain-specific fields
+      const blockchainRails = ['ethereum', 'polygon', 'base', 'arbitrum', 'optimism', 'avalanche_c_chain', 'solana', 'stellar', 'tron', 'bitcoin'];
+      if (blockchainRails.includes(formData.destination_payment_rail) && formData.destination_blockchain_memo) {
+        destination.blockchain_memo = formData.destination_blockchain_memo;
+      }
+      
+      // Generic reference field
       if (formData.destination_reference) destination.reference = formData.destination_reference;
-      if (formData.destination_swift_charges) destination.swift_charges = formData.destination_swift_charges;
-      if (formData.destination_ach_reference) destination.ach_reference = formData.destination_ach_reference;
-      if (formData.destination_blockchain_memo) destination.blockchain_memo = formData.destination_blockchain_memo;
 
       // Build request body
       const requestBody: Record<string, unknown> = {
@@ -182,24 +256,24 @@ export function CreateTransferModal({
       if (formData.allow_any_from_address) features.allow_any_from_address = true;
       if (Object.keys(features).length > 0) requestBody.features = features;
 
-      const response = await fetch('http://localhost:3001/api/transfers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const data = await bridgeAPI.createTransfer(requestBody);
+      setResponseData(data as Record<string, unknown>);
 
-      const data = await response.json();
-      setResponseData(data);
-
-      if (response.ok) {
-        setSuccessMessage(`Transfer created successfully! ID: ${data.id}, State: ${data.state}`);
-      } else {
-        setErrorMessage(data.error || 'Failed to create transfer');
+      if (data) {
+        setSuccessMessage('Transfer created successfully!');
+        setErrorMessage('');
       }
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'An error occurred');
+      console.error('Error creating transfer:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      try {
+        const errorObj = JSON.parse(errorMessage);
+        setErrorMessage(`Transfer failed: ${JSON.stringify(errorObj)}`);
+      } catch {
+        setErrorMessage(`Error: ${errorMessage}`);
+      }
+      setSuccessMessage('');
+      setResponseData(null);
     } finally {
       setLoading(false);
     }
@@ -263,6 +337,11 @@ export function CreateTransferModal({
                       placeholder="10.50"
                     />
                     {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
+                    {availableBalance > 0 && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        💰 Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -322,18 +401,6 @@ export function CreateTransferModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Bridge Wallet ID
-                    </label>
-                    <input
-                      type="text"
-                      value={walletId}
-                      disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed font-mono text-sm"
-                      title="Pre-populated with selected wallet ID"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       External Account ID
                     </label>
                     <input
@@ -362,6 +429,11 @@ export function CreateTransferModal({
               {/* Destination Section */}
               <div className="border-b pb-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Destination</h3>
+                {destinationRails.length === 0 && (
+                  <p className="text-sm text-amber-600 mb-3 p-2 bg-amber-50 border border-amber-200 rounded">
+                    ⚠️ No available routes found for {walletChain.toUpperCase()} {formData.source_currency.toUpperCase()}
+                  </p>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -373,12 +445,17 @@ export function CreateTransferModal({
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 max-h-40 overflow-y-auto"
                       size={1}
+                      disabled={destinationRails.length === 0}
                     >
-                      {config.paymentRails.map((rail) => (
-                        <option key={rail} value={rail}>
-                          {rail.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                        </option>
-                      ))}
+                      {destinationRails.length > 0 ? (
+                        destinationRails.map((rail) => (
+                          <option key={rail} value={railToApiFormat(rail)}>
+                            {rail}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">No available routes</option>
+                      )}
                     </select>
                   </div>
                   <div>
@@ -391,12 +468,17 @@ export function CreateTransferModal({
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 max-h-40 overflow-y-auto"
                       size={1}
+                      disabled={destinationCurrencies.length === 0}
                     >
-                      {config.currencies.map((currency) => (
-                        <option key={currency} value={currency}>
-                          {currency.toUpperCase()}
-                        </option>
-                      ))}
+                      {destinationCurrencies.length > 0 ? (
+                        destinationCurrencies.map((currency) => (
+                          <option key={currency} value={currency.toLowerCase()}>
+                            {currency}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">Select a payment rail first</option>
+                      )}
                     </select>
                   </div>
                   <div className="md:col-span-2">

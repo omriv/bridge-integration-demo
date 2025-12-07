@@ -1,0 +1,2907 @@
+[
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Bitcoin",
+    "destinationCurrency": "BTC",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "ETH",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDP",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "ACH",
+    "sourceCurrency": "USD",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USD"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Arbitrum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Avalanche C-Chain",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "EURC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Bitcoin",
+    "destinationCurrency": "BTC",
+    "transactionMinimum": "20 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Base",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "EURC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "EURC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "DAI",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "2 DAI"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Ethereum",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "2 USDT"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Optimism",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Pix (Beta)",
+    "sourceCurrency": "BRL (BETA)",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "10 BRL (BETA)"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Polygon",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDP",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "SEPA",
+    "sourceCurrency": "EUR",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 EUR"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "CASH",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 CASH"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "EURC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "EURC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "EURC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 EURC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "PYUSD",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 PYUSD"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDB",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDB"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "PIX",
+    "destinationCurrency": "BRL",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "2 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDP",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDP"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "SPEI",
+    "sourceCurrency": "MXN",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "50 MXN"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Pix (Beta)",
+    "destinationCurrency": "BRL (BETA)",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SEPA",
+    "destinationCurrency": "EUR",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "SPEI",
+    "destinationCurrency": "MXN",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USDC"
+  },
+  {
+    "sourceRail": "Stellar",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "ACH",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Tron",
+    "sourceCurrency": "USDT",
+    "destinationRail": "Wire",
+    "destinationCurrency": "USD",
+    "transactionMinimum": "5 USDT"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Arbitrum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Avalanche C-Chain",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Base",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Bitcoin",
+    "destinationCurrency": "BTC",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "DAI",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "ETH",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Ethereum",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "20 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Optimism",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Polygon",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "EURC",
+    "transactionMinimum": "2 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "PYUSD",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDP",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Stellar",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USD"
+  },
+  {
+    "sourceRail": "Wire",
+    "sourceCurrency": "USD",
+    "destinationRail": "Tron",
+    "destinationCurrency": "USDT",
+    "transactionMinimum": "2 USD"
+  }
+]
