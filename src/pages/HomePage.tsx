@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import { CustomerDetails } from '../components/CustomerDetails'
 import { WalletCard } from '../components/WalletCard'
@@ -8,6 +9,7 @@ import { bridgeAPI } from '../services/bridgeAPI'
 import type { VirtualAccount } from '../types'
 
 export function HomePage() {
+  const navigate = useNavigate();
   const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, toggleMock, refreshAll } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
@@ -48,7 +50,7 @@ export function HomePage() {
     await loadCustomerData(customerId);
   };
 
-  const handleMockToggle = (newUseMock: boolean) => {
+  const handleMockToggle = () => {
     setShowModeTransition(true);
     toggleMock();
     setTimeout(() => {
@@ -80,7 +82,21 @@ export function HomePage() {
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex-1"></div>
+              <div className="flex-1 flex justify-start">
+                <button
+                  onClick={() => navigate('/account')}
+                  disabled={useMock}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    useMock
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  }`}
+                  title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
+                >
+                  <span>👤</span>
+                  <span>Developer Account</span>
+                </button>
+              </div>
               <h1 className="text-4xl font-bold text-gray-800 flex-1">
                 Bridge Integration <span className="text-indigo-600">Demo</span>
               </h1>
@@ -110,7 +126,21 @@ export function HomePage() {
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex-1"></div>
+              <div className="flex-1 flex justify-start">
+                <button
+                  onClick={() => navigate('/account')}
+                  disabled={useMock}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    useMock
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  }`}
+                  title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
+                >
+                  <span>👤</span>
+                  <span>Developer Account</span>
+                </button>
+              </div>
               <h1 className="text-4xl font-bold text-gray-800 flex-1">
                 Bridge Integration <span className="text-indigo-600">Demo</span>
               </h1>
@@ -151,7 +181,21 @@ export function HomePage() {
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex-1"></div>
+              <div className="flex-1 flex justify-start">
+                <button
+                  onClick={() => navigate('/account')}
+                  disabled={useMock}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    useMock
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  }`}
+                  title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
+                >
+                  <span>👤</span>
+                  <span>Developer Account</span>
+                </button>
+              </div>
               <h1 className="text-4xl font-bold text-gray-800 flex-1">
                 Bridge Integration <span className="text-indigo-600">Demo</span>
               </h1>
@@ -214,7 +258,21 @@ export function HomePage() {
         {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex-1"></div>
+            <div className="flex-1 flex justify-start">
+              <button
+                onClick={() => navigate('/account')}
+                disabled={useMock}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+                  useMock
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+                title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
+              >
+                <span>👤</span>
+                <span>Developer Account</span>
+              </button>
+            </div>
             <h1 className="text-4xl font-bold text-gray-800 flex-1">
               Bridge Integration <span className="text-indigo-600">Demo</span>
             </h1>
