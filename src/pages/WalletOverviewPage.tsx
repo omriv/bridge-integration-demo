@@ -29,7 +29,7 @@ export function WalletOverviewPage() {
   const { customerId, walletId } = useParams<{ customerId: string; walletId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { wallets, loadWalletData, refreshAll, customer, loadCustomerData } = useData();
+  const { wallets, refreshAll, customer, loadCustomerData } = useData();
   
   // Get virtual accounts from navigation state
   const virtualAccountsFromState = (location.state as { virtualAccounts?: VirtualAccount[] })?.virtualAccounts || [];
@@ -76,7 +76,6 @@ export function WalletOverviewPage() {
   
   // Track if initial load is complete to prevent duplicate API calls
   const hasLoadedRef = useRef(false);
-  const isLoadingLiquidationHistoryRef = useRef(false);
 
   const copyToClipboard = async (text: string, fieldId: string) => {
     try {
@@ -96,43 +95,59 @@ export function WalletOverviewPage() {
 
   const handleLimitBlur = () => {
     const numValue = parseInt(limitInput, 10);
-    if (isNaN(numValue) || numValue < 10) {
-      setLimitInput('10');
-      setLimit(10);
-    } else if (numValue > 100) {
-      setLimitInput('100');
-      setLimit(100);
+    
+    let validatedLimit = 10; // default
+    
+    if (!isNaN(numValue)) {
+      if (numValue < 10) {
+        validatedLimit = 10;
+      } else if (numValue > 100) {
+        validatedLimit = 100;
+      } else {
+        validatedLimit = numValue;
+      }
+    }
+    
+    setLimitInput(validatedLimit.toString());
+    setLimit(validatedLimit);
+  };
+
+  // Individual data loading functions
+  const loadWalletTransactionsData = async (walletId: string, limit: number) => {
+    setIsWalletTxLoading(true);
+    try {
+      const response = await bridgeAPI.getWalletTransactions(walletId, limit)
+        .catch(() => ({ count: 0, data: [] }));
+      
+      setWalletTransactions(response.data);
+      setWalletTransactionsRaw(response);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error loading wallet transactions:', error);
+      setWalletTransactions([]);
+      setWalletTransactionsRaw({ count: 0, data: [] });
+      return [];
+    } finally {
+      setIsWalletTxLoading(false);
     }
   };
 
-  // Reload all data when limit changes
-  useEffect(() => {
-    if (wallet && walletId && customerId && hasLoadedRef.current) {
-      loadAllWalletData();
-    }
-  }, [limit]);
-
-  const loadAllWalletData = async () => {
-    if (!wallet || !walletId || !customerId) return;
-    
-    setIsWalletTxLoading(true);
+  const loadTransfersData = async (
+    customerId: string, 
+    limit: number, 
+    walletId?: string, 
+    walletAddress?: string
+  ) => {
     setIsTransfersLoading(true);
-    setIsLiquidationHistoryLoading(true);
-    setIsVirtualAccountActivityLoading(true);
-    
     try {
-      // Load wallet transactions
-      const txResponse = await bridgeAPI.getWalletTransactions(walletId, limit).catch(() => ({ count: 0, data: [] }));
-      setWalletTransactions(txResponse.data);
-      setWalletTransactionsRaw(txResponse);
-      
-      // Load transfers with progressive fetching
+      // Progressive fetching until we have enough filtered results
       let allTransfers: Transfer[] = [];
       let allResponses: unknown[] = [];
       let updatedBeforeMs = Date.now();
       let fetchCount = 0;
       const maxFetches = 10;
-      debugger;
+      
       while (fetchCount < maxFetches) {
         fetchCount++;
         
@@ -142,7 +157,8 @@ export function WalletOverviewPage() {
         
         allTransfers = [...allTransfers, ...fetchedTransfers];
         
-        const filteredTransfers = filterWalletTransfers(allTransfers, walletId, wallet.address);
+        // Check if we have enough filtered results
+        const filteredTransfers = filterWalletTransfers(allTransfers, walletId, walletAddress);
         
         // Exit conditions
         if (fetchedTransfers.length < limit || filteredTransfers.length >= limit) {
@@ -165,59 +181,156 @@ export function WalletOverviewPage() {
         responses: allResponses
       });
       
-      // Load liquidation addresses and history
-      const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId);
-      setLiquidationAddresses(liquidationData.data);
-      
-      const filteredLiquidation = liquidationData.data.filter(
-        (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
+      return allTransfers;
+    } catch (error) {
+      console.error('Error loading transfers:', error);
+      setTransfers([]);
+      setTransfersRaw({ count: 0, data: [], responses: [] });
+      return [];
+    } finally {
+      setIsTransfersLoading(false);
+    }
+  };
+
+  const loadLiquidationAddressesData = async (customerId: string) => {
+    try {
+      const response = await bridgeAPI.getLiquidationAddresses(customerId);
+      setLiquidationAddresses(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error loading liquidation addresses:', error);
+      setLiquidationAddresses([]);
+      return [];
+    }
+  };
+
+  const loadLiquidationHistoryData = async (
+    liquidationAddresses: LiquidationAddress[],
+    walletAddress: string,
+    limit: number
+  ) => {
+    setIsLiquidationHistoryLoading(true);
+    try {
+      // Filter liquidation addresses for this wallet
+      const filteredLiquidation = liquidationAddresses.filter(
+        (la) => la.destination_address.toLowerCase() === walletAddress.toLowerCase()
+      );
+
+      if (filteredLiquidation.length === 0) {
+        setLiquidationHistory([]);
+        setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
+        return [];
+      }
+
+      // Fetch history for all filtered addresses in parallel
+      const historyPromises = filteredLiquidation.map((la) =>
+        bridgeAPI.getLiquidationHistory(la.customer_id, la.id, limit)
+          .catch(() => ({ count: 0, data: [] }))
       );
       
-      if (filteredLiquidation.length > 0) {
-        const liquidationHistoryPromises = filteredLiquidation.map((la) =>
-          bridgeAPI.getLiquidationHistory(la.customer_id, la.id, limit).catch(() => ({ count: 0, data: [] }))
-        );
-        const liquidationHistoryResponses = await Promise.all(liquidationHistoryPromises);
-        const allLiquidationHistory = liquidationHistoryResponses
-          .flatMap((response) => response.data)
-          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        
-        setLiquidationHistory(allLiquidationHistory);
-        setLiquidationHistoryRaw({
-          count: allLiquidationHistory.length,
-          data: allLiquidationHistory,
-          responses: liquidationHistoryResponses
-        });
+      const historyResponses = await Promise.all(historyPromises);
+      
+      // Combine and sort by date
+      const allHistory = historyResponses
+        .flatMap((response) => response.data)
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      setLiquidationHistory(allHistory);
+      setLiquidationHistoryRaw({
+        count: allHistory.length,
+        data: allHistory,
+        responses: historyResponses
+      });
+      
+      return allHistory;
+    } catch (error) {
+      console.error('Error loading liquidation history:', error);
+      setLiquidationHistory([]);
+      setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
+      return [];
+    } finally {
+      setIsLiquidationHistoryLoading(false);
+    }
+  };
+
+  const loadVirtualAccountActivityData = async (
+    customerId: string,
+    virtualAccounts: VirtualAccount[],
+    walletAddress: string,
+    limit: number
+  ) => {
+    setIsVirtualAccountActivityLoading(true);
+    try {
+      // Filter virtual accounts where destination address matches wallet
+      const filteredVirtualAccounts = virtualAccounts.filter(
+        (va) => va.destination.address.toLowerCase() === walletAddress.toLowerCase()
+      );
+
+      if (filteredVirtualAccounts.length === 0) {
+        setVirtualAccountActivity([]);
+        setVirtualAccountActivityRaw({ count: 0, data: [], responses: [] });
+        return [];
       }
+
+      // Fetch activity for all filtered accounts in parallel
+      const activityPromises = filteredVirtualAccounts.map((va) =>
+        bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit)
+          .catch(() => ({ count: 0, data: [] }))
+      );
+      
+      const activityResponses = await Promise.all(activityPromises);
+      
+      // Combine and sort by created_at
+      const allActivity = activityResponses
+        .flatMap((response) => response.data)
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      setVirtualAccountActivity(allActivity);
+      setVirtualAccountActivityRaw({
+        count: allActivity.length,
+        data: allActivity,
+        responses: activityResponses
+      });
+      
+      return allActivity;
+    } catch (error) {
+      console.error('Error loading virtual account activity:', error);
+      setVirtualAccountActivity([]);
+      setVirtualAccountActivityRaw({ count: 0, data: [], responses: [] });
+      return [];
+    } finally {
+      setIsVirtualAccountActivityLoading(false);
+    }
+  };
+
+  // Reload all data when limit changes
+  useEffect(() => {
+    if (wallet && walletId && customerId && hasLoadedRef.current) {
+      loadAllWalletData();
+    }
+  }, [limit]);
+
+  const loadAllWalletData = async () => {
+    if (!wallet || !walletId || !customerId) return;
+    
+    try {
+      // Load wallet transactions
+      await loadWalletTransactionsData(walletId, limit);
+      
+      // Load transfers with progressive fetching
+      await loadTransfersData(customerId, limit, walletId, wallet.address);
+      
+      // Load liquidation addresses first
+      const liquidationAddressesData = await loadLiquidationAddressesData(customerId);
+      
+      // Then load liquidation history for this wallet
+      await loadLiquidationHistoryData(liquidationAddressesData, wallet.address, limit);
       
       // Load virtual account activity
-      const filteredVirtualAccounts = virtualAccountsFromState.filter(
-        (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
-      );
+      await loadVirtualAccountActivityData(customerId, virtualAccountsFromState, wallet.address, limit);
       
-      if (filteredVirtualAccounts.length > 0) {
-        const activityPromises = filteredVirtualAccounts.map((va) =>
-          bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit).catch(() => ({ count: 0, data: [] }))
-        );
-        const activityResponses = await Promise.all(activityPromises);
-        const allActivity = activityResponses
-          .flatMap((response) => response.data)
-          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        
-        setVirtualAccountActivity(allActivity);
-        setVirtualAccountActivityRaw({
-          count: allActivity.length,
-          data: allActivity,
-          responses: activityResponses
-        });
-      }
     } catch (error) {
       console.error('Error loading wallet data:', error);
-    } finally {
-      setIsWalletTxLoading(false);
-      setIsTransfersLoading(false);
-      setIsLiquidationHistoryLoading(false);
-      setIsVirtualAccountActivityLoading(false);
     }
   };
 
@@ -229,41 +342,38 @@ export function WalletOverviewPage() {
       if (hasLoadedRef.current) return;
       hasLoadedRef.current = true;
       
-      // Load customer data if not already loaded
-      if (!customer || customer.id !== customerId) {
-        try {
-          setLoading(true);
-          await loadCustomerData(customerId);
-        } catch (error) {
-          console.error('Error loading customer:', error);
-          setWalletNotFound(true);
-          setLoading(false);
-          return;
-        }
-      }
-      
-      // First check if wallet is in context
-      const walletFromContext = wallets.find(w => w.id === walletId);
-      if (walletFromContext) {
-        setWallet(walletFromContext);
-        loadData(walletFromContext);
-        return;
-      }
-      
-      // If not in context, fetch wallet data from API
       try {
         setLoading(true);
-        const walletsData = await bridgeAPI.getCustomerWallets(customerId);
-        const foundWallet = walletsData.data.find(w => w.id === walletId);
         
-        if (foundWallet) {
-          setWallet(foundWallet);
-          await loadData(foundWallet);
-        } else {
-          setWalletNotFound(true);
+        // Load customer data if not already loaded
+        if (!customer || customer.id !== customerId) {
+          await loadCustomerData(customerId);
         }
+        
+        // Find or fetch wallet
+        let walletToLoad = wallets.find(w => w.id === walletId);
+        
+        if (!walletToLoad) {
+          const walletsData = await bridgeAPI.getCustomerWallets(customerId);
+          walletToLoad = walletsData.data.find(w => w.id === walletId);
+          
+          if (!walletToLoad) {
+            setWalletNotFound(true);
+            return;
+          }
+        }
+        
+        // Set wallet and load all data
+        setWallet(walletToLoad);
+        
+        // Wait for wallet state to update before loading data
+        await new Promise(resolve => setTimeout(resolve, 0));
+        
+        // Load all wallet data
+        await loadAllWalletData();
+        
       } catch (error) {
-        console.error('Error fetching wallet:', error);
+        console.error('Error initializing wallet:', error);
         setWalletNotFound(true);
       } finally {
         setLoading(false);
@@ -272,141 +382,19 @@ export function WalletOverviewPage() {
     
     initWallet();
     
-    // Cleanup function to reset on unmount
+    // Cleanup on unmount
     return () => {
       hasLoadedRef.current = false;
     };
   }, [walletId, customerId]);
 
-  // Load liquidation history when liquidation addresses change
-  useEffect(() => {
-    const loadLiquidationHistory = async () => {
-      // Prevent duplicate loads
-      if (isLoadingLiquidationHistoryRef.current) return;
-      
-      if (!wallet || !customerId || liquidationAddresses.length === 0) {
-        setLiquidationHistory([]);
-        setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
-        return;
-      }
-
-      // Filter liquidation addresses for this wallet
-      const filteredLiquidation = liquidationAddresses.filter(
-        (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
-      );
-
-      if (filteredLiquidation.length === 0) {
-        setLiquidationHistory([]);
-        setLiquidationHistoryRaw({ count: 0, data: [], responses: [] });
-        return;
-      }
-
-      try {
-        isLoadingLiquidationHistoryRef.current = true;
-        // Fetch liquidation history for all liquidation addresses
-        const liquidationHistoryPromises = filteredLiquidation.map((la) =>
-          bridgeAPI.getLiquidationHistory(la.customer_id, la.id, limit).catch(() => ({ count: 0, data: [] }))
-        );
-        const liquidationHistoryResponses = await Promise.all(liquidationHistoryPromises);
-        // Combine and sort by date
-        const allLiquidationHistory = liquidationHistoryResponses
-          .flatMap((response) => response.data)
-          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
-        setLiquidationHistory(allLiquidationHistory);
-        setLiquidationHistoryRaw({
-          count: allLiquidationHistory.length,
-          data: allLiquidationHistory,
-          responses: liquidationHistoryResponses
-        });
-      } catch (error) {
-        console.error('Error loading liquidation history:', error);
-      } finally {
-        isLoadingLiquidationHistoryRef.current = false;
-      }
-    };
-
-    loadLiquidationHistory();
-  }, [liquidationAddresses, wallet, customerId, limit]);
-
-  // Load virtual account activity when wallet or virtual accounts change
-  useEffect(() => {
-    const loadVirtualAccountActivity = async () => {
-      if (!wallet || !customerId || virtualAccountsFromState.length === 0) {
-        setVirtualAccountActivity([]);
-        setVirtualAccountActivityRaw({ count: 0, data: [], responses: [] });
-        return;
-      }
-
-      // Filter virtual accounts where destination address matches wallet address
-      const filteredVirtualAccounts = virtualAccountsFromState.filter(
-        (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
-      );
-
-      if (filteredVirtualAccounts.length === 0) {
-        setVirtualAccountActivity([]);
-        setVirtualAccountActivityRaw({ count: 0, data: [], responses: [] });
-        return;
-      }
-
-      try {
-        setIsVirtualAccountActivityLoading(true);
-        // Fetch activity for all filtered virtual accounts
-        const activityPromises = filteredVirtualAccounts.map((va) =>
-          bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit).catch(() => ({ count: 0, data: [] }))
-        );
-        const activityResponses = await Promise.all(activityPromises);
-
-        // Combine and sort by created_at
-        const allActivity = activityResponses
-          .flatMap((response) => response.data)
-          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
-        setVirtualAccountActivity(allActivity);
-        setVirtualAccountActivityRaw({
-          count: allActivity.length,
-          data: allActivity,
-          responses: activityResponses
-        });
-        console.log('✅ Loaded virtual account activity:', allActivity.length, 'items');
-      } catch (error) {
-        console.error('❌ Error loading virtual account activity:', error);
-      } finally {
-        setIsVirtualAccountActivityLoading(false);
-      }
-    };
-
-    loadVirtualAccountActivity();
-  }, [wallet, customerId, virtualAccountsFromState, limit]);
-
-  const loadData = async (walletToLoad?: Wallet) => {
-    const targetWallet = walletToLoad || wallet;
-    if (!walletId || !targetWallet) return;
-    
-    try {
-      setLoading(true);
-      const data = await loadWalletData(walletId, targetWallet.address);
-      
-      setLiquidationAddresses(data.liquidationAddresses);
-      setWalletTransactions(data.transactions);
-      setWalletTransactionsRaw(data.transactionsRaw);
-      setTransfers(data.transfers);
-      setTransfersRaw(data.transfersRaw);
-      setLiquidationHistory(data.liquidationHistory);
-      setLiquidationHistoryRaw(data.liquidationHistoryRaw);
-    } catch (error) {
-      console.error('Error loading wallet data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleRefresh = async () => {
+    if (!wallet || !walletId || !customerId) return;
+    
     await refreshAll();
-    if (walletId && wallet) {
-      await loadData();
-    }
+    await loadAllWalletData();
   };
+  
 
   if ((walletNotFound || !wallet) && !loading) {
     return (
@@ -462,7 +450,7 @@ export function WalletOverviewPage() {
                 min="10"
                 max="100"
                 value={limitInput}
-                onChange={(e) => e.stopPropagation()}
+                onChange={(e) => setLimitInput(e.target.value)}
                 onBlur={handleLimitBlur}
                 className="w-16 px-2 py-1 text-sm text-gray-900 bg-white rounded border-0 focus:ring-2 focus:ring-white/50 outline-none"
               />
@@ -523,29 +511,8 @@ export function WalletOverviewPage() {
                     onReload={async () => {
                       if (!wallet || !walletId) return;
                       
-                      const previousData = walletTransactions;
-                      const previousRaw = walletTransactionsRaw;
-                      setIsWalletTxCollapsed(false); // Expand the table
-                      setWalletTransactions([]); // Clear items first
-                      
-                      // Use setTimeout to ensure state update is flushed
-                      await new Promise(resolve => setTimeout(resolve, 0));
-                      setIsWalletTxLoading(true);
-                      
-                      try {
-                        // Fetch directly from API (bypass cache)
-                        const txResponse = await bridgeAPI.getWalletTransactions(walletId, limit).catch(() => ({ count: 0, data: [] }));
-                        setWalletTransactions(txResponse.data);
-                        setWalletTransactionsRaw(txResponse);
-                        console.log('✅ Wallet transactions reloaded successfully:', txResponse.data.length, 'items');
-                      } catch (error) {
-                        console.error('❌ Error reloading wallet transactions:', error);
-                        setWalletTransactions(previousData);
-                        setWalletTransactionsRaw(previousRaw);
-                      } finally {
-                        setIsWalletTxLoading(false);
-                        // Keep table expanded after loading
-                      }
+                      setIsWalletTxCollapsed(false);
+                      await loadWalletTransactionsData(walletId, limit);
                     }}
                     isLoading={isWalletTxLoading}
                     collapsed={isWalletTxCollapsed}
@@ -568,78 +535,8 @@ export function WalletOverviewPage() {
                     onReload={async () => {
                       if (!wallet || !walletId || !customerId) return;
                       
-                      const previousData = transfers;
-                      const previousRaw = transfersRaw;
-                      setIsTransfersCollapsed(false); // Expand the table
-                      setTransfers([]); // Clear items first
-                      
-                      // Use setTimeout to ensure state update is flushed
-                      await new Promise(resolve => setTimeout(resolve, 0));
-                      setIsTransfersLoading(true);
-                      debugger;
-                      try {
-                        // Progressive fetching until we have enough filtered results
-                        let allTransfers: Transfer[] = [];
-                        let allResponses: unknown[] = [];
-                        let updatedBeforeMs = Date.now();
-                        let fetchCount = 0;
-                        const maxFetches = 10;
-                        
-                        while (fetchCount < maxFetches) {
-                          fetchCount++;
-                          
-                          // Fetch transfers with updated_before_ms parameter
-                          const transfersResponse = await bridgeAPI.getTransfers(customerId, limit, updatedBeforeMs);
-                          const fetchedTransfers = transfersResponse.data;
-                          allResponses.push(transfersResponse);
-                          
-                          // Add to accumulated transfers
-                          allTransfers = [...allTransfers, ...fetchedTransfers];
-                          
-                          // Update UI with current results
-                          setTransfers(allTransfers);
-                          setTransfersRaw({
-                            count: allTransfers.length,
-                            data: allTransfers,
-                            responses: allResponses
-                          });
-                          
-                          // Filter transfers for this wallet
-                          const filteredTransfers = filterWalletTransfers(allTransfers, walletId, wallet.address);
-                          
-                          console.log(`🔄 Fetch ${fetchCount}: Got ${fetchedTransfers.length} items, ${filteredTransfers.length} filtered (target: ${limit})`);
-                          
-                          // Check exit conditions
-                          // 1. API returned less items than limit
-                          if (fetchedTransfers.length < limit) {
-                            console.log('✅ API returned less than limit, stopping');
-                            break;
-                          }
-                          
-                          // 2. Filtered list reached the limit
-                          if (filteredTransfers.length >= limit) {
-                            console.log('✅ Filtered list reached limit, stopping');
-                            break;
-                          }
-                          
-                          // 3. Prepare for next fetch - get last item's updated_at
-                          if (fetchedTransfers.length > 0) {
-                            const lastItem = fetchedTransfers[fetchedTransfers.length - 1];
-                            updatedBeforeMs = new Date(lastItem.updated_at).getTime();
-                          } else {
-                            break;
-                          }
-                        }
-                        
-                        console.log('✅ Transfers reloaded successfully:', allTransfers.length, 'total items');
-                      } catch (error) {
-                        console.error('❌ Error reloading transfers:', error);
-                        setTransfers(previousData);
-                        setTransfersRaw(previousRaw);
-                      } finally {
-                        setIsTransfersLoading(false);
-                        // Keep table expanded after loading
-                      }
+                      setIsTransfersCollapsed(false);
+                      await loadTransfersData(customerId, limit, walletId, wallet.address);
                     }}
                     isLoading={isTransfersLoading}
                     collapsed={isTransfersCollapsed}
@@ -656,26 +553,13 @@ export function WalletOverviewPage() {
                     onReload={async () => {
                       if (!wallet || !walletId || !customerId) return;
                       
-                      const previousAddresses = liquidationAddresses;
-                      setIsLiquidationHistoryCollapsed(false); // Expand the table
-                      setLiquidationHistory([]); // Clear items first
+                      setIsLiquidationHistoryCollapsed(false);
                       
-                      // Use setTimeout to ensure state update is flushed
-                      await new Promise(resolve => setTimeout(resolve, 0));
-                      setIsLiquidationHistoryLoading(true);
+                      // Reload liquidation addresses first
+                      const addresses = await loadLiquidationAddressesData(customerId);
                       
-                      try {
-                        // Fetch fresh liquidation addresses (this will trigger the useEffect)
-                        const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId, limit);
-                        setLiquidationAddresses(liquidationData.data);
-                        console.log('✅ Liquidation addresses refreshed, history will auto-load');
-                      } catch (error) {
-                        console.error('❌ Error reloading liquidation addresses:', error);
-                        setLiquidationAddresses(previousAddresses);
-                      } finally {
-                        setIsLiquidationHistoryLoading(false);
-                        // Keep table expanded after loading
-                      }
+                      // Then reload history
+                      await loadLiquidationHistoryData(addresses, wallet.address, limit);
                     }}
                     isLoading={isLiquidationHistoryLoading}
                     collapsed={isLiquidationHistoryCollapsed}
@@ -692,47 +576,8 @@ export function WalletOverviewPage() {
                     onReload={async () => {
                       if (!wallet || !customerId || virtualAccountsFromState.length === 0) return;
                       
-                      const previousActivity = virtualAccountActivity;
-                      setIsVirtualAccountActivityCollapsed(false); // Expand the table
-                      setVirtualAccountActivity([]); // Clear items first
-                      
-                      // Use setTimeout to ensure state update is flushed
-                      await new Promise(resolve => setTimeout(resolve, 0));
-                      setIsVirtualAccountActivityLoading(true);
-                      
-                      try {
-                        // Filter virtual accounts by destination address
-                        const filteredVirtualAccounts = virtualAccountsFromState.filter(
-                          (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
-                        );
-                        
-                        if (filteredVirtualAccounts.length > 0) {
-                          // Fetch activity for all filtered virtual accounts
-                          const activityPromises = filteredVirtualAccounts.map((va) =>
-                            bridgeAPI.getVirtualAccountActivity(customerId, va.id, limit).catch(() => ({ count: 0, data: [] }))
-                          );
-                          const activityResponses = await Promise.all(activityPromises);
-                          
-                          // Combine and sort by created_at
-                          const allActivity = activityResponses
-                            .flatMap((response) => response.data)
-                            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-                          
-                          setVirtualAccountActivity(allActivity);
-                          setVirtualAccountActivityRaw({
-                            count: allActivity.length,
-                            data: allActivity,
-                            responses: activityResponses
-                          });
-                          console.log('✅ Virtual account activity reloaded successfully:', allActivity.length, 'items');
-                        }
-                      } catch (error) {
-                        console.error('❌ Error reloading virtual account activity:', error);
-                        setVirtualAccountActivity(previousActivity);
-                      } finally {
-                        setIsVirtualAccountActivityLoading(false);
-                        // Keep table expanded after loading
-                      }
+                      setIsVirtualAccountActivityCollapsed(false);
+                      await loadVirtualAccountActivityData(customerId, virtualAccountsFromState, wallet.address, limit);
                     }}
                     isLoading={isVirtualAccountActivityLoading}
                     collapsed={isVirtualAccountActivityCollapsed}
