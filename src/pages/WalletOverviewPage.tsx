@@ -17,20 +17,11 @@ function filterWalletTransfers(
   walletId: string | undefined, 
   walletAddress: string | undefined
 ): Transfer[] {
-  let leftovers = transfers.filter((transfer) => {
-    const walletAddr = walletAddress?.toLowerCase();
-    const walletIdMatch = transfer.source.bridge_wallet_id === walletId;
-    const sourceAddrMatch = transfer.source.from_address?.toLowerCase() === walletAddr;
-    const destAddrMatch = transfer.destination.to_address?.toLowerCase() === walletAddr;
-    return !(walletIdMatch || sourceAddrMatch || destAddrMatch);
-  });
-  console.log('Leftover transfers after filtering:', leftovers);
   return transfers.filter((transfer) => {
     const walletAddr = walletAddress?.toLowerCase();
     const walletIdMatch = transfer.source.bridge_wallet_id === walletId;
     const sourceAddrMatch = transfer.source.from_address?.toLowerCase() === walletAddr;
-    const destAddrMatch = transfer.destination.to_address?.toLowerCase() === walletAddr;
-    return walletIdMatch || sourceAddrMatch || destAddrMatch;
+    return walletIdMatch || sourceAddrMatch;
   });
 }
 
@@ -64,6 +55,8 @@ export function WalletOverviewPage() {
   
   const [loading, setLoading] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  // Collapse states for each table
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
   const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(true);
   const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(true);
@@ -101,14 +94,6 @@ export function WalletOverviewPage() {
     setJsonModalOpen(true);
   };
 
-  const handleLimitChange = (value: string) => {
-    setLimitInput(value);
-    const numValue = parseInt(value, 10);
-    if (!isNaN(numValue) && numValue >= 10 && numValue <= 100) {
-      setLimit(numValue);
-    }
-  };
-
   const handleLimitBlur = () => {
     const numValue = parseInt(limitInput, 10);
     if (isNaN(numValue) || numValue < 10) {
@@ -141,10 +126,44 @@ export function WalletOverviewPage() {
       setWalletTransactions(txResponse.data);
       setWalletTransactionsRaw(txResponse);
       
-      // Load transfers
-      const transfersResponse = await bridgeAPI.getTransfers(customerId, limit);
-      setTransfers(transfersResponse.data);
-      setTransfersRaw(transfersResponse);
+      // Load transfers with progressive fetching
+      let allTransfers: Transfer[] = [];
+      let allResponses: unknown[] = [];
+      let updatedBeforeMs = Date.now();
+      let fetchCount = 0;
+      const maxFetches = 10;
+      debugger;
+      while (fetchCount < maxFetches) {
+        fetchCount++;
+        
+        const transfersResponse = await bridgeAPI.getTransfers(customerId, limit, updatedBeforeMs);
+        const fetchedTransfers = transfersResponse.data;
+        allResponses.push(transfersResponse);
+        
+        allTransfers = [...allTransfers, ...fetchedTransfers];
+        
+        const filteredTransfers = filterWalletTransfers(allTransfers, walletId, wallet.address);
+        
+        // Exit conditions
+        if (fetchedTransfers.length < limit || filteredTransfers.length >= limit) {
+          break;
+        }
+        
+        // Prepare for next fetch
+        if (fetchedTransfers.length > 0) {
+          const lastItem = fetchedTransfers[fetchedTransfers.length - 1];
+          updatedBeforeMs = new Date(lastItem.updated_at).getTime();
+        } else {
+          break;
+        }
+      }
+      
+      setTransfers(allTransfers);
+      setTransfersRaw({
+        count: allTransfers.length,
+        data: allTransfers,
+        responses: allResponses
+      });
       
       // Load liquidation addresses and history
       const liquidationData = await bridgeAPI.getLiquidationAddresses(customerId);
@@ -443,7 +462,7 @@ export function WalletOverviewPage() {
                 min="10"
                 max="100"
                 value={limitInput}
-                onChange={(e) => handleLimitChange(e.target.value)}
+                onChange={(e) => e.stopPropagation()}
                 onBlur={handleLimitBlur}
                 className="w-16 px-2 py-1 text-sm text-gray-900 bg-white rounded border-0 focus:ring-2 focus:ring-white/50 outline-none"
               />
@@ -557,13 +576,62 @@ export function WalletOverviewPage() {
                       // Use setTimeout to ensure state update is flushed
                       await new Promise(resolve => setTimeout(resolve, 0));
                       setIsTransfersLoading(true);
-                      
+                      debugger;
                       try {
-                        // Fetch directly from API (bypass cache)
-                        const transfersResponse = await bridgeAPI.getTransfers(customerId, limit);
-                        setTransfers(transfersResponse.data);
-                        setTransfersRaw(transfersResponse);
-                        console.log('✅ Transfers reloaded successfully:', transfersResponse.data.length, 'items');
+                        // Progressive fetching until we have enough filtered results
+                        let allTransfers: Transfer[] = [];
+                        let allResponses: unknown[] = [];
+                        let updatedBeforeMs = Date.now();
+                        let fetchCount = 0;
+                        const maxFetches = 10;
+                        
+                        while (fetchCount < maxFetches) {
+                          fetchCount++;
+                          
+                          // Fetch transfers with updated_before_ms parameter
+                          const transfersResponse = await bridgeAPI.getTransfers(customerId, limit, updatedBeforeMs);
+                          const fetchedTransfers = transfersResponse.data;
+                          allResponses.push(transfersResponse);
+                          
+                          // Add to accumulated transfers
+                          allTransfers = [...allTransfers, ...fetchedTransfers];
+                          
+                          // Update UI with current results
+                          setTransfers(allTransfers);
+                          setTransfersRaw({
+                            count: allTransfers.length,
+                            data: allTransfers,
+                            responses: allResponses
+                          });
+                          
+                          // Filter transfers for this wallet
+                          const filteredTransfers = filterWalletTransfers(allTransfers, walletId, wallet.address);
+                          
+                          console.log(`🔄 Fetch ${fetchCount}: Got ${fetchedTransfers.length} items, ${filteredTransfers.length} filtered (target: ${limit})`);
+                          
+                          // Check exit conditions
+                          // 1. API returned less items than limit
+                          if (fetchedTransfers.length < limit) {
+                            console.log('✅ API returned less than limit, stopping');
+                            break;
+                          }
+                          
+                          // 2. Filtered list reached the limit
+                          if (filteredTransfers.length >= limit) {
+                            console.log('✅ Filtered list reached limit, stopping');
+                            break;
+                          }
+                          
+                          // 3. Prepare for next fetch - get last item's updated_at
+                          if (fetchedTransfers.length > 0) {
+                            const lastItem = fetchedTransfers[fetchedTransfers.length - 1];
+                            updatedBeforeMs = new Date(lastItem.updated_at).getTime();
+                          } else {
+                            break;
+                          }
+                        }
+                        
+                        console.log('✅ Transfers reloaded successfully:', allTransfers.length, 'total items');
                       } catch (error) {
                         console.error('❌ Error reloading transfers:', error);
                         setTransfers(previousData);
