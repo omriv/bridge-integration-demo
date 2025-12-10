@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { LiquidationAddress } from '../types';
 import { LiquidationAddressCard } from './LiquidationAddressCard';
 
@@ -17,15 +17,40 @@ export function LiquidationAddressesSection({
 }: LiquidationAddressesSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  // Get breakdown of chain+currency combinations
-  const getChainCurrencyBreakdown = () => {
-    const breakdown = new Map<string, number>();
+  // Process data for the flow chart
+  const flowData = useMemo(() => {
+    const sources = new Set<string>();
+    const destinations = new Set<string>();
+    const connections = new Set<string>();
+
     liquidationAddresses.forEach((la) => {
-      const key = `${la.chain}+${la.currency}`;
-      breakdown.set(key, (breakdown.get(key) || 0) + 1);
+      const source = `${la.chain}|${la.currency}`;
+      const dest = `${la.destination_payment_rail}|${la.destination_currency}`;
+      sources.add(source);
+      destinations.add(dest);
+      connections.add(`${source}#${dest}`);
     });
-    return Array.from(breakdown.entries()).map(([combo, count]) => ({ combo, count }));
-  };
+
+    const sortedSources = Array.from(sources).sort();
+    const sortedDestinations = Array.from(destinations).sort();
+
+    const edges = Array.from(connections).map((conn) => {
+      const [src, dst] = conn.split('#');
+      return {
+        source: src,
+        dest: dst,
+        sourceIndex: sortedSources.indexOf(src),
+        destIndex: sortedDestinations.indexOf(dst),
+      };
+    });
+
+    return { sources: sortedSources, destinations: sortedDestinations, edges };
+  }, [liquidationAddresses]);
+
+  const ITEM_HEIGHT = 32; // h-8
+  const GAP = 16; // gap-4
+  const ROW_HEIGHT = ITEM_HEIGHT + GAP;
+  const containerHeight = Math.max(flowData.sources.length, flowData.destinations.length) * ROW_HEIGHT;
 
   return (
     <div className="bg-white rounded-lg shadow">
@@ -55,18 +80,65 @@ export function LiquidationAddressesSection({
             </p>
           ) : (
             <div className="space-y-3">
-              {/* Chain + Currency Breakdown */}
-              <div className="bg-blue-50 rounded p-3 border border-blue-200">
-                <h4 className="text-xs font-semibold text-blue-900 mb-2">Chain + Currency Combinations</h4>
-                <div className="flex flex-wrap gap-2">
-                  {getChainCurrencyBreakdown().map(({ combo, count }) => (
-                    <span
-                      key={combo}
-                      className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold border border-blue-300"
+              {/* Liquidation Flow Graph */}
+              <div className="bg-gray-50 rounded p-4 border border-gray-200 overflow-hidden">
+                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Liquidation Flow</h4>
+                
+                <div className="flex relative" style={{ height: containerHeight }}>
+                  {/* Left Column: Sources */}
+                  <div className="w-48 flex flex-col absolute left-0 top-0" style={{ gap: GAP }}>
+                    {flowData.sources.map((source) => {
+                      const [chain, currency] = source.split('|');
+                      return (
+                        <div key={source} className="h-8 flex items-center justify-end px-3 bg-white border border-gray-200 rounded-full shadow-sm z-10">
+                          <span className="text-xs font-bold text-gray-700">{chain.toUpperCase()}</span>
+                          <span className="mx-1 text-gray-300">•</span>
+                          <span className="text-xs text-gray-500">{currency.toUpperCase()}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Middle: SVG Connections */}
+                  <div className="absolute left-48 right-48 top-0 bottom-0">
+                    <svg 
+                      width="100%" 
+                      height="100%" 
+                      viewBox={`0 0 100 ${containerHeight}`} 
+                      preserveAspectRatio="none"
+                      className="overflow-visible"
                     >
-                      {combo.toUpperCase()} ({count})
-                    </span>
-                  ))}
+                      {flowData.edges.map((edge, i) => {
+                        const y1 = edge.sourceIndex * ROW_HEIGHT + ITEM_HEIGHT / 2;
+                        const y2 = edge.destIndex * ROW_HEIGHT + ITEM_HEIGHT / 2;
+                        return (
+                          <path
+                            key={i}
+                            d={`M 0 ${y1} C 50 ${y1}, 50 ${y2}, 100 ${y2}`}
+                            fill="none"
+                            stroke="#CBD5E1" // slate-300
+                            strokeWidth="2"
+                            vectorEffect="non-scaling-stroke"
+                            className="opacity-60 hover:opacity-100 hover:stroke-indigo-500 transition-colors duration-300"
+                          />
+                        );
+                      })}
+                    </svg>
+                  </div>
+
+                  {/* Right Column: Destinations */}
+                  <div className="w-48 flex flex-col absolute right-0 top-0" style={{ gap: GAP }}>
+                    {flowData.destinations.map((dest) => {
+                      const [rail, currency] = dest.split('|');
+                      return (
+                        <div key={dest} className="h-8 flex items-center px-3 bg-white border border-gray-200 rounded-full shadow-sm z-10">
+                          <span className="text-xs font-bold text-gray-700">{rail.toUpperCase()}</span>
+                          <span className="mx-1 text-gray-300">•</span>
+                          <span className="text-xs text-gray-500">{currency.toUpperCase()}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 

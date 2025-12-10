@@ -126,6 +126,10 @@ export function VirtualAccountCard({ virtualAccount }: VirtualAccountCardProps) 
             <div className="p-2 bg-blue-50 border border-blue-200 rounded">
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
+                  <span className="text-gray-600">Currency:</span>
+                  <span className="font-semibold text-gray-900">{virtualAccount.source_deposit_instructions.currency.toUpperCase()}</span>
+                </div>
+                <div className="flex justify-between">
                   <span className="text-gray-600">Bank Name:</span>
                   <span className="font-semibold text-gray-900">{virtualAccount.source_deposit_instructions.bank_name}</span>
                 </div>
@@ -189,6 +193,29 @@ export function VirtualAccountCard({ virtualAccount }: VirtualAccountCardProps) 
             <div className="p-2 bg-purple-50 border border-purple-200 rounded">
               <h5 className="text-xs font-semibold text-gray-700 mb-1">Destination Details</h5>
               <div className="space-y-1 text-xs">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-gray-600">Address:</span>
+                  <div className="flex items-center gap-1">
+                    <span className="font-mono text-xs text-gray-900 truncate max-w-[150px]" title={virtualAccount.destination.address}>
+                      {virtualAccount.destination.address}
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(virtualAccount.destination.address, `va-dest-details-${virtualAccount.id}`)}
+                      className="p-1 hover:bg-white/50 rounded transition-all flex-shrink-0"
+                      title="Copy destination address"
+                    >
+                      {copiedField === `va-dest-details-${virtualAccount.id}` ? (
+                        <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Payment Rail:</span>
                   <span className="font-semibold text-gray-900">{virtualAccount.destination.payment_rail.toUpperCase()}</span>
