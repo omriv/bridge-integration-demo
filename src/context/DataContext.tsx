@@ -36,6 +36,15 @@ async function fetchCustomerWallets(customerId: string): Promise<Wallet[]> {
 }
 
 /**
+ * Fetches a single wallet by ID
+ * @returns Wallet object or throws error
+ */
+async function fetchWallet(customerId: string, walletId: string): Promise<Wallet> {
+  const response = await bridgeAPI.getWallet(customerId, walletId);
+  return response;
+}
+
+/**
  * Fetches liquidation addresses for a customer
  * @param limit - Maximum number of addresses to fetch
  * @returns Array of liquidation addresses
@@ -265,6 +274,7 @@ interface DataContextType {
   useMock: boolean;
   
   // Individual Fetch Functions (No state updates)
+  fetchWallet: (customerId: string, walletId: string) => Promise<Wallet>;
   fetchWalletTransactions: (walletId: string, limit?: number) => Promise<{ data: WalletTransaction[]; raw: unknown }>;
   fetchTransfersProgressive: (customerId: string, limit: number, filterFn?: (transfers: Transfer[]) => Transfer[]) => Promise<{ data: Transfer[]; raw: unknown }>;
   fetchLiquidationAddresses: (customerId: string, limit?: number) => Promise<LiquidationAddress[]>;
@@ -410,6 +420,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         useMock,
         
         // Individual Fetch Functions
+        fetchWallet,
         fetchWalletTransactions,
         fetchTransfersProgressive,
         fetchLiquidationAddresses,

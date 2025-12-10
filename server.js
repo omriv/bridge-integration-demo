@@ -90,6 +90,30 @@ app.get('/api/wallets', async (req, res) => {
   }
 });
 
+// Proxy endpoint for getting a single wallet
+app.get('/api/customers/:customerId/wallets/:walletId', async (req, res) => {
+  try {
+    const { customerId, walletId } = req.params;
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/wallets/${walletId}`, {
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching wallet:', error);
+    res.status(500).json({ error: 'Failed to fetch wallet' });
+  }
+});
+
 // Proxy endpoint for getting liquidation addresses
 app.get('/api/liquidation-addresses', async (req, res) => {
   try {

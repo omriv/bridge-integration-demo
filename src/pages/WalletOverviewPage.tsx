@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity } from '../types';
 import { JsonViewerModal } from '../components/JsonViewerModal';
@@ -27,21 +27,18 @@ function filterWalletTransfers(
 export function WalletOverviewPage() {
   const { customerId, walletId } = useParams<{ customerId: string; walletId: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
   const { 
-    wallets, 
     refreshAll, 
     customer, 
     loadCustomerData, 
     liquidationAddresses,
+    virtualAccounts,
+    fetchWallet,
     fetchWalletTransactions,
     fetchTransfersProgressive,
     fetchLiquidationHistoryParallel,
     fetchVirtualAccountActivityParallel
   } = useData();
-  
-  // Get virtual accounts from navigation state
-  const virtualAccountsFromState = (location.state as { virtualAccounts?: VirtualAccount[] })?.virtualAccounts || [];
   
   // Limit state
   const [limit, setLimit] = useState<number>(10);
@@ -128,14 +125,13 @@ export function WalletOverviewPage() {
       const filterTransfersByWallet = (transfers: Transfer[]) => {
         return filterWalletTransfers(transfers, walletId, wallet.address);
       };
-      debugger;
       // Filter liquidation addresses for this wallet
       const walletLiquidationAddresses = liquidationAddresses.filter(
         (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
       );
       
       // Filter virtual accounts for this wallet
-      const walletVirtualAccounts = virtualAccountsFromState.filter(
+      const walletVirtualAccounts = virtualAccounts.filter(
         (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
       );
       
@@ -209,7 +205,6 @@ export function WalletOverviewPage() {
       // Prevent duplicate loads
       if (hasLoadedRef.current) return;
       hasLoadedRef.current = true;
-      
       try {
         setLoading(true);
         
@@ -220,7 +215,7 @@ export function WalletOverviewPage() {
         }
         
         // Find wallet in context (should be populated by loadCustomerData)
-        let walletToLoad = wallets.find(w => w.id === walletId);
+        let walletToLoad = await fetchWallet(customerId, walletId);
         
         if (!walletToLoad) {
           setWalletNotFound(true);
@@ -474,7 +469,7 @@ export function WalletOverviewPage() {
                       setIsVirtualAccountActivityLoading(true);
                       
                       try {
-                        const walletAccounts = virtualAccountsFromState.filter(
+                        const walletAccounts = virtualAccounts.filter(
                           (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
                         );
                         const result = await fetchVirtualAccountActivityParallel(customerId, walletAccounts, limit);

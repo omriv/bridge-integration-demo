@@ -1,6 +1,7 @@
 import { config, getBaseUrl } from '../config';
 import type { 
   Customer,
+  Wallet,
   CustomersResponse,
   WalletsResponse, 
   LiquidationAddressesResponse,
@@ -55,6 +56,18 @@ export const bridgeAPI = {
 
     if (!response.ok) {
       throw new Error(`Failed to fetch wallets: ${response.statusText}`);
+    }
+
+    return response.json();
+  },
+
+  async getWallet(customerId: string, walletId: string): Promise<Wallet> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/wallets/${walletId}`, {
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch wallet: ${response.statusText}`);
     }
 
     return response.json();
