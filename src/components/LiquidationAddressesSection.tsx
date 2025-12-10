@@ -6,14 +6,16 @@ interface LiquidationAddressesSectionProps {
   liquidationAddresses: LiquidationAddress[];
   copiedField: string | null;
   onCopy: (text: string, fieldId: string) => void;
+  onViewRawJson?: (item: LiquidationAddress) => void;
 }
 
 export function LiquidationAddressesSection({
   liquidationAddresses,
   copiedField,
   onCopy,
+  onViewRawJson
 }: LiquidationAddressesSectionProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   // Get breakdown of chain+currency combinations
   const getChainCurrencyBreakdown = () => {
@@ -75,6 +77,7 @@ export function LiquidationAddressesSection({
                   liquidationAddress={la}
                   copiedField={copiedField}
                   onCopy={onCopy}
+                  onViewRawJson={onViewRawJson ? () => onViewRawJson(la) : undefined}
                 />
               ))}
             </div>

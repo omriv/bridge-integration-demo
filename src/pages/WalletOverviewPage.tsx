@@ -9,6 +9,8 @@ import { createLiquidationHistoryTableColumns } from '../components/tableConfigs
 import { createWalletTransactionsTableColumns } from '../components/tableConfigs/walletTransactionsTableConfig';
 import { createVirtualAccountActivityTableColumns } from '../components/tableConfigs/virtualAccountActivityTableConfig';
 import { LiquidationAddressesSection } from '../components/LiquidationAddressesSection';
+import { HorizontalWalletCard } from '../components/HorizontalWalletCard';
+import { VirtualAccountCard } from '../components/VirtualAccountCard';
 
 // Helper function to filter transfers related to a wallet
 function filterWalletTransfers(
@@ -64,12 +66,6 @@ export function WalletOverviewPage() {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [liquidationHistory, setLiquidationHistory] = useState<LiquidationHistory[]>([]);
   const [virtualAccountActivity, setVirtualAccountActivity] = useState<VirtualAccountActivity[]>([]);
-  
-  // Store raw API responses for JSON viewer
-  const [walletTransactionsRaw, setWalletTransactionsRaw] = useState<unknown>(null);
-  const [transfersRaw, setTransfersRaw] = useState<unknown>(null);
-  const [liquidationHistoryRaw, setLiquidationHistoryRaw] = useState<unknown>(null);
-  const [virtualAccountActivityRaw, setVirtualAccountActivityRaw] = useState<unknown>(null);
   
   const [loading, setLoading] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -151,7 +147,6 @@ export function WalletOverviewPage() {
       setIsWalletTxLoading(true);
       fetchWalletTransactions(walletId, limit).then(result => {
         setWalletTransactions(result.data);
-        setWalletTransactionsRaw(result.raw);
         setIsWalletTxLoading(false);
       }).catch(error => {
         console.error('Error loading wallet transactions:', error);
@@ -162,7 +157,6 @@ export function WalletOverviewPage() {
       setIsTransfersLoading(true);
       fetchTransfersProgressive(customerId, limit, filterTransfersByWallet).then(result => {
         setTransfers(result.data);
-        setTransfersRaw(result.raw);
         setIsTransfersLoading(false);
       }).catch(error => {
         console.error('Error loading transfers:', error);
@@ -173,7 +167,6 @@ export function WalletOverviewPage() {
       setIsLiquidationHistoryLoading(true);
       fetchLiquidationHistoryParallel(walletLiquidationAddresses, limit).then(result => {
         setLiquidationHistory(result.data);
-        setLiquidationHistoryRaw(result.raw);
         setIsLiquidationHistoryLoading(false);
       }).catch(error => {
         console.error('Error loading liquidation history:', error);
@@ -184,7 +177,6 @@ export function WalletOverviewPage() {
       setIsVirtualAccountActivityLoading(true);
       fetchVirtualAccountActivityParallel(customerId, walletVirtualAccounts, limit).then(result => {
         setVirtualAccountActivity(result.data);
-        setVirtualAccountActivityRaw(result.raw);
         setIsVirtualAccountActivityLoading(false);
       }).catch(error => {
         console.error('Error loading virtual account activity:', error);
@@ -364,7 +356,49 @@ export function WalletOverviewPage() {
             <span className="ml-3 text-gray-600">Loading...</span>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Wallet Details Card */}
+            {wallet && (
+              <HorizontalWalletCard 
+                wallet={wallet} 
+                virtualAccounts={virtualAccounts.filter(
+                  (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
+                )} 
+              />
+            )}
+
+            {/* Virtual Accounts Section */}
+            {(() => {
+              const walletVirtualAccounts = virtualAccounts.filter(
+                (va) => wallet && va.destination.address.toLowerCase() === wallet.address.toLowerCase()
+              );
+              
+              if (walletVirtualAccounts.length > 0) {
+                return (
+                  <div className="bg-white rounded-lg shadow p-4">
+                    <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                      <span className="mr-2">🏦</span>
+                      Virtual Accounts ({walletVirtualAccounts.length})
+                    </h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      {walletVirtualAccounts.map((account) => (
+                        <VirtualAccountCard key={account.id} virtualAccount={account} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+
+            {/* Liquidation Addresses Section */}
+            <LiquidationAddressesSection
+              liquidationAddresses={walletLiquidationAddresses}
+              copiedField={copiedField}
+              onCopy={copyToClipboard}
+              onViewRawJson={(item) => openJsonModal('Liquidation Address JSON', item)}
+            />
+
             {/* Transactions Section */}
             <div className="bg-white rounded-lg shadow">
               <button
@@ -393,7 +427,6 @@ export function WalletOverviewPage() {
                     icon="💳"
                     items={walletTransactions}
                     columns={createWalletTransactionsTableColumns(openJsonModal)}
-                    onViewRawJson={() => openJsonModal('Wallet Transactions - Full Response', walletTransactionsRaw)}
                     onReload={async () => {
                       if (!walletId) return;
                       
@@ -403,7 +436,6 @@ export function WalletOverviewPage() {
                       try {
                         const result = await fetchWalletTransactions(walletId, limit);
                         setWalletTransactions(result.data);
-                        setWalletTransactionsRaw(result.raw);
                       } catch (error) {
                         console.error('Error reloading wallet transactions:', error);
                       } finally {
@@ -427,7 +459,6 @@ export function WalletOverviewPage() {
                       copyToClipboard,
                       openJsonModal
                     )}
-                    onViewRawJson={() => openJsonModal('Transfers - Full Response', transfersRaw)}
                     onReload={async () => {
                       if (!wallet || !walletId || !customerId) return;
                       
@@ -438,7 +469,6 @@ export function WalletOverviewPage() {
                         const filterFn = (transfers: Transfer[]) => filterWalletTransfers(transfers, walletId, wallet.address);
                         const result = await fetchTransfersProgressive(customerId, limit, filterFn);
                         setTransfers(result.data);
-                        setTransfersRaw(result.raw);
                       } catch (error) {
                         console.error('Error reloading transfers:', error);
                       } finally {
@@ -456,7 +486,6 @@ export function WalletOverviewPage() {
                     icon="💧"
                     items={liquidationHistory}
                     columns={createLiquidationHistoryTableColumns(openJsonModal)}
-                    onViewRawJson={() => openJsonModal('Liquidation History - Full Response', liquidationHistoryRaw)}
                     onReload={async () => {
                       if (!wallet) return;
                       
@@ -466,7 +495,6 @@ export function WalletOverviewPage() {
                       try {
                         const result = await fetchLiquidationHistoryParallel(walletLiquidationAddresses, limit);
                         setLiquidationHistory(result.data);
-                        setLiquidationHistoryRaw(result.raw);
                       } catch (error) {
                         console.error('Error reloading liquidation history:', error);
                       } finally {
@@ -484,7 +512,6 @@ export function WalletOverviewPage() {
                     icon="🏦"
                     items={virtualAccountActivity}
                     columns={createVirtualAccountActivityTableColumns(copiedField, copyToClipboard, openJsonModal)}
-                    onViewRawJson={() => openJsonModal('Virtual Account Activity - Full Response', virtualAccountActivityRaw)}
                     onReload={async () => {
                       if (!wallet || !customerId) return;
                       
@@ -497,7 +524,6 @@ export function WalletOverviewPage() {
                         );
                         const result = await fetchVirtualAccountActivityParallel(customerId, walletAccounts, limit);
                         setVirtualAccountActivity(result.data);
-                        setVirtualAccountActivityRaw(result.raw);
                       } catch (error) {
                         console.error('Error reloading virtual account activity:', error);
                       } finally {
@@ -511,13 +537,6 @@ export function WalletOverviewPage() {
                 </div>
               )}
             </div>
-
-            {/* Liquidation Addresses Section */}
-            <LiquidationAddressesSection
-              liquidationAddresses={walletLiquidationAddresses}
-              copiedField={copiedField}
-              onCopy={copyToClipboard}
-            />
           </div>
         )}
       </div>
