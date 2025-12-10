@@ -84,13 +84,12 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getTransfers(customerId: string, limit: number = 10, updatedBeforeMs?: number): Promise<TransfersResponse> {
+  async getTransfers(customerId: string, limit: number = 10, startingAfter?: string): Promise<TransfersResponse> {
     let url = `${getCurrentBaseUrl()}/transfers?customer_id=${customerId}&limit=${limit}`;
     
-    if (updatedBeforeMs == undefined) {
-      updatedBeforeMs = Date.now();
+    if (startingAfter !== undefined) {
+      url += `&starting_after=${startingAfter}`;
     }
-    url += `&updated_before_ms=${updatedBeforeMs}`;
     
     const response = await fetch(url, {
       headers,

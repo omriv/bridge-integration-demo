@@ -133,23 +133,18 @@ async function fetchTransfersProgressive(
   limit: number,
   filterFn?: (transfers: Transfer[]) => Transfer[]
 ): Promise<{ data: Transfer[]; raw: unknown }> {
-  let allTransfers: Transfer[] = [];
-  let allResponses: unknown[] = [];
-  let updatedBeforeMs = Date.now();
+  let filteredTransfers: Transfer[] = [];
+  let startingAfter: string | undefined = undefined;
   let fetchCount = 0;
   const maxFetches = 10; // Safety limit to prevent infinite loops
-  
   while (fetchCount < maxFetches) {
     fetchCount++;
     
-    const response = await bridgeAPI.getTransfers(customerId, limit, updatedBeforeMs);
+    const response = await bridgeAPI.getTransfers(customerId, limit, startingAfter);
     const fetchedTransfers = response.data;
-    allResponses.push(response);
-    
-    allTransfers = [...allTransfers, ...fetchedTransfers];
     
     // Apply filter if provided
-    const filteredTransfers = filterFn ? filterFn(allTransfers) : allTransfers;
+    filteredTransfers = [...filteredTransfers, ...(filterFn ? filterFn(fetchedTransfers) : fetchedTransfers)];
     
     // Exit conditions:
     // 1. Fetched fewer items than limit (reached end of data)
@@ -161,18 +156,17 @@ async function fetchTransfersProgressive(
     // Prepare for next page
     if (fetchedTransfers.length > 0) {
       const lastItem = fetchedTransfers[fetchedTransfers.length - 1];
-      updatedBeforeMs = new Date(lastItem.updated_at).getTime();
+      startingAfter = lastItem.id;
     } else {
       break; // No more data
     }
   }
   
   return {
-    data: allTransfers,
+    data: filteredTransfers.slice(0, limit),
     raw: {
-      count: allTransfers.length,
-      data: allTransfers,
-      responses: allResponses,
+      count: filteredTransfers.slice(0, limit).length,
+      data: filteredTransfers.slice(0, limit),
       fetchCount
     }
   };

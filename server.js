@@ -142,8 +142,12 @@ app.get('/api/wallets/:walletId/transactions', async (req, res) => {
 // Proxy endpoint for getting transfer history
 app.get('/api/transfers', async (req, res) => {
   try {
-    const { customer_id, limit = 10 } = req.query;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/transfers?customer_id=${customer_id}&limit=${limit}`, {
+    const { customer_id, limit = 10, starting_after } = req.query;
+    let url = `${BRIDGE_BASE_URL}/v0/transfers?customer_id=${customer_id}&limit=${limit}`;
+    if (starting_after) {
+      url += `&starting_after=${starting_after}`;
+    }
+    const response = await fetch(url, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',
