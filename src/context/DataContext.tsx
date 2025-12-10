@@ -49,7 +49,7 @@ async function fetchWallet(customerId: string, walletId: string): Promise<Wallet
  * @param limit - Maximum number of addresses to fetch
  * @returns Array of liquidation addresses
  */
-async function fetchLiquidationAddresses(customerId: string, limit: number = 50): Promise<LiquidationAddress[]> {
+async function fetchCustomerLiquidationAddresses(customerId: string, limit: number = 50): Promise<LiquidationAddress[]> {
   const response = await bridgeAPI.getLiquidationAddresses(customerId, limit);
   return response.data;
 }
@@ -181,6 +181,42 @@ async function fetchTransfersProgressive(
   };
 }
 
+async function fetchWalletLiquidationAddressesProgressive(
+  customerId: string,
+  limit: number,
+  filterFn?: (liquidationAddresses: LiquidationAddress[]) => LiquidationAddress[]
+): Promise<LiquidationAddress[]> {
+  let filteredLiquidationAddresses: LiquidationAddress[] = [];
+  let startingAfter: string | undefined = undefined;
+  let fetchCount = 0;
+  const maxFetches = 10; // Safety limit to prevent infinite loops
+  while (fetchCount < maxFetches) {
+    fetchCount++;
+    
+    const response = await bridgeAPI.getLiquidationAddresses(customerId, limit, startingAfter);
+    const fetchedLiquidationAddresses = response.data;
+    
+    // Apply filter if provided
+    filteredLiquidationAddresses = [...filteredLiquidationAddresses, ...(filterFn ? filterFn(fetchedLiquidationAddresses) : fetchedLiquidationAddresses)];
+    
+    // Exit conditions:
+    // 1. Fetched fewer items than limit (reached end of data)
+    if (fetchedLiquidationAddresses.length < limit) {
+      break;
+    }
+    
+    // Prepare for next page
+    if (fetchedLiquidationAddresses.length > 0) {
+      const lastItem = fetchedLiquidationAddresses[fetchedLiquidationAddresses.length - 1];
+      startingAfter = lastItem.id;
+    } else {
+      break; // No more data
+    }
+  }
+  
+  return filteredLiquidationAddresses;
+}
+
 // ============================================================================
 // PARALLEL FETCH FUNCTIONS (Fetch Multiple Resources Concurrently)
 // ============================================================================
@@ -277,7 +313,8 @@ interface DataContextType {
   fetchWallet: (customerId: string, walletId: string) => Promise<Wallet>;
   fetchWalletTransactions: (walletId: string, limit?: number) => Promise<{ data: WalletTransaction[]; raw: unknown }>;
   fetchTransfersProgressive: (customerId: string, limit: number, filterFn?: (transfers: Transfer[]) => Transfer[]) => Promise<{ data: Transfer[]; raw: unknown }>;
-  fetchLiquidationAddresses: (customerId: string, limit?: number) => Promise<LiquidationAddress[]>;
+  fetchCustomerLiquidationAddresses: (customerId: string, limit?: number) => Promise<LiquidationAddress[]>;
+  fetchWalletLiquidationAddressesProgressive: (customerId: string, limit: number, filterFn?: (liquidationAddresses: LiquidationAddress[]) => LiquidationAddress[]) => Promise<LiquidationAddress[]>;
   fetchLiquidationHistoryParallel: (addresses: LiquidationAddress[], limit?: number) => Promise<{ data: LiquidationHistory[]; raw: unknown }>;
   fetchVirtualAccountActivityParallel: (customerId: string, accounts: VirtualAccount[], limit?: number) => Promise<{ data: VirtualAccountActivity[]; raw: unknown }>;
   
@@ -334,7 +371,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const [customerData, walletsData, liquidationData, virtualAccountsData] = await Promise.all([
         fetchCustomer(customerIdToUse),
         fetchCustomerWallets(customerIdToUse),
-        fetchLiquidationAddresses(customerIdToUse),
+        fetchCustomerLiquidationAddresses(customerIdToUse),
         fetchVirtualAccounts(customerIdToUse)
       ]);
 
@@ -423,7 +460,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         fetchWallet,
         fetchWalletTransactions,
         fetchTransfersProgressive,
-        fetchLiquidationAddresses,
+        fetchCustomerLiquidationAddresses,
+        fetchWalletLiquidationAddressesProgressive,
         fetchLiquidationHistoryParallel,
         fetchVirtualAccountActivityParallel,
         

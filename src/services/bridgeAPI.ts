@@ -73,8 +73,14 @@ export const bridgeAPI = {
     return response.json();
   },
 
-  async getLiquidationAddresses(customerId: string, limit: number = 10): Promise<LiquidationAddressesResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/liquidation-addresses?customer_id=${customerId}&limit=${limit}`, {
+  async getLiquidationAddresses(customerId: string, limit: number = 10, startingAfter?: string): Promise<LiquidationAddressesResponse> {
+    let url = `${getCurrentBaseUrl()}/liquidation-addresses?customer_id=${customerId}&limit=${limit}`;
+    
+    if (startingAfter !== undefined) {
+      url += `&starting_after=${startingAfter}`;
+    }
+    
+    const response = await fetch(url, {
       headers,
     });
 

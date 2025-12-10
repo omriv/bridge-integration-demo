@@ -117,8 +117,12 @@ app.get('/api/customers/:customerId/wallets/:walletId', async (req, res) => {
 // Proxy endpoint for getting liquidation addresses
 app.get('/api/liquidation-addresses', async (req, res) => {
   try {
-    const { customer_id } = req.query;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/liquidation_addresses?customer_id=${customer_id}&limit=50`, {
+    const { customer_id, limit = 10, starting_after } = req.query;
+    let url = `${BRIDGE_BASE_URL}/v0/liquidation_addresses?customer_id=${customer_id}&limit=${limit}`;
+    if (starting_after) {
+      url += `&starting_after=${starting_after}`;
+    }
+    const response = await fetch(url, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',

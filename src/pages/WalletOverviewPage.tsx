@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import type { Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity } from '../types';
+import type { Wallet, WalletTransaction, Transfer, LiquidationHistory, VirtualAccountActivity, LiquidationAddress } from '../types';
 import { JsonViewerModal } from '../components/JsonViewerModal';
 import { DynamicTransactionsTable } from '../components/DynamicTransactionsTable';
 import { createTransfersTableColumns } from '../components/tableConfigs/transfersTableConfig';
@@ -24,6 +24,16 @@ function filterWalletTransfers(
   });
 }
 
+function filterLiquidationAddresses(
+  liquidationAddresses: LiquidationAddress[], 
+  walletAddress: string | undefined
+): LiquidationAddress[] {
+  return liquidationAddresses.filter((liquidationAddress) => {
+    const walletAddr = walletAddress?.toLowerCase();
+    return liquidationAddress.destination_address.toLowerCase() === walletAddr;
+  });
+}
+
 export function WalletOverviewPage() {
   const { customerId, walletId } = useParams<{ customerId: string; walletId: string }>();
   const navigate = useNavigate();
@@ -31,11 +41,11 @@ export function WalletOverviewPage() {
     refreshAll, 
     customer, 
     loadCustomerData, 
-    liquidationAddresses,
     virtualAccounts,
     fetchWallet,
     fetchWalletTransactions,
     fetchTransfersProgressive,
+    fetchWalletLiquidationAddressesProgressive,
     fetchLiquidationHistoryParallel,
     fetchVirtualAccountActivityParallel
   } = useData();
@@ -46,7 +56,10 @@ export function WalletOverviewPage() {
   
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletNotFound, setWalletNotFound] = useState(false);
+  const [liquidationAddressesLoaded, setLiquidationAddressesLoaded] = useState(false);
   
+  const [ walletLiquidationAddresses, setWalletLiquidationAddresses] = useState<LiquidationAddress[]>([]);
+
   const [walletTransactions, setWalletTransactions] = useState<WalletTransaction[]>([]);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [liquidationHistory, setLiquidationHistory] = useState<LiquidationHistory[]>([]);
@@ -125,11 +138,7 @@ export function WalletOverviewPage() {
       const filterTransfersByWallet = (transfers: Transfer[]) => {
         return filterWalletTransfers(transfers, walletId, wallet.address);
       };
-      // Filter liquidation addresses for this wallet
-      const walletLiquidationAddresses = liquidationAddresses.filter(
-        (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
-      );
-      
+            
       // Filter virtual accounts for this wallet
       const walletVirtualAccounts = virtualAccounts.filter(
         (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
@@ -224,6 +233,14 @@ export function WalletOverviewPage() {
         
         // Set wallet - this will trigger the limit effect to load data
         setWallet(walletToLoad);
+
+        // Load Liquidation Addresses
+        const filterLiquidationAddressesByWallet = (liquidationAddresses: LiquidationAddress[]) => {
+          return filterLiquidationAddresses(liquidationAddresses, walletToLoad.address);
+        };
+        const laResult = await fetchWalletLiquidationAddressesProgressive(customerId, limit, filterLiquidationAddressesByWallet);
+        setWalletLiquidationAddresses(laResult);
+        setLiquidationAddressesLoaded(true);
         
       } catch (error) {
         console.error('Error initializing wallet:', error);
@@ -243,16 +260,25 @@ export function WalletOverviewPage() {
 
   // Load wallet data once wallet is set and ready
   useEffect(() => {
-    if (wallet && walletId && customerId && hasLoadedRef.current) {
+    if (wallet && walletId && customerId && hasLoadedRef.current && liquidationAddressesLoaded) {
       loadAllWalletData();
     }
-  }, [wallet]);
+  }, [wallet, liquidationAddressesLoaded]);
 
   const handleRefresh = async () => {
     if (!wallet || !walletId || !customerId) return;
     
     await refreshAll();
-    await loadAllWalletData();
+    // Reset loaded state to trigger reload
+    setLiquidationAddressesLoaded(false);
+    
+    // Reload liquidation addresses
+    const filterLiquidationAddressesByWallet = (liquidationAddresses: LiquidationAddress[]) => {
+      return filterLiquidationAddresses(liquidationAddresses, wallet.address);
+    };
+    const laResult = await fetchWalletLiquidationAddressesProgressive(customerId, limit, filterLiquidationAddressesByWallet);
+    setWalletLiquidationAddresses(laResult);
+    setLiquidationAddressesLoaded(true);
   };
   
 
@@ -438,10 +464,7 @@ export function WalletOverviewPage() {
                       setIsLiquidationHistoryLoading(true);
                       
                       try {
-                        const walletAddresses = liquidationAddresses.filter(
-                          (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()
-                        );
-                        const result = await fetchLiquidationHistoryParallel(walletAddresses, limit);
+                        const result = await fetchLiquidationHistoryParallel(walletLiquidationAddresses, limit);
                         setLiquidationHistory(result.data);
                         setLiquidationHistoryRaw(result.raw);
                       } catch (error) {
@@ -491,7 +514,7 @@ export function WalletOverviewPage() {
 
             {/* Liquidation Addresses Section */}
             <LiquidationAddressesSection
-              liquidationAddresses={liquidationAddresses}
+              liquidationAddresses={walletLiquidationAddresses}
               copiedField={copiedField}
               onCopy={copyToClipboard}
             />
