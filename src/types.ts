@@ -226,3 +226,34 @@ export interface VirtualAccountActivityResponse {
   count: number;
   data: VirtualAccountActivity[];
 }
+
+export interface ExternalAccount {
+  id: string;
+  object: 'external_account';
+  customer_id: string;
+  currency: string;
+  account_owner_name?: string;
+  bank_name?: string;
+  type: string;
+  account_number?: string;
+  routing_number?: string;
+  iban?: string;
+  clabe?: string;
+  swift_code?: string;
+  address?: {
+    street_line_1?: string;
+    street_line_2?: string;
+    city?: string;
+    state?: string;
+    postal_code?: string;
+    country?: string;
+  };
+  created_at: string;
+  updated_at: string;
+  [key: string]: unknown;
+}
+
+export interface ExternalAccountsResponse {
+  count: number;
+  data: ExternalAccount[];
+}

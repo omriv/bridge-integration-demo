@@ -300,6 +300,67 @@ app.post('/api/transfers', async (req, res) => {
   }
 });
 
+// Proxy endpoint for creating an external account
+app.post('/api/customers/:customerId/external_accounts', async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const accountData = req.body;
+    
+    // Generate a unique idempotency key
+    const idempotencyKey = `ea_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/external_accounts`, {
+      method: 'POST',
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(accountData),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating external account:', error);
+    res.status(500).json({ error: 'Failed to create external account' });
+  }
+});
+
+// Proxy endpoint for getting external accounts
+app.get('/api/customers/:customerId/external_accounts', async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const { limit = 10, starting_after } = req.query;
+    let url = `${BRIDGE_BASE_URL}/v0/customers/${customerId}/external_accounts?limit=${limit}`;
+    if (starting_after) {
+      url += `&starting_after=${starting_after}`;
+    }
+    const response = await fetch(url, {
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching external accounts:', error);
+    res.status(500).json({ error: 'Failed to fetch external accounts' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`\n🚀 Backend server running on http://localhost:${PORT}`);
   console.log(`📡 Proxying Bridge API requests to avoid CORS issues\n`);

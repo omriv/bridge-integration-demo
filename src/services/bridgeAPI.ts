@@ -9,7 +9,8 @@ import type {
   TransfersResponse,
   LiquidationHistoryResponse,
   VirtualAccountsResponse,
-  VirtualAccountActivityResponse
+  VirtualAccountActivityResponse,
+  ExternalAccountsResponse
 } from '../types';
 
 const headers = {
@@ -157,11 +158,44 @@ export const bridgeAPI = {
     return response.json();
   },
 
+  async getExternalAccounts(customerId: string, limit: number = 10, startingAfter?: string): Promise<ExternalAccountsResponse> {
+    let url = `${getCurrentBaseUrl()}/customers/${customerId}/external_accounts?limit=${limit}`;
+    
+    if (startingAfter !== undefined) {
+      url += `&starting_after=${startingAfter}`;
+    }
+    
+    const response = await fetch(url, {
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch external accounts: ${response.statusText}`);
+    }
+
+    return response.json();
+  },
+
   async createTransfer(transferData: Record<string, unknown>): Promise<unknown> {
     const response = await fetch(`${getCurrentBaseUrl()}/transfers`, {
       method: 'POST',
       headers,
       body: JSON.stringify(transferData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
+
+  async createExternalAccount(customerId: string, accountData: Record<string, unknown>): Promise<unknown> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/external_accounts`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(accountData),
     });
 
     if (!response.ok) {

@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { bridgeAPI } from '../services/bridgeAPI';
 import { config } from '../config';
-import type { Customer, Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity } from '../types';
+import type { Customer, Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity, ExternalAccount } from '../types';
 
 // ============================================================================
 // INDIVIDUAL FETCH FUNCTIONS (No State Updates - Pure Data Fetching)
@@ -117,6 +117,19 @@ export async function fetchVirtualAccounts(customerId: string): Promise<VirtualA
     return response.data;
   } catch (error) {
     console.error('Error fetching virtual accounts:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetches external accounts (bank accounts) for a customer
+ */
+export async function fetchExternalAccounts(customerId: string, limit: number = 50): Promise<ExternalAccount[]> {
+  try {
+    const response = await bridgeAPI.getExternalAccounts(customerId, limit);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching external accounts:', error);
     return [];
   }
 }
@@ -304,6 +317,7 @@ interface DataContextType {
   wallets: Wallet[];
   liquidationAddresses: LiquidationAddress[];
   virtualAccounts: VirtualAccount[];
+  externalAccounts: ExternalAccount[];
   virtualAccountsLoading: boolean;
   loading: boolean;
   error: string | null;
@@ -317,6 +331,8 @@ interface DataContextType {
   fetchWalletLiquidationAddressesProgressive: (customerId: string, limit: number, filterFn?: (liquidationAddresses: LiquidationAddress[]) => LiquidationAddress[]) => Promise<LiquidationAddress[]>;
   fetchLiquidationHistoryParallel: (addresses: LiquidationAddress[], limit?: number) => Promise<{ data: LiquidationHistory[]; raw: unknown }>;
   fetchVirtualAccountActivityParallel: (customerId: string, accounts: VirtualAccount[], limit?: number) => Promise<{ data: VirtualAccountActivity[]; raw: unknown }>;
+  fetchExternalAccounts: (customerId: string, limit?: number) => Promise<ExternalAccount[]>;
+  createExternalAccount: (customerId: string, accountData: Record<string, unknown>) => Promise<unknown>;
   
   // Composite Functions (With state updates)
   loadCustomerData: (customerId?: string) => Promise<void>;
@@ -337,6 +353,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [liquidationAddresses, setLiquidationAddresses] = useState<LiquidationAddress[]>([]);
   const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
+  const [externalAccounts, setExternalAccounts] = useState<ExternalAccount[]>([]);
   const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -357,6 +374,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setWallets([]);
       setLiquidationAddresses([]);
       setVirtualAccounts([]);
+      setExternalAccounts([]);
       await loadCustomers();
       setLoading(false);
       return;
@@ -368,17 +386,19 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setError(null);
 
       // Fetch customer details, wallets, liquidation addresses, and virtual accounts in parallel
-      const [customerData, walletsData, liquidationData, virtualAccountsData] = await Promise.all([
+      const [customerData, walletsData, liquidationData, virtualAccountsData, externalAccountsData] = await Promise.all([
         fetchCustomer(customerIdToUse),
         fetchCustomerWallets(customerIdToUse),
         fetchCustomerLiquidationAddresses(customerIdToUse),
-        fetchVirtualAccounts(customerIdToUse)
+        fetchVirtualAccounts(customerIdToUse),
+        fetchExternalAccounts(customerIdToUse)
       ]);
 
       setCustomer(customerData);
       setWallets(walletsData);
       setLiquidationAddresses(liquidationData);
       setVirtualAccounts(virtualAccountsData);
+      setExternalAccounts(externalAccountsData);
       
       // Load customers list in background after initial data loads
       if (customers.length === 0) {
@@ -394,11 +414,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
         setWallets([]);
         setLiquidationAddresses([]);
         setVirtualAccounts([]);
+        setExternalAccounts([]);
         await loadCustomers();
       } else {
         setError(errorMessage);
         console.error('Error loading customer data:', err);
         setVirtualAccounts([]);
+        setExternalAccounts([]);
       }
     } finally {
       setLoading(false);
@@ -423,6 +445,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
     ]);
   }, [loadCustomerData, loadCustomers]);
 
+  const createExternalAccount = useCallback(async (customerId: string, accountData: Record<string, unknown>) => {
+    const result = await bridgeAPI.createExternalAccount(customerId, accountData);
+    // Refresh external accounts after creation
+    const updatedAccounts = await fetchExternalAccounts(customerId);
+    setExternalAccounts(updatedAccounts);
+    return result;
+  }, []);
+
   const toggleMock = useCallback(() => {
     const newUseMock = !useMock;
     setUseMock(newUseMock);
@@ -433,6 +463,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setWallets([]);
     setLiquidationAddresses([]);
     setVirtualAccounts([]);
+    setExternalAccounts([]);
     setCustomers([]);
     
     // Reload data with new mode
@@ -451,6 +482,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         wallets,
         liquidationAddresses,
         virtualAccounts,
+        externalAccounts,
         virtualAccountsLoading,
         loading,
         error,
@@ -464,6 +496,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         fetchWalletLiquidationAddressesProgressive,
         fetchLiquidationHistoryParallel,
         fetchVirtualAccountActivityParallel,
+        fetchExternalAccounts,
+        createExternalAccount,
         
         // Composite Functions
         loadCustomerData,

@@ -72,6 +72,7 @@ export function WalletOverviewPage() {
 
   // Collapse states for each table
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
+  const [isVirtualAccountsCollapsed, setIsVirtualAccountsCollapsed] = useState(true);
   const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(true);
   const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(true);
   const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(true);
@@ -294,7 +295,7 @@ export function WalletOverviewPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Compact Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg sticky top-0 z-10">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
@@ -375,16 +376,34 @@ export function WalletOverviewPage() {
               
               if (walletVirtualAccounts.length > 0) {
                 return (
-                  <div className="bg-white rounded-lg shadow p-4">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                      <span className="mr-2">🏦</span>
-                      Virtual Accounts ({walletVirtualAccounts.length})
-                    </h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      {walletVirtualAccounts.map((account) => (
-                        <VirtualAccountCard key={account.id} virtualAccount={account} />
-                      ))}
-                    </div>
+                  <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                    <button
+                      onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
+                      className="w-full flex items-center justify-between p-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+                        <span className="mr-2">🏦</span>
+                        Virtual Accounts ({walletVirtualAccounts.length})
+                      </h2>
+                      <svg
+                        className={`w-5 h-5 text-gray-600 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {!isVirtualAccountsCollapsed && (
+                      <div className="p-4 border-t border-gray-200">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          {walletVirtualAccounts.map((account) => (
+                            <VirtualAccountCard key={account.id} virtualAccount={account} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               }

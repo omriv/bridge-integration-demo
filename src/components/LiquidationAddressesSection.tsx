@@ -52,6 +52,21 @@ export function LiquidationAddressesSection({
   const ROW_HEIGHT = ITEM_HEIGHT + GAP;
   const containerHeight = Math.max(flowData.sources.length, flowData.destinations.length) * ROW_HEIGHT;
 
+  const getHoverColorClass = (index: number) => {
+    const colors = [
+      'hover:stroke-blue-500',
+      'hover:stroke-emerald-500',
+      'hover:stroke-violet-500',
+      'hover:stroke-amber-500',
+      'hover:stroke-rose-500',
+      'hover:stroke-lime-500',
+      'hover:stroke-zinc-500',
+      'hover:stroke-indigo-500',
+      'hover:stroke-cyan-500'
+    ];
+    return colors[index % colors.length];
+  };
+
   return (
     <div className="bg-white rounded-lg shadow">
       <button
@@ -82,7 +97,7 @@ export function LiquidationAddressesSection({
             <div className="space-y-3">
               {/* Liquidation Flow Graph */}
               <div className="bg-gray-50 rounded p-4 border border-gray-200 overflow-hidden">
-                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Liquidation Flow</h4>
+                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Liquidation Flows</h4>
                 
                 <div className="flex relative" style={{ height: containerHeight }}>
                   {/* Left Column: Sources */}
@@ -90,7 +105,7 @@ export function LiquidationAddressesSection({
                     {flowData.sources.map((source) => {
                       const [chain, currency] = source.split('|');
                       return (
-                        <div key={source} className="h-8 flex items-center justify-end px-3 bg-white border border-gray-200 rounded-full shadow-sm z-10">
+                        <div key={source} className="h-8 flex items-center justify-end px-3 bg-orange-50 border border-gray-200 rounded-full shadow-sm">
                           <span className="text-xs font-bold text-gray-700">{chain.toUpperCase()}</span>
                           <span className="mx-1 text-gray-300">•</span>
                           <span className="text-xs text-gray-500">{currency.toUpperCase()}</span>
@@ -119,7 +134,7 @@ export function LiquidationAddressesSection({
                             stroke="#CBD5E1" // slate-300
                             strokeWidth="2"
                             vectorEffect="non-scaling-stroke"
-                            className="opacity-60 hover:opacity-100 hover:stroke-indigo-500 transition-colors duration-300"
+                            className={`opacity-60 hover:opacity-100 transition-all duration-300 ${getHoverColorClass(i)}`}
                           />
                         );
                       })}
@@ -131,7 +146,7 @@ export function LiquidationAddressesSection({
                     {flowData.destinations.map((dest) => {
                       const [rail, currency] = dest.split('|');
                       return (
-                        <div key={dest} className="h-8 flex items-center px-3 bg-white border border-gray-200 rounded-full shadow-sm z-10">
+                        <div key={dest} className="h-8 flex items-center px-3 bg-green-50 border border-gray-200 rounded-full shadow-sm">
                           <span className="text-xs font-bold text-gray-700">{rail.toUpperCase()}</span>
                           <span className="mx-1 text-gray-300">•</span>
                           <span className="text-xs text-gray-500">{currency.toUpperCase()}</span>
