@@ -128,7 +128,7 @@ export function WalletOverviewPage() {
       const filterTransfersByWallet = (transfers: Transfer[]) => {
         return filterWalletTransfers(transfers, walletId, wallet.address);
       };
-      
+      debugger;
       // Filter liquidation addresses for this wallet
       const walletLiquidationAddresses = liquidationAddresses.filter(
         (la) => la.destination_address.toLowerCase() === wallet.address.toLowerCase()

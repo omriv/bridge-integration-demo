@@ -250,23 +250,6 @@ async function fetchVirtualAccountActivityParallel(
   };
 }
 
-/**
- * Loads initial customer data (customer + wallets + liquidation addresses) in parallel
- * This is a composite function for the common use case of loading a customer's basic data
- */
-export async function loadCustomerBasicData(customerId: string): Promise<{
-  customer: Customer;
-  wallets: Wallet[];
-  liquidationAddresses: LiquidationAddress[];
-}> {
-  const [customer, wallets, liquidationAddresses] = await Promise.all([
-    fetchCustomer(customerId),
-    fetchCustomerWallets(customerId),
-    fetchLiquidationAddresses(customerId)
-  ]);
-  
-  return { customer, wallets, liquidationAddresses };
-}
 
 interface DataContextType {
   // State
@@ -275,6 +258,8 @@ interface DataContextType {
   currentCustomerId: string;
   wallets: Wallet[];
   liquidationAddresses: LiquidationAddress[];
+  virtualAccounts: VirtualAccount[];
+  virtualAccountsLoading: boolean;
   loading: boolean;
   error: string | null;
   useMock: boolean;
@@ -304,6 +289,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [currentCustomerId, setCurrentCustomerId] = useState<string>(config.customerId);
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [liquidationAddresses, setLiquidationAddresses] = useState<LiquidationAddress[]>([]);
+  const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
+  const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -322,6 +309,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setCustomer(null);
       setWallets([]);
       setLiquidationAddresses([]);
+      setVirtualAccounts([]);
       await loadCustomers();
       setLoading(false);
       return;
@@ -329,18 +317,21 @@ export function DataProvider({ children }: { children: ReactNode }) {
     
     try {
       setLoading(true);
+      setVirtualAccountsLoading(true);
       setError(null);
 
-      // Fetch customer details, wallets, and liquidation addresses in parallel
-      const [customerData, walletsData, liquidationData] = await Promise.all([
-        bridgeAPI.getCustomer(customerIdToUse),
-        bridgeAPI.getCustomerWallets(customerIdToUse),
-        bridgeAPI.getLiquidationAddresses(customerIdToUse),
+      // Fetch customer details, wallets, liquidation addresses, and virtual accounts in parallel
+      const [customerData, walletsData, liquidationData, virtualAccountsData] = await Promise.all([
+        fetchCustomer(customerIdToUse),
+        fetchCustomerWallets(customerIdToUse),
+        fetchLiquidationAddresses(customerIdToUse),
+        fetchVirtualAccounts(customerIdToUse)
       ]);
 
       setCustomer(customerData);
-      setWallets(walletsData.data);
-      setLiquidationAddresses(liquidationData.data);
+      setWallets(walletsData);
+      setLiquidationAddresses(liquidationData);
+      setVirtualAccounts(virtualAccountsData);
       
       // Load customers list in background after initial data loads
       if (customers.length === 0) {
@@ -355,13 +346,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
         setCustomer(null);
         setWallets([]);
         setLiquidationAddresses([]);
+        setVirtualAccounts([]);
         await loadCustomers();
       } else {
         setError(errorMessage);
         console.error('Error loading customer data:', err);
+        setVirtualAccounts([]);
       }
     } finally {
       setLoading(false);
+      setVirtualAccountsLoading(false);
     }
   }, [currentCustomerId, customers.length]);
 
@@ -391,6 +385,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setCustomer(null);
     setWallets([]);
     setLiquidationAddresses([]);
+    setVirtualAccounts([]);
     setCustomers([]);
     
     // Reload data with new mode
@@ -408,6 +403,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         currentCustomerId,
         wallets,
         liquidationAddresses,
+        virtualAccounts,
+        virtualAccountsLoading,
         loading,
         error,
         useMock,

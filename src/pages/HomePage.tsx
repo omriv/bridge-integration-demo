@@ -5,15 +5,11 @@ import { CustomerDetails } from '../components/CustomerDetails'
 import { WalletCard } from '../components/WalletCard'
 import { VirtualAccountCard } from '../components/VirtualAccountCard'
 import { MockToggle } from '../components/MockToggle'
-import { bridgeAPI } from '../services/bridgeAPI'
-import type { VirtualAccount } from '../types'
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, toggleMock, refreshAll } = useData();
+  const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, toggleMock, refreshAll, virtualAccounts, virtualAccountsLoading } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
-  const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
   const [showModeTransition, setShowModeTransition] = useState(false);
 
   useEffect(() => {
@@ -21,28 +17,6 @@ export function HomePage() {
       loadCustomerData();
     }
   }, [customer, loadCustomerData]);
-
-  useEffect(() => {
-    const loadVirtualAccounts = async () => {
-      if (!customer) {
-        setVirtualAccounts([]);
-        return;
-      }
-      
-      try {
-        setVirtualAccountsLoading(true);
-        const response = await bridgeAPI.getVirtualAccounts(customer.id);
-        setVirtualAccounts(response.data);
-      } catch (error) {
-        console.error('Error loading virtual accounts:', error);
-        setVirtualAccounts([]);
-      } finally {
-        setVirtualAccountsLoading(false);
-      }
-    };
-    
-    loadVirtualAccounts();
-  }, [customer]);
 
   const handleCustomerChange = async (customerId: string) => {
     setCurrentCustomerId(customerId);
