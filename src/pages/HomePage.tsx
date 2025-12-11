@@ -540,6 +540,7 @@ export function HomePage() {
           isOpen={isAddWalletModalOpen}
           onClose={() => setIsAddWalletModalOpen(false)}
           customerId={customer.id}
+          existingWallets={wallets}
         />
       )}
     </div>

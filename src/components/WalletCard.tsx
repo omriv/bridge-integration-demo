@@ -29,12 +29,12 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
 
   const getChainColor = (chain: string) => {
     const colors: Record<string, string> = {
-      ethereum: 'bg-blue-500 text-white border-blue-600',
+      ethereum: 'bg-teal-500 text-white border-blue-600',
       polygon: 'bg-purple-600 text-white border-purple-700',
-      base: 'bg-indigo-600 text-white border-indigo-700',
+      base: 'bg-amber-600 text-white border-indigo-700',
       arbitrum: 'bg-cyan-600 text-white border-cyan-700',
       optimism: 'bg-red-600 text-white border-red-700',
-      solana: 'bg-violet-600 text-white border-violet-700',
+      solana: 'bg-fuchsia-600 text-white border-violet-700',
       avalanche: 'bg-rose-600 text-white border-rose-700',
       bsc: 'bg-yellow-600 text-white border-yellow-700',
     };
@@ -166,7 +166,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                       navigate(`/${customer.id}/${wallet.id}`, { state: { virtualAccounts } });
                     }
                   }}
-                  className="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"
+                  className="flex-1 bg-indigo-500 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm"
                 >
                   📋 Overview
                 </button>
@@ -175,7 +175,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                     e.stopPropagation();
                     setShowCreateTransferModal(true);
                   }}
-                  className="flex-1 bg-green-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-green-700 transition-all shadow-sm"
+                  className="flex-1 bg-green-500 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-green-700 transition-all shadow-sm"
                 >
                   💸 Create Transfer
                 </button>

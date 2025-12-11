@@ -223,6 +223,68 @@ app.get('/api/customers/:customerId/virtual_accounts/:virtualAccountId/history',
   }
 });
 
+// POST /api/transfers - Create transfer (Mock)
+app.post('/api/transfers', (req, res) => {
+  try {
+    const transferData = req.body;
+    const newTransfer = {
+      id: `transfer_${Date.now()}`,
+      ...transferData,
+      state: 'pending',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    res.status(201).json(newTransfer);
+  } catch (error) {
+    console.error('Error creating transfer:', error);
+    res.status(500).json({ error: 'Failed to create transfer' });
+  }
+});
+
+// POST /api/customers/:customerId/wallets - Create wallet (Mock)
+app.post('/api/customers/:customerId/wallets', (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const { chain } = req.body;
+    
+    const newWallet = {
+      id: `wallet_${Date.now()}`,
+      customer_id: customerId,
+      chain: chain || 'base',
+      address: `0x${Math.random().toString(16).substring(2, 42)}`,
+      tags: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      balances: []
+    };
+    
+    res.status(201).json(newWallet);
+  } catch (error) {
+    console.error('Error creating wallet:', error);
+    res.status(500).json({ error: 'Failed to create wallet' });
+  }
+});
+
+// POST /api/customers/:customerId/external_accounts - Create external account (Mock)
+app.post('/api/customers/:customerId/external_accounts', (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const accountData = req.body;
+    const newAccount = {
+      id: `ea_${Date.now()}`,
+      customer_id: customerId,
+      object: 'external_account',
+      ...accountData,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    res.status(201).json(newAccount);
+  } catch (error) {
+    console.error('Error creating external account:', error);
+    res.status(500).json({ error: 'Failed to create external account' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`\n🎭 Mock server running on http://localhost:${PORT}`);
   console.log(`📦 Serving mock data from JSON files\n`);
