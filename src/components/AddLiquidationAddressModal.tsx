@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { JsonViewerModal } from './JsonViewerModal';
 import type { Wallet } from '../types';
@@ -26,10 +26,10 @@ export function AddLiquidationAddressModal({
   const [responseData, setResponseData] = useState<unknown>(null);
 
   const [formData, setFormData] = useState({
-    chain: 'ethereum',
-    currency: 'usdc',
-    destination_payment_rail: 'ach',
-    destination_currency: 'usd',
+    chain: '',
+    currency: '',
+    destination_payment_rail: '',
+    destination_currency: '',
     bridge_wallet_id: '',
     destination_address: '',
     destination_reference: '',
@@ -37,11 +37,61 @@ export function AddLiquidationAddressModal({
     custom_developer_fee_percent: '',
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      setLoading(false);
+      setError(null);
+      setSuccess(false);
+      setResponseData(null);
+      setFormData({
+        chain: '',
+        currency: '',
+        destination_payment_rail: '',
+        destination_currency: '',
+        bridge_wallet_id: '',
+        destination_address: '',
+        destination_reference: '',
+        return_address: '',
+        custom_developer_fee_percent: '',
+      });
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
+      
+      // Mutual exclusivity logic
+      if (name === 'bridge_wallet_id') {
+        newData.destination_address = ''; // Clear destination address
+        
+        // Set payment rail and currency based on wallet
+        if (value) {
+          const wallet = wallets.find(w => w.id === value);
+          if (wallet) {
+            newData.destination_payment_rail = wallet.chain;
+            
+            // Try to find USDC or default to first balance or USDC
+            const hasUsdc = wallet.balances?.some(b => b.currency.toLowerCase() === 'usdc');
+            if (hasUsdc) {
+              newData.destination_currency = 'usdc';
+            } else if (wallet.balances && wallet.balances.length > 0) {
+              newData.destination_currency = wallet.balances[0].currency;
+            } else {
+              newData.destination_currency = 'usdc'; // Default
+            }
+          }
+        }
+      } else if (name === 'destination_address') {
+        newData.bridge_wallet_id = ''; // Clear bridge wallet
+      }
+      
+      return newData;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,6 +99,18 @@ export function AddLiquidationAddressModal({
     setLoading(true);
     setError(null);
     setSuccess(false);
+
+    if (!formData.bridge_wallet_id && !formData.destination_address) {
+      setError('Please select a Bridge Wallet or enter a Destination Address.');
+      setLoading(false);
+      return;
+    }
+
+    if (formData.bridge_wallet_id && formData.destination_address) {
+      setError('Please select either a Bridge Wallet or a Destination Address, not both.');
+      setLoading(false);
+      return;
+    }
 
     const removeEmpty = (obj: unknown): unknown => {
       if (obj === null || obj === undefined || obj === '') return undefined;
@@ -137,8 +199,10 @@ export function AddLiquidationAddressModal({
                       name="chain"
                       value={formData.chain}
                       onChange={handleInputChange}
+                      required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
+                      <option value="">Select chain...</option>
                       <option value="arbitrum">Arbitrum</option>
                       <option value="avalanche_c_chain">Avalanche C-Chain</option>
                       <option value="base">Base</option>
@@ -156,8 +220,10 @@ export function AddLiquidationAddressModal({
                       name="currency"
                       value={formData.currency}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
+                      <option value="">Select currency...</option>
                       <option value="usdb">USDB</option>
                       <option value="usdc">USDC</option>
                       <option value="usdt">USDT</option>
@@ -173,53 +239,6 @@ export function AddLiquidationAddressModal({
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
                   <h3 className="font-semibold text-gray-900 border-b border-gray-200 pb-2">Destination Details</h3>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Payment Rail</label>
-                      <select
-                        name="destination_payment_rail"
-                        value={formData.destination_payment_rail}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="ach">ACH</option>
-                        <option value="wire">Wire</option>
-                        <option value="sepa">SEPA</option>
-                        <option value="swift">SWIFT</option>
-                        <option value="spei">SPEI</option>
-                        <option value="pix">Pix</option>
-                        <option value="ethereum">Ethereum</option>
-                        <option value="solana">Solana</option>
-                        <option value="polygon">Polygon</option>
-                        <option value="arbitrum">Arbitrum</option>
-                        <option value="optimism">Optimism</option>
-                        <option value="base">Base</option>
-                        <option value="avalanche_c_chain">Avalanche</option>
-                        <option value="stellar">Stellar</option>
-                        <option value="tron">Tron</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Destination Currency</label>
-                      <select
-                        name="destination_currency"
-                        value={formData.destination_currency}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase"
-                      >
-                        <option value="usd">USD</option>
-                        <option value="eur">EUR</option>
-                        <option value="mxn">MXN</option>
-                        <option value="brl">BRL</option>
-                        <option value="usdc">USDC</option>
-                        <option value="usdt">USDT</option>
-                        <option value="dai">DAI</option>
-                        <option value="pyusd">PYUSD</option>
-                        <option value="eurc">EURC</option>
-                      </select>
-                    </div>
-                  </div>
-
                   {/* Destination Target (Account/Wallet/Address) */}
                   <div className="space-y-4">
                     <div>
@@ -238,18 +257,70 @@ export function AddLiquidationAddressModal({
                         ))}
                       </select>
                     </div>
+                  </div>
 
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Destination Address (Crypto)</label>
-                      <input
-                        type="text"
-                        name="destination_address"
-                        value={formData.destination_address}
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Payment Rail *</label>
+                      <select
+                        name="destination_payment_rail"
+                        value={formData.destination_payment_rail}
                         onChange={handleInputChange}
-                        placeholder="0x..."
+                        required
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
+                      >
+                        <option value="">Select chain...</option>
+                        <option value="ach">ACH</option>
+                        <option value="wire">Wire</option>
+                        <option value="sepa">SEPA</option>
+                        <option value="swift">SWIFT</option>
+                        <option value="spei">SPEI</option>
+                        <option value="pix">Pix</option>
+                        <option value="ethereum">Ethereum</option>
+                        <option value="solana">Solana</option>
+                        <option value="polygon">Polygon</option>
+                        <option value="arbitrum">Arbitrum</option>
+                        <option value="optimism">Optimism</option>
+                        <option value="base">Base</option>
+                        <option value="avalanche_c_chain">Avalanche</option>
+                        <option value="stellar">Stellar</option>
+                        <option value="tron">Tron</option>
+                      </select>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Destination Currency *</label>
+                      <select
+                        name="destination_currency"
+                        value={formData.destination_currency}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase"
+                      >
+                        <option value="">Select currency...</option>
+                        <option value="usd">USD</option>
+                        <option value="eur">EUR</option>
+                        <option value="mxn">MXN</option>
+                        <option value="brl">BRL</option>
+                        <option value="usdc">USDC</option>
+                        <option value="usdt">USDT</option>
+                        <option value="dai">DAI</option>
+                        <option value="pyusd">PYUSD</option>
+                        <option value="eurc">EURC</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Destination Address */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Destination Address (Crypto)</label>
+                    <input
+                      type="text"
+                      name="destination_address"
+                      value={formData.destination_address}
+                      onChange={handleInputChange}
+                      placeholder="0x..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
                   </div>
                 </div>
 
