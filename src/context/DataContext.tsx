@@ -333,6 +333,7 @@ interface DataContextType {
   fetchVirtualAccountActivityParallel: (customerId: string, accounts: VirtualAccount[], limit?: number) => Promise<{ data: VirtualAccountActivity[]; raw: unknown }>;
   fetchExternalAccounts: (customerId: string, limit?: number) => Promise<ExternalAccount[]>;
   createExternalAccount: (customerId: string, accountData: Record<string, unknown>) => Promise<unknown>;
+  createWallet: (customerId: string, walletData: Record<string, unknown>) => Promise<unknown>;
   
   // Composite Functions (With state updates)
   loadCustomerData: (customerId?: string) => Promise<void>;
@@ -453,6 +454,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return result;
   }, []);
 
+  const createWallet = useCallback(async (customerId: string, walletData: Record<string, unknown>) => {
+    const result = await bridgeAPI.createWallet(customerId, walletData);
+    // Refresh wallets after creation
+    const updatedWallets = await fetchCustomerWallets(customerId);
+    setWallets(updatedWallets);
+    return result;
+  }, []);
+
   const toggleMock = useCallback(() => {
     const newUseMock = !useMock;
     setUseMock(newUseMock);
@@ -498,6 +507,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         fetchVirtualAccountActivityParallel,
         fetchExternalAccounts,
         createExternalAccount,
+        createWallet,
         
         // Composite Functions
         loadCustomerData,

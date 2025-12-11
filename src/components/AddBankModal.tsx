@@ -85,6 +85,28 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
     setError(null);
     setSuccess(false);
 
+    const removeEmpty = (obj: unknown): unknown => {
+      if (obj === null || obj === undefined || obj === '') return undefined;
+      
+      if (Array.isArray(obj)) {
+        const cleaned = obj.map(removeEmpty).filter(v => v !== undefined);
+        return cleaned.length > 0 ? cleaned : undefined;
+      }
+      
+      if (typeof obj === 'object') {
+        const cleaned: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(obj)) {
+          const cleanedValue = removeEmpty(value);
+          if (cleanedValue !== undefined) {
+            cleaned[key] = cleanedValue;
+          }
+        }
+        return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+      }
+      
+      return obj;
+    };
+
     try {
       // Base payload with common fields
       let payload: Record<string, unknown> = {
@@ -99,11 +121,6 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
           country: formData.country,
         }
       };
-
-      // Remove empty address fields
-      if (!payload.address || Object.values(payload.address as object).every(v => !v)) {
-        delete payload.address;
-      }
 
       switch (accountType) {
         case 'us':
@@ -124,7 +141,7 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
             account_type: 'iban',
             iban: {
               account_number: formData.iban_account_number,
-              bic: formData.iban_bic || undefined,
+              bic: formData.iban_bic,
               country: formData.iban_country,
             },
             account_owner_type: formData.account_owner_type,
@@ -155,7 +172,7 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
               },
               category: formData.swift_category,
               purpose_of_funds: [formData.swift_purpose],
-              short_business_description: formData.swift_description || undefined,
+              short_business_description: formData.swift_description,
             },
             account_owner_type: formData.account_owner_type,
           };
@@ -221,7 +238,8 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
           break;
       }
 
-      const result = await createExternalAccount(customerId, payload);
+      const cleanedPayload = removeEmpty(payload) as Record<string, unknown>;
+      const result = await createExternalAccount(customerId, cleanedPayload);
       setResponseData(result);
       setSuccess(true);
     } catch (err) {
@@ -491,12 +509,13 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                       </div>
                       
                       <div className="border-t border-gray-200 pt-2">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Bank Address</h4>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Bank Address *</h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="col-span-2">
                             <input
                               type="text"
                               name="swift_bank_street"
+                              required
                               placeholder="Street"
                               value={formData.swift_bank_street}
                               onChange={handleInputChange}
@@ -506,6 +525,7 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                           <input
                             type="text"
                             name="swift_bank_city"
+                            required
                             placeholder="City"
                             value={formData.swift_bank_city}
                             onChange={handleInputChange}
@@ -514,6 +534,7 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                           <input
                             type="text"
                             name="swift_bank_postal"
+                            required
                             placeholder="Postal Code"
                             value={formData.swift_bank_postal}
                             onChange={handleInputChange}
@@ -522,6 +543,7 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                           <input
                             type="text"
                             name="swift_bank_country"
+                            required
                             placeholder="Country"
                             value={formData.swift_bank_country}
                             onChange={handleInputChange}

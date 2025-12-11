@@ -191,6 +191,21 @@ export const bridgeAPI = {
     return response.json();
   },
 
+  async createWallet(customerId: string, walletData: Record<string, unknown>): Promise<unknown> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/wallets`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(walletData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
+
   async createExternalAccount(customerId: string, accountData: Record<string, unknown>): Promise<unknown> {
     const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/external_accounts`, {
       method: 'POST',

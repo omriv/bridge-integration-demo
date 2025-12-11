@@ -6,6 +6,7 @@ import { WalletCard } from '../components/WalletCard'
 import { VirtualAccountCard } from '../components/VirtualAccountCard'
 import { BankAccountCard } from '../components/BankAccountCard'
 import { AddBankModal } from '../components/AddBankModal'
+import { AddWalletModal } from '../components/AddWalletModal'
 import { MockToggle } from '../components/MockToggle'
 
 export function HomePage() {
@@ -21,6 +22,7 @@ export function HomePage() {
 
   // Modal states
   const [isAddBankModalOpen, setIsAddBankModalOpen] = useState(false);
+  const [isAddWalletModalOpen, setIsAddWalletModalOpen] = useState(false);
 
   useEffect(() => {
     if (!customer) {
@@ -370,10 +372,7 @@ export function HomePage() {
 
         {/* Wallets Section */}
         <div className="mb-6 bg-white rounded-xl shadow-lg overflow-hidden">
-          <button 
-            onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}
-            className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-          >
+          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}>
             <h2 className="text-2xl font-bold text-gray-800 flex items-center">
               <span className="text-indigo-600 mr-2">💼</span>
               Customer Wallets
@@ -381,15 +380,26 @@ export function HomePage() {
                 ({wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'})
               </span>
             </h2>
-            <svg
-              className={`w-6 h-6 text-gray-500 transition-transform ${isWalletsCollapsed ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAddWalletModalOpen(true);
+                }}
+                className="px-3 py-1.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm"
+              >
+                <span>➕</span> Add Wallet
+              </button>
+              <svg
+                className={`w-6 h-6 text-gray-500 transition-transform ${isWalletsCollapsed ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
 
           {!isWalletsCollapsed && (
             <div className="p-6 border-t border-gray-100">
@@ -520,6 +530,15 @@ export function HomePage() {
         <AddBankModal
           isOpen={isAddBankModalOpen}
           onClose={() => setIsAddBankModalOpen(false)}
+          customerId={customer.id}
+        />
+      )}
+
+      {/* Add Wallet Modal */}
+      {customer && (
+        <AddWalletModal
+          isOpen={isAddWalletModalOpen}
+          onClose={() => setIsAddWalletModalOpen(false)}
           customerId={customer.id}
         />
       )}

@@ -300,6 +300,38 @@ app.post('/api/transfers', async (req, res) => {
   }
 });
 
+// Proxy endpoint for creating a wallet
+app.post('/api/customers/:customerId/wallets', async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const walletData = req.body;
+    
+    // Generate a unique idempotency key
+    const idempotencyKey = `wallet_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/wallets`, {
+      method: 'POST',
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(walletData),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating wallet:', error);
+    res.status(500).json({ error: 'Failed to create wallet' });
+  }
+});
+
 // Proxy endpoint for creating an external account
 app.post('/api/customers/:customerId/external_accounts', async (req, res) => {
   try {
