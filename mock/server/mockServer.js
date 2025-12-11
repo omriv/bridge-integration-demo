@@ -285,6 +285,27 @@ app.post('/api/customers/:customerId/external_accounts', (req, res) => {
   }
 });
 
+// POST /api/customers/:customerId/liquidation_addresses - Create liquidation address (Mock)
+app.post('/api/customers/:customerId/liquidation_addresses', (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const addressData = req.body;
+    const newAddress = {
+      id: `la_${Date.now()}`,
+      customer_id: customerId,
+      ...addressData,
+      address: `0x${Math.random().toString(16).substring(2, 42)}`,
+      state: 'active',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    res.status(201).json(newAddress);
+  } catch (error) {
+    console.error('Error creating liquidation address:', error);
+    res.status(500).json({ error: 'Failed to create liquidation address' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`\n🎭 Mock server running on http://localhost:${PORT}`);
   console.log(`📦 Serving mock data from JSON files\n`);

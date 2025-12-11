@@ -334,6 +334,7 @@ interface DataContextType {
   fetchExternalAccounts: (customerId: string, limit?: number) => Promise<ExternalAccount[]>;
   createExternalAccount: (customerId: string, accountData: Record<string, unknown>) => Promise<unknown>;
   createWallet: (customerId: string, walletData: Record<string, unknown>) => Promise<unknown>;
+  createLiquidationAddress: (customerId: string, addressData: Record<string, unknown>) => Promise<unknown>;
   
   // Composite Functions (With state updates)
   loadCustomerData: (customerId?: string) => Promise<void>;
@@ -462,6 +463,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return result;
   }, []);
 
+  const createLiquidationAddress = useCallback(async (customerId: string, addressData: Record<string, unknown>) => {
+    const result = await bridgeAPI.createLiquidationAddress(customerId, addressData);
+    // Refresh liquidation addresses after creation
+    const updatedAddresses = await fetchCustomerLiquidationAddresses(customerId);
+    setLiquidationAddresses(updatedAddresses);
+    return result;
+  }, []);
+
   const toggleMock = useCallback(() => {
     const newUseMock = !useMock;
     setUseMock(newUseMock);
@@ -508,6 +517,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         fetchExternalAccounts,
         createExternalAccount,
         createWallet,
+        createLiquidationAddress,
         
         // Composite Functions
         loadCustomerData,

@@ -1,21 +1,27 @@
 import { useState, useMemo } from 'react';
-import type { LiquidationAddress } from '../types';
+import type { LiquidationAddress, Wallet } from '../types';
 import { LiquidationAddressCard } from './LiquidationAddressCard';
+import { AddLiquidationAddressModal } from './AddLiquidationAddressModal';
 
 interface LiquidationAddressesSectionProps {
   liquidationAddresses: LiquidationAddress[];
   copiedField: string | null;
   onCopy: (text: string, fieldId: string) => void;
   onViewRawJson?: (item: LiquidationAddress) => void;
+  customerId: string;
+  wallets: Wallet[];
 }
 
 export function LiquidationAddressesSection({
   liquidationAddresses,
   copiedField,
   onCopy,
-  onViewRawJson
+  onViewRawJson,
+  customerId,
+  wallets
 }: LiquidationAddressesSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Process data for the flow chart
   const flowData = useMemo(() => {
@@ -69,23 +75,34 @@ export function LiquidationAddressesSection({
 
   return (
     <div className="bg-white rounded-lg shadow">
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="w-full flex items-center justify-between p-3 hover:bg-gray-50 transition-colors"
-      >
-        <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-          <span className="mr-2">🏦</span>
-          Liquidation Addresses ({liquidationAddresses.length})
-        </h2>
-        <svg
-          className={`w-5 h-5 text-gray-600 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      <div className="w-full flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex items-center flex-1"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+            <span className="mr-2">🏦</span>
+            Liquidation Addresses ({liquidationAddresses.length})
+          </h2>
+          <svg
+            className={`w-5 h-5 text-gray-600 transition-transform ml-2 ${isCollapsed ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsAddModalOpen(true);
+          }}
+          className="ml-4 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Add Address
+        </button>
+      </div>
 
       {!isCollapsed && (
         <div className="p-4 border-t border-gray-200">
@@ -171,6 +188,13 @@ export function LiquidationAddressesSection({
           )}
         </div>
       )}
+
+      <AddLiquidationAddressModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        customerId={customerId}
+        wallets={wallets}
+      />
     </div>
   );
 }

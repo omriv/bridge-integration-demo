@@ -220,4 +220,19 @@ export const bridgeAPI = {
 
     return response.json();
   },
+
+  async createLiquidationAddress(customerId: string, addressData: Record<string, unknown>): Promise<unknown> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/liquidation_addresses`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(addressData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
 };

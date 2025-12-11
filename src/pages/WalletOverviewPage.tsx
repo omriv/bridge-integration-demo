@@ -44,6 +44,7 @@ export function WalletOverviewPage() {
     customer, 
     loadCustomerData, 
     virtualAccounts,
+    wallets,
     fetchWallet,
     fetchWalletTransactions,
     fetchTransfersProgressive,
@@ -416,6 +417,8 @@ export function WalletOverviewPage() {
               copiedField={copiedField}
               onCopy={copyToClipboard}
               onViewRawJson={(item) => openJsonModal('Liquidation Address JSON', item)}
+              customerId={customerId || ''}
+              wallets={wallets}
             />
 
             {/* Transactions Section */}
