@@ -235,4 +235,18 @@ export const bridgeAPI = {
 
     return response.json();
   },
+
+  async deleteCustomer(customerId: string): Promise<unknown> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
 };

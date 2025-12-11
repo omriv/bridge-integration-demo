@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { JsonViewerModal } from './JsonViewerModal';
 import type { Wallet } from '../types';
@@ -12,7 +12,7 @@ interface AddWalletModalProps {
 
 export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }: AddWalletModalProps) {
   const { createWallet } = useData();
-  const [chain, setChain] = useState('base');
+  const [chain, setChain] = useState('solana');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -21,6 +21,18 @@ export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }:
   // Response viewer state
   const [responseModalOpen, setResponseModalOpen] = useState(false);
   const [responseData, setResponseData] = useState<unknown>(null);
+
+  // Reset state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setSuccess(false);
+      setError(null);
+      setLoading(false);
+      setResponseData(null);
+      setIsPayoneerRules(true);
+      setChain('solana');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

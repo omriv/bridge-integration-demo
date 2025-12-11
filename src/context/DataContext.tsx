@@ -335,6 +335,7 @@ interface DataContextType {
   createExternalAccount: (customerId: string, accountData: Record<string, unknown>) => Promise<unknown>;
   createWallet: (customerId: string, walletData: Record<string, unknown>) => Promise<unknown>;
   createLiquidationAddress: (customerId: string, addressData: Record<string, unknown>) => Promise<unknown>;
+  deleteCustomer: (customerId: string) => Promise<void>;
   
   // Composite Functions (With state updates)
   loadCustomerData: (customerId?: string) => Promise<void>;
@@ -456,6 +457,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const createWallet = useCallback(async (customerId: string, walletData: Record<string, unknown>) => {
+    debugger;
     const result = await bridgeAPI.createWallet(customerId, walletData);
     // Refresh wallets after creation
     const updatedWallets = await fetchCustomerWallets(customerId);
@@ -470,6 +472,21 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setLiquidationAddresses(updatedAddresses);
     return result;
   }, []);
+
+  const deleteCustomer = useCallback(async (customerId: string) => {
+    await bridgeAPI.deleteCustomer(customerId);
+    // If we deleted the current customer, clear the current customer state
+    if (customer && customer.id === customerId) {
+      setCustomer(null);
+      setCurrentCustomerId('');
+      setWallets([]);
+      setLiquidationAddresses([]);
+      setVirtualAccounts([]);
+      setExternalAccounts([]);
+    }
+    // Refresh customers list
+    await loadCustomers();
+  }, [customer, loadCustomers]);
 
   const toggleMock = useCallback(() => {
     const newUseMock = !useMock;
@@ -518,6 +535,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         createExternalAccount,
         createWallet,
         createLiquidationAddress,
+        deleteCustomer,
         
         // Composite Functions
         loadCustomerData,

@@ -62,6 +62,29 @@ app.get('/api/customers/:customerId', (req, res) => {
   }
 });
 
+// DELETE /api/customers/:customerId - Delete customer (Mock)
+app.delete('/api/customers/:customerId', (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const customerIndex = customersData.data.findIndex(c => c.id === customerId);
+    
+    if (customerIndex === -1) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+    
+    const deletedCustomer = customersData.data[customerIndex];
+    
+    res.json({
+      id: deletedCustomer.id,
+      object: 'customer',
+      deleted: true
+    });
+  } catch (error) {
+    console.error('Error deleting customer:', error);
+    res.status(500).json({ error: 'Failed to delete customer' });
+  }
+});
+
 // GET /api/wallets?customer_id=X - Filter wallets by customer
 app.get('/api/wallets', (req, res) => {
   try {

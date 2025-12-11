@@ -1,13 +1,30 @@
 import type { Customer } from '../types';
 import { useState } from 'react';
+import { useData } from '../context/DataContext';
 
 interface CustomerDetailsProps {
   customer: Customer;
 }
 
 export function CustomerDetails({ customer }: CustomerDetailsProps) {
+  const { deleteCustomer } = useData();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteCustomer(customer.id);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      console.error('Failed to delete customer:', error);
+      alert('Failed to delete customer');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const copyToClipboard = async (text: string, fieldName: string) => {
     try {
@@ -82,23 +99,35 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="w-full flex items-center justify-between mb-4 hover:opacity-80 transition-opacity"
-      >
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-          <span className="text-indigo-600 mr-2">👤</span>
-          Customer Details
-        </h2>
-        <svg
-          className={`w-6 h-6 text-gray-600 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      <div className="w-full flex items-center justify-between mb-4">
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex items-center hover:opacity-80 transition-opacity"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+          <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+            <span className="text-indigo-600 mr-2">👤</span>
+            Customer Details
+          </h2>
+          <svg
+            className={`w-6 h-6 text-gray-600 transition-transform ml-2 ${isCollapsed ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsDeleteModalOpen(true);
+          }}
+          className="px-3 py-1.5 bg-red-100 text-red-700 text-sm font-semibold rounded-lg hover:bg-red-200 transition-colors flex items-center gap-2"
+        >
+          <span>🗑️</span> Delete
+        </button>
+      </div>
       
       {!isCollapsed && (
         <div className="space-y-3">
@@ -121,6 +150,40 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             }
             return null;
           })}
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Delete Customer</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete customer <span className="font-semibold">{customer.full_name || customer.email || customer.id}</span>? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Customer'
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
