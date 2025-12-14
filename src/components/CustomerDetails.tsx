@@ -98,14 +98,14 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 p-6 mb-6">
+    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700 p-6 mb-6">
       <div className="w-full flex items-center justify-between mb-6">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center hover:opacity-80 transition-opacity group"
         >
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center">
-            <span className="text-neutral-700 dark:text-neutral-300 mr-3 p-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg group-hover:bg-neutral-200 dark:group-hover:bg-neutral-700 transition-colors"><i className="fas fa-user"></i></span>
+            <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-user"></i></span>
             Customer Details
           </h2>
           <svg

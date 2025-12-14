@@ -34,13 +34,13 @@ export function DeveloperAccountPage() {
 
         <div className="space-y-6">
           {/* Developer Fees Section */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/50 dark:to-emerald-900/50 border-b border-green-500/20 text-neutral-900 dark:text-white px-6 py-4">
-              <h2 className="text-2xl font-bold flex items-center gap-2 text-green-600 dark:text-green-400">
-                <span><i className="fas fa-coins"></i></span>
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
+            <div className="w-full px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
+                <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-coins"></i></span>
                 Developer Fees
               </h2>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">View and manage your transaction fees</p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 ml-11">View and manage your transaction fees</p>
             </div>
             <div className="p-6">
               <div className="bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded">
@@ -66,13 +66,13 @@ export function DeveloperAccountPage() {
           </div>
 
           {/* Exchange Rates Section */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/50 dark:to-pink-900/50 border-b border-purple-500/20 text-neutral-900 dark:text-white px-6 py-4">
-              <h2 className="text-2xl font-bold flex items-center gap-2 text-purple-600 dark:text-purple-400">
-                <span><i className="fas fa-exchange-alt"></i></span>
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
+            <div className="w-full px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
+                <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-exchange-alt"></i></span>
                 Exchange Rates
               </h2>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Current cryptocurrency exchange rates</p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 ml-11">Current cryptocurrency exchange rates</p>
             </div>
             <div className="p-6">
               <div className="bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded">
@@ -102,13 +102,13 @@ export function DeveloperAccountPage() {
           </div>
 
           {/* Webhooks Section */}
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
-            <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/50 dark:to-red-900/50 border-b border-orange-500/20 text-neutral-900 dark:text-white px-6 py-4">
-              <h2 className="text-2xl font-bold flex items-center gap-2 text-orange-600 dark:text-orange-400">
-                <span><i className="fas fa-bell"></i></span>
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
+            <div className="w-full px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
+                <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-bell"></i></span>
                 Webhooks
               </h2>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Configure event notifications and callbacks</p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 ml-11">Configure event notifications and callbacks</p>
             </div>
             <div className="p-6">
               <div className="bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded">

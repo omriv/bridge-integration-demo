@@ -68,14 +68,14 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
   const totalUSD = calculateTotalUSD();
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
       >
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-            <span className="mr-3 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-700 dark:text-neutral-300"><i className="fas fa-wallet"></i></span>
+            <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-wallet"></i></span>
             Wallet Details
           </h2>
           <div className="flex items-center gap-2">

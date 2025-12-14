@@ -245,10 +245,10 @@ export function HomePage() {
         {customer && <CustomerDetails customer={customer} />}
 
         {/* Wallets Section */}
-        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
           <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}>
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="text-neutral-700 dark:text-neutral-300 mr-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg"><i className="fas fa-wallet"></i></span>
+              <span className="mr-2 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-wallet"></i></span>
               Customer Wallets
               <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'})
@@ -294,13 +294,13 @@ export function HomePage() {
         </div>
 
         {/* Virtual Accounts Section */}
-        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
           <button 
             onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
             className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
           >
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="text-neutral-700 dark:text-neutral-300 mr-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg"><i className="fas fa-university"></i></span>
+              <span className="mr-2 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-university"></i></span>
               Virtual Accounts
               <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({virtualAccounts.length} {virtualAccounts.length === 1 ? 'account' : 'accounts'})
@@ -340,10 +340,10 @@ export function HomePage() {
         </div>
 
         {/* Bank Accounts Section */}
-        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
           <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsBankAccountsCollapsed(!isBankAccountsCollapsed)}>
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="text-neutral-700 dark:text-neutral-300 mr-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg"><i className="fas fa-landmark"></i></span>
+              <span className="mr-2 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-landmark"></i></span>
               Bank Accounts
               <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({externalAccounts.length} {externalAccounts.length === 1 ? 'account' : 'accounts'})

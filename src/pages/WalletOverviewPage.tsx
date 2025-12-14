@@ -374,13 +374,13 @@ export function WalletOverviewPage() {
               
               if (walletVirtualAccounts.length > 0) {
                 return (
-                  <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+                  <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
                     <button
                       onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
                       className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
                     >
                       <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-                        <span className="mr-3 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-700 dark:text-neutral-300"><i className="fas fa-university"></i></span>
+                        <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-university"></i></span>
                         Virtual Accounts ({walletVirtualAccounts.length})
                       </h2>
                       <svg
@@ -419,13 +419,13 @@ export function WalletOverviewPage() {
             />
 
             {/* Transactions Section */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700">
+            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700">
               <button
                 onClick={() => setIsTransactionsCollapsed(!isTransactionsCollapsed)}
                 className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
               >
                 <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-                  <span className="mr-3 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-700 dark:text-neutral-300"><i className="fas fa-chart-bar"></i></span>
+                  <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-chart-bar"></i></span>
                   Recent Transactions
                 </h2>
                 <svg
