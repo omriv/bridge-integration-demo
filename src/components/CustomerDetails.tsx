@@ -161,14 +161,21 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             <h3 className="text-xl font-bold text-gray-900 mb-4">
               {deleteStep === 1 && 'Delete Customer'}
               {deleteStep === 2 && 'Are you really sure?'}
-              {deleteStep === 3 && 'Final Confirmation'}
+              {deleteStep === 3 && 'Are you absolutely sure?'}
             </h3>
             <p className="text-gray-600 mb-6">
               {deleteStep === 1 && (
                 <>Are you sure you want to delete customer <span className="font-semibold">{customer.full_name || customer.email || customer.id}</span>? This action cannot be undone.</>
               )}
-              {deleteStep === 2 && 'Are you absolutely sure? This will permanently remove all data associated with this customer.'}
-              {deleteStep === 3 && 'This is your last chance to cancel. Do you really want to delete this customer?'}
+              {deleteStep === 2 && 'Are you sure that you are sure? This will permanently remove all data associated with this customer.'}
+              {deleteStep === 3 && `Listen, I am not joking here!`}
+              <br/>
+              <br/>
+              {deleteStep === 3 && `If you delete this customer there is NO going back and you might regret it.`}
+              <br/>
+              {deleteStep === 3 && `Think about it for a bit. Ask yourself if this is really necessary.`}
+              <br/>
+              {deleteStep === 3 && `If you are still so damn sure, then go ahead and click the button below one last time...`}
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -197,7 +204,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                 ) : (
                   deleteStep === 1 ? 'Yes, delete' :
                   deleteStep === 2 ? 'I understand, continue' :
-                  'Yes, Delete Customer'
+                  'YESSSSS!!!!'
                 )}
               </button>
             </div>
