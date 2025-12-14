@@ -8,13 +8,15 @@ interface AddLiquidationAddressModalProps {
   onClose: () => void;
   customerId: string;
   wallets: Wallet[];
+  onSuccess?: () => void;
 }
 
 export function AddLiquidationAddressModal({ 
   isOpen, 
   onClose, 
   customerId, 
-  wallets 
+  wallets,
+  onSuccess
 }: AddLiquidationAddressModalProps) {
   const { createLiquidationAddress } = useData();
   const [loading, setLoading] = useState(false);
@@ -139,6 +141,9 @@ export function AddLiquidationAddressModal({
       const result = await createLiquidationAddress(customerId, payload);
       setResponseData(result);
       setSuccess(true);
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (err) {
       console.error(err);
       setError(err instanceof Error ? err.message : 'Failed to create liquidation address');

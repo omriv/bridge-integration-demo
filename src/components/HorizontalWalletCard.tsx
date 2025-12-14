@@ -8,13 +8,25 @@ import { ChainBadge } from './ChainBadge';
 
 interface HorizontalWalletCardProps {
   wallet: Wallet;
+  onRefresh?: () => void;
+  onTransferSuccess?: () => void;
 }
 
-export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
+export function HorizontalWalletCard({ wallet, onRefresh, onTransferSuccess }: HorizontalWalletCardProps) {
   const { customer } = useData();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [showCreateTransferModal, setShowCreateTransferModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRefresh) {
+      setIsRefreshing(true);
+      await onRefresh();
+      setIsRefreshing(false);
+    }
+  };
 
   const copyToClipboard = async (text: string, fieldId: string) => {
     try {
@@ -57,6 +69,15 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
+        {onRefresh && (
+          <div
+            onClick={handleRefresh}
+            className={`p-2 text-neutral-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all ${isRefreshing ? 'animate-spin text-amber-600 dark:text-amber-400' : ''}`}
+            title="Refresh wallet details"
+          >
+            <i className="fas fa-sync-alt"></i>
+          </div>
+        )}
       </button>
 
       {!isCollapsed && (
@@ -237,6 +258,7 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
           walletAddress={wallet.address}
           walletChain={wallet.chain}
           walletBalances={wallet.balances}
+          onSuccess={onTransferSuccess}
         />
       )}
     </div>

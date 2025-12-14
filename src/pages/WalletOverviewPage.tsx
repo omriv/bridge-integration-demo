@@ -282,6 +282,49 @@ export function WalletOverviewPage() {
     setWalletLiquidationAddresses(laResult);
     setLiquidationAddressesLoaded(true);
   };
+
+  const handleWalletRefresh = async () => {
+    if (!walletId || !customerId) return;
+    
+    try {
+      const updatedWallet = await fetchWallet(customerId, walletId);
+      setWallet(updatedWallet);
+    } catch (error) {
+      console.error('Error refreshing wallet:', error);
+    }
+  };
+
+  const handleTransferSuccess = async () => {
+    // Reload wallet details
+    await handleWalletRefresh();
+    
+    // Reload transfers table
+    if (!wallet || !walletId || !customerId) return;
+    
+    setIsTransfersCollapsed(false);
+    setIsTransfersLoading(true);
+    
+    try {
+      const filterFn = (transfers: Transfer[]) => filterWalletTransfers(transfers, walletId, wallet.address);
+      const result = await fetchTransfersProgressive(customerId, limit, filterFn);
+      setTransfers(result.data);
+    } catch (error) {
+      console.error('Error reloading transfers:', error);
+    } finally {
+      setIsTransfersLoading(false);
+    }
+  };
+
+  const handleLiquidationAddressAdded = async () => {
+    if (!wallet || !customerId) return;
+    
+    // Reload liquidation addresses
+    const filterLiquidationAddressesByWallet = (liquidationAddresses: LiquidationAddress[]) => {
+      return filterLiquidationAddresses(liquidationAddresses, wallet.address);
+    };
+    const laResult = await fetchWalletLiquidationAddressesProgressive(customerId, limit, filterLiquidationAddressesByWallet);
+    setWalletLiquidationAddresses(laResult);
+  };
   
 
   if ((walletNotFound || !wallet) && !loading) {
@@ -320,6 +363,22 @@ export function WalletOverviewPage() {
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Wallet Overview</h1>
               {wallet && <ChainBadge chain={wallet.chain} />}
+              {customerId && (
+                <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700/50 px-2 py-1 rounded text-xs font-mono text-neutral-500 dark:text-neutral-400">
+                  <span>{customerId.substring(0, 12)}...</span>
+                  <button
+                    onClick={() => copyToClipboard(customerId, 'header-customer-id')}
+                    className="p-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                    title="Copy Customer ID"
+                  >
+                    {copiedField === 'header-customer-id' ? (
+                      <i className="fas fa-check text-green-500"></i>
+                    ) : (
+                      <i className="fas fa-copy"></i>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
             {wallet && (
               <div className="text-lg font-bold text-neutral-900 dark:text-white">
@@ -373,6 +432,8 @@ export function WalletOverviewPage() {
             {wallet && (
               <HorizontalWalletCard 
                 wallet={wallet} 
+                onRefresh={handleWalletRefresh}
+                onTransferSuccess={handleTransferSuccess}
               />
             )}
 
@@ -393,6 +454,7 @@ export function WalletOverviewPage() {
               onViewRawJson={(item) => openJsonModal('Liquidation Address JSON', item)}
               customerId={customerId || ''}
               wallets={wallets}
+              onAddressAdded={handleLiquidationAddressAdded}
             />
 
             {/* Transactions Section */}

@@ -10,6 +10,7 @@ interface LiquidationAddressesSectionProps {
   onViewRawJson?: (item: LiquidationAddress) => void;
   customerId: string;
   wallets: Wallet[];
+  onAddressAdded?: () => void;
 }
 
 export function LiquidationAddressesSection({
@@ -18,7 +19,8 @@ export function LiquidationAddressesSection({
   onCopy,
   onViewRawJson,
   customerId,
-  wallets
+  wallets,
+  onAddressAdded
 }: LiquidationAddressesSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -196,6 +198,7 @@ export function LiquidationAddressesSection({
         onClose={() => setIsAddModalOpen(false)}
         customerId={customerId}
         wallets={wallets}
+        onSuccess={onAddressAdded}
       />
     </div>
   );

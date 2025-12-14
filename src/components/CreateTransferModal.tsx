@@ -13,6 +13,7 @@ interface CreateTransferModalProps {
   walletAddress: string;
   walletChain: string;
   walletBalances: WalletBalance[];
+  onSuccess?: () => void;
 }
 
 export function CreateTransferModal({
@@ -23,6 +24,7 @@ export function CreateTransferModal({
   walletAddress,
   walletChain,
   walletBalances,
+  onSuccess,
 }: CreateTransferModalProps) {
   // Get currencies with balance > 0
   const availableCurrencies = walletBalances
@@ -313,6 +315,9 @@ export function CreateTransferModal({
       if (data) {
         setSuccessMessage('Transfer created successfully!');
         setErrorMessage('');
+        if (onSuccess) {
+          onSuccess();
+        }
       }
     } catch (error) {
       console.error('Error creating transfer:', error);
