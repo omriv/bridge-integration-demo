@@ -132,7 +132,7 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
                 <div className="mt-3 flex gap-3">
                   <button
                     onClick={() => setShowCreateTransferModal(true)}
-                    className="bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-amber-500 transition-all shadow-lg shadow-amber-900/20 flex items-center gap-2"
+                    className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg font-semibold hover:bg-amber-500/20 transition-all shadow-lg shadow-amber-900/20 flex items-center gap-2"
                   >
                     <span><i className="fas fa-paper-plane"></i></span> Create Transfer
                   </button>

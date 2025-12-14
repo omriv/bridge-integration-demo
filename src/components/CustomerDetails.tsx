@@ -98,8 +98,8 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700 p-6 mb-6">
-      <div className="w-full flex items-center justify-between mb-6">
+    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700 p-4 mb-6">
+      <div className="w-full flex items-center justify-between">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center hover:opacity-80 transition-opacity group"
@@ -117,20 +117,20 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        
+        {customer.id !== 'cfbc5326-25ff-43fb-82c9-6e800566f490' &&
         <button
           onClick={(e) => {
             e.stopPropagation();
             setDeleteStep(1);
           }}
-          className="px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-sm font-medium rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 transition-all flex items-center gap-2"
+          className="px-3 py-1.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-lg text-sm font-medium hover:bg-rose-500/20 transition-all flex items-center gap-2"
         >
           <span><i className="fas fa-trash"></i></span> Delete
-        </button>
+        </button>}
       </div>
       
       {!isCollapsed && (
-        <div className="space-y-3">
+        <div className="space-y-3 mt-6">
           {renderField('Customer ID', customer.id, 'id')}
           {renderField('Type', customer.type, 'type')}
           {renderStatusField('Status', customer.status)}
@@ -177,14 +177,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
               <br/>
               {deleteStep === 3 && `If you are still so damn sure, then go ahead and click the button below one last time...`}
             </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setDeleteStep(0)}
-                className="px-4 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg font-medium transition-colors"
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
+            <div className="flex gap-3">
               <button
                 onClick={() => {
                   if (deleteStep < 3) {
@@ -193,12 +186,12 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                     handleDelete();
                   }
                 }}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm"
+                className="flex-1 px-4 py-2 bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 rounded-lg font-medium hover:bg-red-500/20 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
                 disabled={isDeleting}
               >
                 {isDeleting ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
                     Deleting...
                   </>
                 ) : (
@@ -206,6 +199,13 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                   deleteStep === 2 ? 'I understand, continue' :
                   'YESSSSS!!!!'
                 )}
+              </button>
+              <button
+                onClick={() => setDeleteStep(0)}
+                className="px-4 py-2 bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20 rounded-lg font-medium hover:bg-neutral-500/20 transition-colors"
+                disabled={isDeleting}
+              >
+                Cancel
               </button>
             </div>
           </div>

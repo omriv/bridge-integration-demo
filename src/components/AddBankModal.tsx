@@ -269,7 +269,7 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl w-full max-w-2xl relative border border-neutral-200 dark:border-neutral-700">
-          <div className="p-6 border-b border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
+          <div className="p-6 border-b border-neutral-200 dark:border-neutral-700 flex justify-between items-center bg-neutral-50 dark:bg-neutral-800/30 rounded-t-xl">
             <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Add Bank Account</h2>
             <button onClick={onClose} className="text-neutral-400 hover:text-neutral-600 dark:hover:text-white transition-colors">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,13 +291,13 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                     onClick={() => {
                       setResponseModalOpen(true);
                     }}
-                    className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 font-medium border border-neutral-300 dark:border-neutral-600 transition-colors"
+                    className="px-4 py-2 bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20 rounded-lg hover:bg-neutral-500/20 font-medium transition-colors"
                   >
                     View Response
                   </button>
                   <button
                     onClick={onClose}
-                    className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-500 font-medium transition-colors"
+                    className="px-4 py-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-lg hover:bg-amber-500/20 font-medium transition-colors"
                   >
                     Close
                   </button>
@@ -773,27 +773,27 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="px-4 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg font-medium transition-colors"
-                  >
-                    Cancel
-                  </button>
+                <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="flex-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-amber-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-600"></div>
                         Creating...
                       </>
                     ) : (
                       'Create Account'
                     )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-500/20 transition-colors"
+                  >
+                    Cancel
                   </button>
                 </div>
               </form>

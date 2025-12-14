@@ -342,17 +342,17 @@ export function CreateTransferModal({
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
         <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-4xl w-full my-8 border border-neutral-200 dark:border-neutral-700">
           {/* Header */}
-          <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6 rounded-t-lg">
+          <div className="bg-neutral-50 dark:bg-neutral-800/30 border-b border-neutral-200 dark:border-neutral-700 p-6 rounded-t-lg">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Create Transfer</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">Create Transfer</h2>
               <button
                 onClick={onClose}
-                className="text-white hover:text-neutral-200 text-2xl font-bold"
+                className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-white text-2xl font-bold"
               >
                 ×
               </button>
             </div>
-            <p className="text-sm opacity-90 mt-1">Customer: {customerId} • Wallet: {walletId}</p>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Customer: {customerId} • Wallet: {walletId}</p>
           </div>
 
           {/* Form */}
@@ -714,7 +714,7 @@ export function CreateTransferModal({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-500 transition-colors disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:cursor-not-allowed"
+                  className="flex-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-amber-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Creating...' : 'Send Transfer'}
                 </button>
@@ -722,7 +722,7 @@ export function CreateTransferModal({
                   <button
                     type="button"
                     onClick={() => setShowJsonModal(true)}
-                    className="bg-neutral-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-neutral-500 transition-colors"
+                    className="bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-500/20 transition-colors"
                   >
                     View JSON
                   </button>
@@ -730,7 +730,7 @@ export function CreateTransferModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                  className="bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-500/20 transition-colors"
                 >
                   Close
                 </button>

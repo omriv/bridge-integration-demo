@@ -136,7 +136,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                       navigate(`/${customer.id}/${wallet.id}`, { state: { virtualAccounts } });
                     }
                   }}
-                  className="flex-1 bg-amber-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-amber-700 transition-all shadow-sm flex items-center justify-center gap-1"
+                  className="flex-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-teal-500/20 transition-all shadow-sm flex items-center justify-center gap-1"
                 >
                   <i className="fas fa-clipboard-list"></i> Overview
                 </button>
@@ -145,7 +145,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                     e.stopPropagation();
                     setShowCreateTransferModal(true);
                   }}
-                  className="flex-1 bg-emerald-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-emerald-700 transition-all shadow-sm flex items-center justify-center gap-1"
+                  className="flex-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500/20 transition-all shadow-sm flex items-center justify-center gap-1"
                 >
                   <i className="fas fa-paper-plane"></i> Create Transfer
                 </button>

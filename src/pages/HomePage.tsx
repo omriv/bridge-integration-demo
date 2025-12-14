@@ -1,21 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useData } from '../context/DataContext'
 import { CustomerDetails } from '../components/CustomerDetails'
-import { WalletCard } from '../components/WalletCard'
-import { VirtualAccountCard } from '../components/VirtualAccountCard'
-import { BankAccountCard } from '../components/BankAccountCard'
 import { AddBankModal } from '../components/AddBankModal'
 import { AddWalletModal } from '../components/AddWalletModal'
+import { WalletsSection } from '../components/WalletsSection'
+import { BankAccountsSection } from '../components/BankAccountsSection'
+import { VirtualAccountsSection } from '../components/VirtualAccountsSection'
 
 export function HomePage() {
   const { customer, customers, currentCustomerId, wallets, loading, error, loadCustomerData, setCurrentCustomerId, refreshAll, virtualAccounts, virtualAccountsLoading, externalAccounts } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  // Collapse states
-  const [isWalletsCollapsed, setIsWalletsCollapsed] = useState(true);
-  const [isVirtualAccountsCollapsed, setIsVirtualAccountsCollapsed] = useState(true);
-  const [isBankAccountsCollapsed, setIsBankAccountsCollapsed] = useState(true);
-
   // Modal states
   const [isAddBankModalOpen, setIsAddBankModalOpen] = useState(false);
   const [isAddWalletModalOpen, setIsAddWalletModalOpen] = useState(false);
@@ -245,154 +240,29 @@ export function HomePage() {
         {customer && <CustomerDetails customer={customer} />}
 
         {/* Wallets Section */}
-        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
-          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}>
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="mr-2 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-wallet"></i></span>
-              Customer Wallets
-              <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
-                ({wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'})
-              </span>
-            </h2>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsAddWalletModalOpen(true);
-                }}
-                className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 shadow-sm"
-              >
-                <span><i className="fas fa-plus"></i></span> Add Wallet
-              </button>
-              <svg
-                className={`w-6 h-6 text-neutral-500 transition-transform ${isWalletsCollapsed ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-
-          {!isWalletsCollapsed && (
-            <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
-              {wallets.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-neutral-400 text-5xl mb-4"><i className="fas fa-inbox"></i></div>
-                  <p className="text-neutral-500">No wallets found for this customer</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {wallets.map((wallet) => (
-                    <WalletCard key={wallet.id} wallet={wallet} virtualAccounts={virtualAccounts} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <WalletsSection 
+          wallets={wallets} 
+          virtualAccounts={virtualAccounts} 
+          onAddWallet={() => setIsAddWalletModalOpen(true)} 
+        />
 
         {/* Virtual Accounts Section */}
-        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
-          <button 
-            onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
-            className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
-          >
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="mr-2 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-university"></i></span>
-              Virtual Accounts
-              <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
-                ({virtualAccounts.length} {virtualAccounts.length === 1 ? 'account' : 'accounts'})
-              </span>
-            </h2>
-            <svg
-              className={`w-6 h-6 text-neutral-500 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {!isVirtualAccountsCollapsed && (
-            <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
-              {virtualAccountsLoading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto mb-4"></div>
-                  <p className="text-neutral-500">Loading virtual accounts...</p>
-                </div>
-              ) : virtualAccounts.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-neutral-400 text-5xl mb-4"><i className="fas fa-inbox"></i></div>
-                  <p className="text-neutral-500">No virtual accounts found for this customer</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {virtualAccounts.map((account) => (
-                    <VirtualAccountCard key={account.id} virtualAccount={account} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <VirtualAccountsSection 
+          virtualAccounts={virtualAccounts} 
+          loading={virtualAccountsLoading} 
+        />
 
         {/* Bank Accounts Section */}
-        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
-          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsBankAccountsCollapsed(!isBankAccountsCollapsed)}>
-            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="mr-2 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-landmark"></i></span>
-              Bank Accounts
-              <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
-                ({externalAccounts.length} {externalAccounts.length === 1 ? 'account' : 'accounts'})
-              </span>
-            </h2>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsAddBankModalOpen(true);
-                }}
-                className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 shadow-sm"
-              >
-                <span><i className="fas fa-plus"></i></span> Add Bank
-              </button>
-              <svg
-                className={`w-6 h-6 text-neutral-500 transition-transform ${isBankAccountsCollapsed ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-
-          {!isBankAccountsCollapsed && (
-            <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
-              {externalAccounts.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-neutral-400 text-5xl mb-4"><i className="fas fa-inbox"></i></div>
-                  <p className="text-neutral-500">No bank accounts found for this customer</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {externalAccounts.map((account) => (
-                    <BankAccountCard key={account.id} account={account} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <BankAccountsSection 
+          accounts={externalAccounts} 
+          onAddBank={() => setIsAddBankModalOpen(true)} 
+        />
 
         {/* Refresh Button */}
         <div className="text-center">
           <button
             onClick={refreshAll}
-            className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
+            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-amber-500/20 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
           >
             <i className="fas fa-sync-alt mr-2"></i> Refresh Data
           </button>

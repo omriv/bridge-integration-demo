@@ -11,7 +11,7 @@ import { createWalletTransactionsTableColumns } from '../components/tableConfigs
 import { createVirtualAccountActivityTableColumns } from '../components/tableConfigs/virtualAccountActivityTableConfig';
 import { LiquidationAddressesSection } from '../components/LiquidationAddressesSection';
 import { HorizontalWalletCard } from '../components/HorizontalWalletCard';
-import { VirtualAccountCard } from '../components/VirtualAccountCard';
+import { VirtualAccountsSection } from '../components/VirtualAccountsSection';
 import { ChainBadge } from '../components/ChainBadge';
 
 // Helper function to filter transfers related to a wallet
@@ -75,7 +75,6 @@ export function WalletOverviewPage() {
 
   // Collapse states for each table
   const [isTransactionsCollapsed, setIsTransactionsCollapsed] = useState(false);
-  const [isVirtualAccountsCollapsed, setIsVirtualAccountsCollapsed] = useState(true);
   const [isWalletTxCollapsed, setIsWalletTxCollapsed] = useState(true);
   const [isTransfersCollapsed, setIsTransfersCollapsed] = useState(true);
   const [isLiquidationHistoryCollapsed, setIsLiquidationHistoryCollapsed] = useState(true);
@@ -378,46 +377,13 @@ export function WalletOverviewPage() {
             )}
 
             {/* Virtual Accounts Section */}
-            {(() => {
-              const walletVirtualAccounts = virtualAccounts.filter(
-                (va) => wallet && va.destination.address.toLowerCase() === wallet.address.toLowerCase()
-              );
-              
-              if (walletVirtualAccounts.length > 0) {
-                return (
-                  <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden border border-neutral-200 dark:border-neutral-700">
-                    <button
-                      onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
-                      className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
-                    >
-                      <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-                        <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-university"></i></span>
-                        Virtual Accounts ({walletVirtualAccounts.length})
-                      </h2>
-                      <svg
-                        className={`w-5 h-5 text-neutral-500 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-
-                    {!isVirtualAccountsCollapsed && (
-                      <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                          {walletVirtualAccounts.map((account) => (
-                            <VirtualAccountCard key={account.id} virtualAccount={account} />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-              return null;
-            })()}
+            {wallet && (
+              <VirtualAccountsSection 
+                virtualAccounts={virtualAccounts.filter(
+                  (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
+                )} 
+              />
+            )}
 
             {/* Liquidation Addresses Section */}
             <LiquidationAddressesSection
@@ -433,14 +399,14 @@ export function WalletOverviewPage() {
             <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700">
               <button
                 onClick={() => setIsTransactionsCollapsed(!isTransactionsCollapsed)}
-                className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
+                className="w-full flex items-center p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
               >
                 <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
                   <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-chart-bar"></i></span>
                   Recent Transactions
                 </h2>
                 <svg
-                  className={`w-5 h-5 text-neutral-500 transition-transform ${isTransactionsCollapsed ? 'rotate-180' : ''}`}
+                  className={`w-5 h-5 text-neutral-500 transition-transform ml-3 ${isTransactionsCollapsed ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
