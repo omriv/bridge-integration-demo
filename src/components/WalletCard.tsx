@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { config } from '../config';
 import { CreateTransferModal } from './CreateTransferModal';
+import { getCurrencyColor } from '../utils/colorUtils';
+import { ChainBadge } from './ChainBadge';
 
 interface WalletCardProps {
   wallet: Wallet;
@@ -27,38 +29,6 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
     }
   };
 
-  const getChainColor = (chain: string) => {
-    const colors: Record<string, string> = {
-      ethereum: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/30',
-      polygon: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30',
-      base: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
-      arbitrum: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/30',
-      optimism: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
-      solana: 'bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/30',
-      avalanche: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
-      bsc: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/30',
-    };
-    return colors[chain.toLowerCase()] || 'bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 border-neutral-200 dark:border-neutral-600';
-  };
-
-  const getCurrencyColor = (currency: string) => {
-    const colors: Record<string, string> = {
-      usdc: 'bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400',
-      usdt: 'bg-green-500/10 border-green-500/30 text-green-600 dark:text-green-400',
-      usdb: 'bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400',
-      dai: 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400',
-      eth: 'bg-neutral-100 border-neutral-200 dark:bg-neutral-700 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300',
-      weth: 'bg-neutral-100 border-neutral-200 dark:bg-neutral-700 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300',
-      btc: 'bg-orange-500/10 border-orange-500/30 text-orange-600 dark:text-orange-400',
-      wbtc: 'bg-orange-500/10 border-orange-500/30 text-orange-600 dark:text-orange-400',
-      matic: 'bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400',
-      sol: 'bg-violet-500/10 border-violet-500/30 text-violet-600 dark:text-violet-400',
-      avax: 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400',
-      bnb: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-600 dark:text-yellow-400',
-    };
-    return colors[currency.toLowerCase()] || 'bg-neutral-100 border-neutral-200 dark:bg-neutral-700 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300';
-  };
-
   // Calculate total USD value of all balances
   const calculateTotalUSD = () => {
     return wallet.balances.reduce((total, balance) => {
@@ -79,9 +49,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-1.5 mb-2">
-              <span className={`px-2 py-0.5 rounded text-xs font-semibold ${getChainColor(wallet.chain)}`}>
-                {wallet.chain.toUpperCase()}
-              </span>
+              <ChainBadge chain={wallet.chain} />
               {wallet.tags.length > 0 && (
                 <span className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400 rounded text-xs">
                   {wallet.tags.join(', ')}

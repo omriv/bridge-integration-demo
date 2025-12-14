@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { config } from '../config';
 import type { Wallet, WalletTransaction, Transfer, LiquidationHistory, VirtualAccountActivity, LiquidationAddress } from '../types';
 import { JsonViewerModal } from '../components/JsonViewerModal';
 import { DynamicTransactionsTable } from '../components/DynamicTransactionsTable';
@@ -11,6 +12,7 @@ import { createVirtualAccountActivityTableColumns } from '../components/tableCon
 import { LiquidationAddressesSection } from '../components/LiquidationAddressesSection';
 import { HorizontalWalletCard } from '../components/HorizontalWalletCard';
 import { VirtualAccountCard } from '../components/VirtualAccountCard';
+import { ChainBadge } from '../components/ChainBadge';
 
 // Helper function to filter transfers related to a wallet
 function filterWalletTransfers(
@@ -89,6 +91,13 @@ export function WalletOverviewPage() {
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
   const [jsonModalTitle, setJsonModalTitle] = useState('');
   const [jsonModalData, setJsonModalData] = useState<unknown>(null);
+  
+  // Calculate total USD value
+  const totalUSD = wallet ? wallet.balances.reduce((total, balance) => {
+    const amount = parseFloat(balance.balance);
+    const rate = config.conversionRates[balance.currency.toLowerCase()] || 0;
+    return total + (amount * rate);
+  }, 0) : 0;
   
   // Track if initial load is complete to prevent duplicate API calls
   const hasLoadedRef = useRef(false);
@@ -308,12 +317,14 @@ export function WalletOverviewPage() {
             <span className="font-semibold">Back</span>
           </button>
           
-          <div className="flex-1 mx-4">
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Wallet Overview</h1>
+          <div className="flex-1 mx-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Wallet Overview</h1>
+              {wallet && <ChainBadge chain={wallet.chain} />}
+            </div>
             {wallet && (
-              <div className="flex items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
-                <span className="font-semibold text-blue-600 dark:text-blue-400">{wallet.chain.toUpperCase()}</span>
-                <span className="font-mono text-xs bg-neutral-100 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-700">{wallet.address.substring(0, 20)}...</span>
+              <div className="text-lg font-bold text-neutral-900 dark:text-white">
+                ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
             )}
           </div>
