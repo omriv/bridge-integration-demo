@@ -18,6 +18,37 @@ if (!BRIDGE_API_KEY) {
 app.use(cors());
 app.use(express.json());
 
+// Proxy endpoint for creating a customer
+app.post('/api/customers', async (req, res) => {
+  try {
+    const customerData = req.body;
+    
+    // Generate a unique idempotency key
+    const idempotencyKey = `cust_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers`, {
+      method: 'POST',
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(customerData),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating customer:', error);
+    res.status(500).json({ error: 'Failed to create customer' });
+  }
+});
+
 // Proxy endpoint for getting all customers
 app.get('/api/customers', async (req, res) => {
   try {

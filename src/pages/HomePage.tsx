@@ -3,6 +3,7 @@ import { useData } from '../context/DataContext'
 import { CustomerDetails } from '../components/CustomerDetails'
 import { AddBankModal } from '../components/AddBankModal'
 import { AddWalletModal } from '../components/AddWalletModal'
+import { AddCustomerModal } from '../components/AddCustomerModal'
 import { WalletsSection } from '../components/WalletsSection'
 import { BankAccountsSection } from '../components/BankAccountsSection'
 import { VirtualAccountsSection } from '../components/VirtualAccountsSection'
@@ -14,6 +15,7 @@ export function HomePage() {
   // Modal states
   const [isAddBankModalOpen, setIsAddBankModalOpen] = useState(false);
   const [isAddWalletModalOpen, setIsAddWalletModalOpen] = useState(false);
+  const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
 
   useEffect(() => {
     if (!customer) {
@@ -153,87 +155,95 @@ export function HomePage() {
       <div className="max-w-6xl mx-auto">
         {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
-          {/* Customer Selector Dropdown */}
-          {customers.length > 0 && (
-            <div className="mt-4 max-w-md mx-auto relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-4 py-3 flex items-center justify-between hover:border-amber-500 transition-colors shadow-sm"
-              >
-                <div className="flex items-center gap-3 flex-1 text-left">
-                  <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">Current Customer:</span>
-                  {customer && (
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-sm text-neutral-900 dark:text-neutral-200">
-                        {customer.full_name || customer.email || customer.id.substring(0, 12) + '...'}
-                      </span>
-                      {customer.status && (
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(customer.status)}`}>
-                          {customer.status.replace(/_/g, ' ').toUpperCase()}
-                        </span>
-                      )}
-                      {customer.kyc_status && (
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(customer.kyc_status)}`}>
-                          KYC: {customer.kyc_status.replace(/_/g, ' ').toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                <svg
-                  className={`w-5 h-5 text-neutral-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            <div className="mt-4 max-w-2xl mx-auto relative flex gap-2">
+              {customers.length > 0 && (
+              <div className="relative flex-1">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-4 py-3 flex items-center justify-between hover:border-amber-500 transition-colors shadow-sm"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl max-h-96 overflow-y-auto">
-                  {customers.map((cust) => (
-                    <button
-                      key={cust.id}
-                      onClick={() => handleCustomerChange(cust.id)}
-                      className={`w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0 ${
-                        cust.id === currentCustomerId ? 'bg-amber-500/10' : ''
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
-                            {cust.full_name || cust.email || 'Unnamed Customer'}
-                          </div>
-                          <div className="font-mono text-xs text-neutral-500 truncate">
-                            {cust.id}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
-                          {cust.status && (
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.status)}`}>
-                              {cust.status.replace(/_/g, ' ').toUpperCase()}
-                            </span>
-                          )}
-                          {cust.kyc_status && (
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.kyc_status)}`}>
-                              KYC: {cust.kyc_status.replace(/_/g, ' ').toUpperCase()}
-                            </span>
-                          )}
-                          {cust.tos_status && (
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.tos_status)}`}>
-                              ToS: {cust.tos_status.replace(/_/g, ' ').toUpperCase()}
-                            </span>
-                          )}
-                        </div>
+                  <div className="flex items-center gap-3 flex-1 text-left">
+                    <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">Current Customer:</span>
+                    {customer && (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-sm text-neutral-900 dark:text-neutral-200">
+                          {customer.full_name || customer.email || customer.id.substring(0, 12) + '...'}
+                        </span>
+                        {customer.status && (
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(customer.status)}`}>
+                            {customer.status.replace(/_/g, ' ').toUpperCase()}
+                          </span>
+                        )}
+                        {customer.kyc_status && (
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(customer.kyc_status)}`}>
+                            KYC: {customer.kyc_status.replace(/_/g, ' ').toUpperCase()}
+                          </span>
+                        )}
                       </div>
-                    </button>
-                  ))}
-                </div>
-              )}
+                    )}
+                  </div>
+                  <svg
+                    className={`w-5 h-5 text-neutral-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl max-h-96 overflow-y-auto">
+                    {customers.map((cust) => (
+                      <button
+                        key={cust.id}
+                        onClick={() => handleCustomerChange(cust.id)}
+                        className={`w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0 ${
+                          cust.id === currentCustomerId ? 'bg-amber-500/10' : ''
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
+                              {cust.full_name || cust.email || 'Unnamed Customer'}
+                            </div>
+                            <div className="font-mono text-xs text-neutral-500 truncate">
+                              {cust.id}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
+                            {cust.status && (
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.status)}`}>
+                                {cust.status.replace(/_/g, ' ').toUpperCase()}
+                              </span>
+                            )}
+                            {cust.kyc_status && (
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.kyc_status)}`}>
+                                KYC: {cust.kyc_status.replace(/_/g, ' ').toUpperCase()}
+                              </span>
+                            )}
+                            {cust.tos_status && (
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(cust.tos_status)}`}>
+                                ToS: {cust.tos_status.replace(/_/g, ' ').toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              )}    
+              <button
+                onClick={() => setIsAddCustomerModalOpen(true)}
+                className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg font-semibold hover:bg-amber-500/20 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
+              >
+                <i className="fas fa-plus"></i> Add Customer
+              </button>
             </div>
-          )}
+          
         </div>
 
         {/* Customer Details */}
@@ -262,7 +272,7 @@ export function HomePage() {
         <div className="text-center">
           <button
             onClick={refreshAll}
-            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-amber-500/20 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
+            className="bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-teal-500/20 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
           >
             <i className="fas fa-sync-alt mr-2"></i> Refresh Data
           </button>
@@ -287,6 +297,12 @@ export function HomePage() {
           existingWallets={wallets}
         />
       )}
+
+      {/* Add Customer Modal */}
+      <AddCustomerModal
+        isOpen={isAddCustomerModalOpen}
+        onClose={() => setIsAddCustomerModalOpen(false)}
+      />
     </div>
   )
 }
