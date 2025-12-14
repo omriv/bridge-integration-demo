@@ -13,30 +13,25 @@ export function DeveloperAccountPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200">
-      {/* Header */}
-      <div className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      {/* Content */}
+      <div className="max-w-7xl mx-auto p-4 md:p-8">
+        {/* Page Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Developer Account Overview</h1>
+            <p className="text-neutral-500 dark:text-neutral-400">Manage your Bridge API settings</p>
+          </div>
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-3 py-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             <span className="font-semibold">Back to Home</span>
           </button>
-          
-          <div className="flex-1 mx-4 text-center">
-            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Developer Account Overview</h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">Manage your Bridge API settings</p>
-          </div>
-
-          <div className="w-32"></div> {/* Spacer for balance */}
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto p-4 md:p-8">
         <div className="space-y-6">
           {/* Developer Fees Section */}
           <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">

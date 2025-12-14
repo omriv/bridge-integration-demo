@@ -7,14 +7,11 @@ import { VirtualAccountCard } from '../components/VirtualAccountCard'
 import { BankAccountCard } from '../components/BankAccountCard'
 import { AddBankModal } from '../components/AddBankModal'
 import { AddWalletModal } from '../components/AddWalletModal'
-import { MockToggle } from '../components/MockToggle'
-import { ThemeToggle } from '../components/ThemeToggle'
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, toggleMock, refreshAll, virtualAccounts, virtualAccountsLoading, externalAccounts } = useData();
+  const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, refreshAll, virtualAccounts, virtualAccountsLoading, externalAccounts } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showModeTransition, setShowModeTransition] = useState(false);
   
   // Collapse states
   const [isWalletsCollapsed, setIsWalletsCollapsed] = useState(true);
@@ -35,14 +32,6 @@ export function HomePage() {
     setCurrentCustomerId(customerId);
     setIsDropdownOpen(false);
     await loadCustomerData(customerId);
-  };
-
-  const handleMockToggle = () => {
-    setShowModeTransition(true);
-    toggleMock();
-    setTimeout(() => {
-      setShowModeTransition(false);
-    }, 2000);
   };
 
   const getStatusColor = (status?: string) => {
@@ -68,30 +57,6 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto">
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1 flex justify-start">
-                <button
-                  onClick={() => navigate('/account')}
-                  disabled={useMock}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
-                    useMock
-                      ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
-                      : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
-                  }`}
-                  title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
-                >
-                  <span>👤</span>
-                  <span>Developer Account</span>
-                </button>
-              </div>
-              <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
-                Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
-              </h1>
-              <div className="flex-1 flex justify-end gap-3">
-                <ThemeToggle />
-                <MockToggle useMock={useMock} onToggle={handleMockToggle} />
-              </div>
-            </div>
             <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
           </div>
 
@@ -113,30 +78,6 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto">
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1 flex justify-start">
-                <button
-                  onClick={() => navigate('/account')}
-                  disabled={useMock}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
-                    useMock
-                      ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
-                      : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
-                  }`}
-                  title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
-                >
-                  <span>👤</span>
-                  <span>Developer Account</span>
-                </button>
-              </div>
-              <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
-                Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
-              </h1>
-              <div className="flex-1 flex justify-end gap-3">
-                <ThemeToggle />
-                <MockToggle useMock={useMock} onToggle={handleMockToggle} />
-              </div>
-            </div>
             <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
           </div>
 
@@ -167,34 +108,6 @@ export function HomePage() {
     return (
       <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8 transition-colors duration-300">
         <div className="max-w-6xl mx-auto">
-          {/* Header - Always Visible */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1 flex justify-start">
-                <button
-                  onClick={() => navigate('/account')}
-                  disabled={useMock}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
-                    useMock
-                      ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
-                      : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
-                  }`}
-                  title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
-                >
-                  <span>👤</span>
-                  <span>Developer Account</span>
-                </button>
-              </div>
-              <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
-                Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
-              </h1>
-              <div className="flex-1 flex justify-end gap-3">
-                <ThemeToggle />
-                <MockToggle useMock={useMock} onToggle={handleMockToggle} />
-              </div>
-            </div>
-            <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
-          </div>
 
           {/* Customer Selector */}
           <div className="max-w-2xl mx-auto bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-8 border border-neutral-200 dark:border-neutral-700">
@@ -243,52 +156,10 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8 transition-colors duration-300">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-4 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1 flex justify-start">
-              <button
-                onClick={() => navigate('/account')}
-                disabled={useMock}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  useMock
-                    ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
-                    : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
-                }`}
-                title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
-              >
-                <span>👤</span>
-                <span>Developer Account</span>
-              </button>
-            </div>
-            <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
-              Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
-            </h1>
-            <div className="flex-1 flex justify-end gap-3">
-              <ThemeToggle />
-              <MockToggle useMock={useMock} onToggle={handleMockToggle} />
-            </div>
-          </div>
-          <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
-
-          {/* Mode Transition Notification */}
-          {showModeTransition && (
-            <div className="mt-4 max-w-md mx-auto">
-              <div className={`px-4 py-3 rounded-lg border flex items-center gap-3 animate-pulse ${
-                useMock 
-                  ? 'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400' 
-                  : 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400'
-              }`}>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
-                <span className="font-semibold">
-                  {useMock ? 'Switching to Mock Data...' : 'Switching to Real Data...'}
-                </span>
-              </div>
-            </div>
-          )}
-          
           {/* Customer Selector Dropdown */}
           {customers.length > 0 && (
             <div className="mt-4 max-w-md mx-auto relative">
