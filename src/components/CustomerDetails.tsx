@@ -10,14 +10,14 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
   const { deleteCustomer } = useData();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteStep, setDeleteStep] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
       await deleteCustomer(customer.id);
-      setIsDeleteModalOpen(false);
+      setDeleteStep(0);
     } catch (error) {
       console.error('Failed to delete customer:', error);
       alert('Failed to delete customer');
@@ -121,7 +121,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setIsDeleteModalOpen(true);
+            setDeleteStep(1);
           }}
           className="px-3 py-1.5 bg-red-100 text-red-700 text-sm font-semibold rounded-lg hover:bg-red-200 transition-colors flex items-center gap-2"
         >
@@ -153,23 +153,39 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
         </div>
       )}
 
-      {isDeleteModalOpen && (
+      {deleteStep > 0 && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Delete Customer</h3>
+          <div className={`bg-white rounded-xl shadow-xl w-full p-6 transition-all duration-300 ${
+            deleteStep === 1 ? 'max-w-md' : deleteStep === 2 ? 'max-w-lg' : 'max-w-xl'
+          }`}>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+              {deleteStep === 1 && 'Delete Customer'}
+              {deleteStep === 2 && 'Are you really sure?'}
+              {deleteStep === 3 && 'Final Confirmation'}
+            </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete customer <span className="font-semibold">{customer.full_name || customer.email || customer.id}</span>? This action cannot be undone.
+              {deleteStep === 1 && (
+                <>Are you sure you want to delete customer <span className="font-semibold">{customer.full_name || customer.email || customer.id}</span>? This action cannot be undone.</>
+              )}
+              {deleteStep === 2 && 'Are you absolutely sure? This will permanently remove all data associated with this customer.'}
+              {deleteStep === 3 && 'This is your last chance to cancel. Do you really want to delete this customer?'}
             </p>
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setIsDeleteModalOpen(false)}
+                onClick={() => setDeleteStep(0)}
                 className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors"
                 disabled={isDeleting}
               >
                 Cancel
               </button>
               <button
-                onClick={handleDelete}
+                onClick={() => {
+                  if (deleteStep < 3) {
+                    setDeleteStep(prev => prev + 1);
+                  } else {
+                    handleDelete();
+                  }
+                }}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
                 disabled={isDeleting}
               >
@@ -179,7 +195,9 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                     Deleting...
                   </>
                 ) : (
-                  'Delete Customer'
+                  deleteStep === 1 ? 'Yes, delete' :
+                  deleteStep === 2 ? 'I understand, continue' :
+                  'Yes, Delete Customer'
                 )}
               </button>
             </div>

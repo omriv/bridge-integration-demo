@@ -122,7 +122,7 @@ export function LiquidationAddressesSection({
                     {flowData.sources.map((source) => {
                       const [chain, currency] = source.split('|');
                       return (
-                        <div key={source} className="h-8 flex items-center justify-end px-3 bg-orange-50 border border-gray-200 rounded-full shadow-sm">
+                        <div key={source} className="h-8 flex items-center justify-end px-3 bg-teal-100 border border-gray-200 rounded-full shadow-sm">
                           <span className="text-xs font-bold text-gray-700">{chain.toUpperCase()}</span>
                           <span className="mx-1 text-gray-300">•</span>
                           <span className="text-xs text-gray-500">{currency.toUpperCase()}</span>
@@ -163,7 +163,7 @@ export function LiquidationAddressesSection({
                     {flowData.destinations.map((dest) => {
                       const [rail, currency] = dest.split('|');
                       return (
-                        <div key={dest} className="h-8 flex items-center px-3 bg-green-50 border border-gray-200 rounded-full shadow-sm">
+                        <div key={dest} className="h-8 flex items-center px-3 bg-amber-100 border border-gray-200 rounded-full shadow-sm">
                           <span className="text-xs font-bold text-gray-700">{rail.toUpperCase()}</span>
                           <span className="mx-1 text-gray-300">•</span>
                           <span className="text-xs text-gray-500">{currency.toUpperCase()}</span>

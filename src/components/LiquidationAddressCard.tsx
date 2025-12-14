@@ -61,24 +61,14 @@ export function LiquidationAddressCard({
             </div>
           </div>
 
-          <div>
-            <p className="text-gray-500 mb-0.5">Chain</p>
+          <div className='bg-teal-100'>
+            <p className="text-gray-500 mb-0.5">Source Chain</p>
             <p className="font-semibold text-gray-900 uppercase">{la.chain}</p>
           </div>
 
-          <div>
-            <p className="text-gray-500 mb-0.5">Currency</p>
-            <p className="font-semibold text-gray-900 uppercase">{la.currency}</p>
-          </div>
-
-          <div>
-            <p className="text-gray-500 mb-0.5">Dest. Rail</p>
+          <div className='bg-amber-100'>
+            <p className="text-gray-500 mb-0.5">Destination Rail</p>
             <p className="font-semibold text-gray-900 uppercase">{la.destination_payment_rail}</p>
-          </div>
-
-          <div>
-            <p className="text-gray-500 mb-0.5">Dest. Currency</p>
-            <p className="font-semibold text-gray-900 uppercase">{la.destination_currency}</p>
           </div>
 
           <div>
@@ -94,6 +84,17 @@ export function LiquidationAddressCard({
             <p className="text-gray-500 mb-0.5">Created</p>
             <p className="text-gray-900">{new Date(la.created_at).toLocaleDateString()}</p>
           </div>
+
+          <div className='bg-teal-100'>
+            <p className="text-gray-500 mb-0.5">Source Currency</p>
+            <p className="font-semibold text-gray-900 uppercase">{la.currency}</p>
+          </div>
+
+          <div className='bg-amber-100'>
+            <p className="text-gray-500 mb-0.5">Destination Currency</p>
+            <p className="font-semibold text-gray-900 uppercase">{la.destination_currency}</p>
+          </div>
+
         </div>
         
         {onViewRawJson && (

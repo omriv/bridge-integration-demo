@@ -245,6 +245,13 @@
     "transactionMinimum": "1 USDC"
   },
   {
+    "sourceRail": "Solana",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
     "sourceRail": "Arbitrum",
     "sourceCurrency": "USDC",
     "destinationRail": "Solana",
