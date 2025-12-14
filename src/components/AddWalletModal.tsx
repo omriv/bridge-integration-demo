@@ -69,12 +69,12 @@ export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-md relative">
-          <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-gray-800">Add Bridge Wallet</h2>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+        <div className="bg-slate-900 rounded-xl shadow-xl w-full max-w-md relative border border-slate-700">
+          <div className="p-6 border-b border-slate-700 flex justify-between items-center">
+            <h2 className="text-xl font-bold text-white">Add Bridge Wallet</h2>
+            <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -85,20 +85,20 @@ export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }:
             {success ? (
               <div className="text-center py-8">
                 <div className="text-green-500 text-5xl mb-4">✅</div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Wallet Created Successfully!</h3>
-                <p className="text-gray-600 mb-6">The new wallet has been added to the customer's profile.</p>
+                <h3 className="text-xl font-bold text-white mb-2">Wallet Created Successfully!</h3>
+                <p className="text-slate-400 mb-6">The new wallet has been added to the customer's profile.</p>
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={() => {
                       setResponseModalOpen(true);
                     }}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+                    className="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 font-medium border border-slate-600 transition-colors"
                   >
                     View Response
                   </button>
                   <button
                     onClick={onClose}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 font-medium transition-colors"
                   >
                     Close
                   </button>
@@ -107,22 +107,22 @@ export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }:
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Payoneer Rules Toggle */}
-                <div className={`flex items-center justify-between p-4 rounded-lg border border-gray-200 ${
-                      isPayoneerRules ? 'bg-rose-200' : 'bg-lime-200'
+                <div className={`flex items-center justify-between p-4 rounded-lg border border-slate-700 ${
+                      isPayoneerRules ? 'bg-rose-500/10' : 'bg-lime-500/10'
                     }`}>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-900">
+                    <span className="font-semibold text-white">
                       {isPayoneerRules ? 'Payoneer Rules Apply' : 'Free Choice'}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-slate-400">
                       {isPayoneerRules ? 'Strict validation enabled' : 'Standard validation'}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={handleToggleRules}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                      isPayoneerRules ? 'bg-rose-600' : 'bg-lime-600'
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      isPayoneerRules ? 'bg-rose-500' : 'bg-lime-500'
                     }`}
                   >
                     <span
@@ -134,21 +134,21 @@ export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }:
                 </div>
 
                 {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
                     {error}
                   </div>
                 )}
 
                 {isBlocked && (
-                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                  <div className="bg-yellow-500/10 border-l-4 border-yellow-500/50 p-4">
                     <div className="flex">
                       <div className="flex-shrink-0">
-                        <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <svg className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <p className="text-sm text-yellow-700">
+                        <p className="text-sm text-yellow-400">
                           Payoneer Rules: This customer already has a wallet. Creating additional wallets is not allowed.
                         </p>
                       </div>
@@ -157,36 +157,36 @@ export function AddWalletModal({ isOpen, onClose, customerId, existingWallets }:
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Chain *</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Chain *</label>
                   <select
                     value={chain}
                     onChange={(e) => setChain(e.target.value)}
                     disabled={isPayoneerRules}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+                    className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-800 disabled:text-slate-500"
                   >
                     {!isPayoneerRules && <option value="base">Base</option>}
                     {!isPayoneerRules && <option value="ethereum">Ethereum</option>}
                     <option value="solana">Solana</option>
                   </select>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-slate-500">
                     {isPayoneerRules 
                       ? "Only Solana is supported under Payoneer Rules." 
                       : "Select the blockchain network for this wallet."}
                   </p>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <div className="flex justify-end gap-3 pt-4 border-t border-slate-700">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading || isBlocked}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {loading ? (
                       <>

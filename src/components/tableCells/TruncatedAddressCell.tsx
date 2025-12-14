@@ -13,7 +13,7 @@ export function TruncatedAddressCell({ data, className }: CellTypeProps) {
     : address;
 
   return (
-    <span className={className || "text-xs font-mono text-gray-600"} title={address}>
+    <span className={className || "text-xs font-mono text-slate-400"} title={address}>
       {truncated}
     </span>
   );

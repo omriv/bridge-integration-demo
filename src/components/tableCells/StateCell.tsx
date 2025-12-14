@@ -11,7 +11,7 @@ export function StateCell({ data, className }: CellTypeProps) {
   // If no state, show N/A
   if (!state) {
     return (
-      <span className={className || "inline-block px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-400"}>
+      <span className={className || "inline-block px-2 py-0.5 rounded text-xs font-semibold bg-slate-700 text-slate-400"}>
         N/A
       </span>
     );
@@ -24,7 +24,7 @@ export function StateCell({ data, className }: CellTypeProps) {
     if (normalizedState === 'payment_processed' || 
         normalizedState === 'funds_received' || 
         normalizedState === 'complete') {
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-500/10 text-green-400';
     }
     
     // In Progress states
@@ -32,11 +32,11 @@ export function StateCell({ data, className }: CellTypeProps) {
         normalizedState === 'funds_scheduled' || 
         normalizedState === 'awaiting_funds' ||
         normalizedState === 'in_review') {
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-500/10 text-yellow-400';
     }
     
     // Other/Unknown states
-    return 'bg-gray-100 text-gray-800';
+    return 'bg-slate-700 text-slate-300';
   };
 
   return (

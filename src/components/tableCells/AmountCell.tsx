@@ -10,7 +10,7 @@ export function AmountCell({ data, className }: CellTypeProps) {
   const currency = data?.currency;
   
   return (
-    <span className={className || "font-semibold text-gray-900"}>
+    <span className={className || "font-semibold text-white"}>
       {amount}{currency ? ` ${currency.toUpperCase()}` : ''}
     </span>
   );

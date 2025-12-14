@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
-/* Ensure status badge colors are always available */
-@layer utilities {
-  .bg-green-100 { background-color: rgb(220 252 231); }
-  .text-green-800 { color: rgb(22 101 52); }
-  .bg-yellow-100 { background-color: rgb(254 249 195); }
-  .text-yellow-800 { color: rgb(133 77 14); }
-  .bg-red-100 { background-color: rgb(254 226 226); }
-  .text-red-800 { color: rgb(153 27 27); }
-  .bg-gray-100 { background-color: rgb(243 244 246); }
-  .text-gray-700 { color: rgb(55 65 81); }
-  .text-gray-800 { color: rgb(31 41 55); }
+@theme {
+  --color-background: #0f172a; /* slate-900 */
+  --color-surface: #1e293b; /* slate-800 */
+  --color-surface-hover: #334155; /* slate-700 */
+  --color-border: #334155; /* slate-700 */
+  --color-primary: #3b82f6; /* blue-500 */
+  --color-primary-hover: #2563eb; /* blue-600 */
+  --color-text-primary: #f8fafc; /* slate-50 */
+  --color-text-secondary: #94a3b8; /* slate-400 */
 }
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+

@@ -9,7 +9,7 @@ export function TextCell({ data, className }: CellTypeProps) {
   const text = data?.text || '';
   
   return (
-    <span className={className || "text-gray-700"}>
+    <span className={className || "text-slate-300"}>
       {text}
     </span>
   );

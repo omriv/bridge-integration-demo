@@ -10,7 +10,7 @@ export function DateTimeCell({ data, className }: CellTypeProps) {
   const formatted = dateTime ? new Date(dateTime).toLocaleString() : '-';
 
   return (
-    <span className={className || "text-gray-600 text-xs"}>
+    <span className={className || "text-slate-400 text-xs"}>
       {formatted}
     </span>
   );

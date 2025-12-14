@@ -11,8 +11,8 @@ export function PaymentDestinationCell({ data, className }: CellTypeProps) {
   
   return (
     <div className={className}>
-      <div className="font-medium text-gray-900">{currency.toUpperCase()}</div>
-      <div className="text-gray-500 text-xs">{paymentRail}</div>
+      <div className="font-medium text-white">{currency.toUpperCase()}</div>
+      <div className="text-slate-500 text-xs">{paymentRail}</div>
     </div>
   );
 }

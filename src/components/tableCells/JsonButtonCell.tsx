@@ -11,7 +11,7 @@ export function JsonButtonCell({ data, onClick, className }: CellTypeProps) {
   return (
     <button
       onClick={() => onClick?.(data?.value)}
-      className={className || "px-2 py-0.5 bg-gray-800 text-green-400 rounded text-xs font-semibold hover:bg-gray-700"}
+      className={className || "px-2 py-0.5 bg-slate-900 text-green-400 rounded text-xs font-semibold hover:bg-slate-700 border border-slate-700"}
     >
       {label}
     </button>
