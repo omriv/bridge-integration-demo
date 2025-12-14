@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { JsonViewerModal } from './JsonViewerModal';
-import type { WalletBalance } from '../types';
+import { GetDestinationAddressModal } from './GetDestinationAddressModal';
+import type { WalletBalance, LiquidationAddress } from '../types';
 import { getAvailableRoutes, getDestinationRails, getDestinationCurrencies, railToApiFormat, type Route } from '../utils/routingHelper';
 import { bridgeAPI } from '../services/bridgeAPI';
 
@@ -65,6 +66,7 @@ export function CreateTransferModal({
   const [errorMessage, setErrorMessage] = useState('');
   const [responseData, setResponseData] = useState<Record<string, unknown> | null>(null);
   const [showJsonModal, setShowJsonModal] = useState(false);
+  const [showGetAddressModal, setShowGetAddressModal] = useState(false);
   
   // Routing state
   const [availableRoutes, setAvailableRoutes] = useState<Route[]>([]);
@@ -132,6 +134,16 @@ export function CreateTransferModal({
       }));
     }
   }, [formData.source_payment_rail, walletId, walletAddress]);
+
+  const handleAddressSelect = (address: LiquidationAddress) => {
+    setFormData(prev => ({
+      ...prev,
+      destination_to_address: address.address,
+      destination_payment_rail: railToApiFormat(address.chain),
+      destination_currency: address.currency !== 'any' ? address.currency.toLowerCase() : prev.destination_currency
+    }));
+    setShowGetAddressModal(false);
+  };
 
   if (!isOpen) return null;
   
@@ -495,7 +507,16 @@ export function CreateTransferModal({
 
               {/* Destination Section */}
               <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Destination</h3>
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Destination</h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowGetAddressModal(true)}
+                    className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium flex items-center gap-1"
+                  >
+                    <i className="fas fa-search"></i> Get Destination Customer Addresses
+                  </button>
+                </div>
                 {destinationRails.length === 0 && (
                   <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded flex items-center gap-2">
                     <i className="fas fa-exclamation-triangle"></i>
@@ -746,6 +767,14 @@ export function CreateTransferModal({
         onClose={() => setShowJsonModal(false)}
         title="Transfer Response"
         data={responseData}
+      />
+
+      <GetDestinationAddressModal
+        isOpen={showGetAddressModal}
+        onClose={() => setShowGetAddressModal(false)}
+        onSelectAddress={handleAddressSelect}
+        currentChain={walletChain}
+        sourceCurrency={formData.source_currency}
       />
     </>
   );
