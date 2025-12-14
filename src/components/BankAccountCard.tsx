@@ -60,26 +60,26 @@ export function BankAccountCard({ account }: BankAccountCardProps) {
   };
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🏦</span>
           <div>
-            <h3 className="font-semibold text-white">{account.bank_name || 'Unknown Bank'}</h3>
-            <p className="text-xs text-slate-500 uppercase">{account.type.replace(/_/g, ' ')}</p>
+            <h3 className="font-semibold text-neutral-900 dark:text-white">{account.bank_name || 'Unknown Bank'}</h3>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 uppercase">{account.type.replace(/_/g, ' ')}</p>
           </div>
         </div>
-        <span className="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs font-semibold">
+        <span className="px-2 py-1 bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 rounded text-xs font-semibold">
           {account.currency}
         </span>
       </div>
       
-      <div className="space-y-2 text-sm border-t border-slate-700 pt-3">
+      <div className="space-y-2 text-sm border-t border-neutral-200 dark:border-neutral-700 pt-3">
         <div className="flex justify-between">
-          <span className="text-slate-500">Account Owner:</span>
-          <span className="font-medium text-slate-300">{account.account_owner_name || 'N/A'}</span>
+          <span className="text-neutral-500 dark:text-neutral-400">Account Owner:</span>
+          <span className="font-medium text-neutral-700 dark:text-neutral-300">{account.account_owner_name || 'N/A'}</span>
         </div>
-        <div className="text-slate-300">
+        <div className="text-neutral-700 dark:text-neutral-300">
           {getAccountDetails()}
         </div>
       </div>

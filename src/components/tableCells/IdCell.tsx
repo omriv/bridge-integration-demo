@@ -11,7 +11,7 @@ export function IdCell({ data, className }: CellTypeProps) {
   const truncated = id.length > truncateLength ? `${id.substring(0, truncateLength)}...` : id;
 
   return (
-    <span className={className || "text-xs font-mono text-slate-400"} title={id}>
+    <span className={className || "text-xs font-mono text-neutral-500"} title={id}>
       {truncated}
     </span>
   );

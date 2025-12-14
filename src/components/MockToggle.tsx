@@ -20,8 +20,8 @@ export function MockToggle({ useMock, onToggle }: MockToggleProps) {
       {/* Mode Badge */}
       <div className={`px-3 py-1.5 rounded-lg font-semibold text-sm transition-all ${
         useMock 
-          ? 'bg-orange-500/10 text-orange-400 border-2 border-orange-500/30' 
-          : 'bg-green-500/10 text-green-400 border-2 border-green-500/30'
+          ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-2 border-orange-500/30' 
+          : 'bg-green-500/10 text-green-600 dark:text-green-400 border-2 border-green-500/30'
       }`}>
         {useMock ? '🎭 Mock Data' : '🌐 Real Data'}
       </div>
@@ -34,7 +34,7 @@ export function MockToggle({ useMock, onToggle }: MockToggleProps) {
       >
         <button
           onClick={handleToggle}
-          className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 ${
+          className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 ${
             useMock 
               ? 'bg-orange-500 focus:ring-orange-500' 
               : 'bg-green-500 focus:ring-green-500'
@@ -52,20 +52,20 @@ export function MockToggle({ useMock, onToggle }: MockToggleProps) {
 
         {/* Tooltip */}
         {showTooltip && (
-          <div className="absolute top-full mt-2 right-0 z-50 w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl border border-slate-700">
+          <div className="absolute top-full mt-2 right-0 z-50 w-64 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white text-xs rounded-lg p-3 shadow-xl border border-neutral-200 dark:border-neutral-700">
             <div className="font-semibold mb-1">Data Source Toggle</div>
-            <div className="text-slate-300">
+            <div className="text-neutral-600 dark:text-neutral-300">
               {useMock 
                 ? 'Currently using local mock data. Switch to use real Bridge API.' 
                 : 'Currently using Bridge API. Switch to use local mock data for testing.'}
             </div>
-            <div className="absolute -top-1 right-6 w-2 h-2 bg-slate-800 border-t border-l border-slate-700 transform rotate-45"></div>
+            <div className="absolute -top-1 right-6 w-2 h-2 bg-white dark:bg-neutral-800 border-t border-l border-neutral-200 dark:border-neutral-700 transform rotate-45"></div>
           </div>
         )}
       </div>
 
       {/* Helper Text */}
-      <div className="text-xs text-slate-400 hidden md:block">
+      <div className="text-xs text-neutral-500 dark:text-neutral-400 hidden md:block">
         {useMock ? 'Using local mock data' : 'Using Bridge API'}
       </div>
     </div>

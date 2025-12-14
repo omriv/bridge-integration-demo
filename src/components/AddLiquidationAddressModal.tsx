@@ -150,10 +150,10 @@ export function AddLiquidationAddressModal({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="bg-slate-900 rounded-xl shadow-xl w-full max-w-2xl relative border border-slate-700">
-          <div className="p-6 border-b border-slate-700 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-white">Add Liquidation Address</h2>
-            <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+        <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl w-full max-w-2xl relative border border-neutral-200 dark:border-neutral-800">
+          <div className="p-6 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center">
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Add Liquidation Address</h2>
+            <button onClick={onClose} className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-white transition-colors">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -164,20 +164,20 @@ export function AddLiquidationAddressModal({
             {success ? (
               <div className="text-center py-8">
                 <div className="text-green-500 text-5xl mb-4">✅</div>
-                <h3 className="text-xl font-bold text-white mb-2">Address Created Successfully!</h3>
-                <p className="text-slate-400 mb-6">The new liquidation address has been added.</p>
+                <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Address Created Successfully!</h3>
+                <p className="text-neutral-500 dark:text-neutral-400 mb-6">The new liquidation address has been added.</p>
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={() => {
                       setResponseModalOpen(true);
                     }}
-                    className="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 font-medium border border-slate-600 transition-colors"
+                    className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 font-medium border border-neutral-200 dark:border-neutral-600 transition-colors"
                   >
                     View Response
                   </button>
                   <button
                     onClick={onClose}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 font-medium transition-colors"
+                    className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium transition-colors"
                   >
                     Close
                   </button>
@@ -186,7 +186,7 @@ export function AddLiquidationAddressModal({
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
                     {error}
                   </div>
                 )}
@@ -194,13 +194,13 @@ export function AddLiquidationAddressModal({
                 {/* Basic Info */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Source Chain *</label>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Source Chain *</label>
                     <select
                       name="chain"
                       value={formData.chain}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
                     >
                       <option value="">Select chain...</option>
                       <option value="arbitrum">Arbitrum</option>
@@ -215,13 +215,13 @@ export function AddLiquidationAddressModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Source Currency *</label>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Source Currency *</label>
                     <select
                       name="currency"
                       value={formData.currency}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
                     >
                       <option value="">Select currency...</option>
                       <option value="usdb">USDB</option>
@@ -236,18 +236,18 @@ export function AddLiquidationAddressModal({
                 </div>
 
                 {/* Destination Info */}
-                <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 space-y-4">
-                  <h3 className="font-semibold text-white border-b border-slate-700 pb-2">Destination Details</h3>
+                <div className="bg-neutral-50 dark:bg-neutral-800/50 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700 space-y-4">
+                  <h3 className="font-semibold text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-700 pb-2">Destination Details</h3>
                   
                   {/* Destination Target (Account/Wallet/Address) */}
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-400 mb-1">Bridge Wallet</label>
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Bridge Wallet</label>
                       <select
                         name="bridge_wallet_id"
                         value={formData.bridge_wallet_id}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
                       >
                         <option value="">Select Bridge Wallet...</option>
                         {wallets.map(w => (
@@ -261,13 +261,13 @@ export function AddLiquidationAddressModal({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-400 mb-1">Payment Rail *</label>
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Payment Rail *</label>
                       <select
                         name="destination_payment_rail"
                         value={formData.destination_payment_rail}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
                       >
                         <option value="">Select chain...</option>
                         <option value="ach">ACH</option>
@@ -288,13 +288,13 @@ export function AddLiquidationAddressModal({
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-400 mb-1">Destination Currency *</label>
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Destination Currency *</label>
                       <select
                         name="destination_currency"
                         value={formData.destination_currency}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase"
+                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none uppercase"
                       >
                         <option value="">Select currency...</option>
                         <option value="usd">USD</option>
@@ -312,58 +312,58 @@ export function AddLiquidationAddressModal({
 
                   {/* Destination Address */}
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Destination Address (Crypto)</label>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Destination Address (Crypto)</label>
                     <input
                       type="text"
                       name="destination_address"
                       value={formData.destination_address}
                       onChange={handleInputChange}
                       placeholder="0x..."
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 placeholder-neutral-400 dark:placeholder-neutral-500 outline-none"
                     />
                   </div>
                 </div>
 
                 {/* Additional Options */}
-                <div className="border-t border-slate-700 pt-4">
-                  <h3 className="text-sm font-semibold text-slate-300 mb-3">Additional Options</h3>
+                <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4">
+                  <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-3">Additional Options</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-400 mb-1">Return Address</label>
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Return Address</label>
                       <input
                         type="text"
                         name="return_address"
                         value={formData.return_address}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-400 mb-1">Developer Fee %</label>
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">Developer Fee %</label>
                       <input
                         type="text"
                         name="custom_developer_fee_percent"
                         value={formData.custom_developer_fee_percent}
                         onChange={handleInputChange}
                         placeholder="e.g. 0.1"
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-500"
+                        className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 placeholder-neutral-400 dark:placeholder-neutral-500 outline-none"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-slate-700">
+                <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2 text-slate-300 hover:bg-slate-800 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg font-medium transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-6 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-amber-900/20"
                   >
                     {loading ? (
                       <>

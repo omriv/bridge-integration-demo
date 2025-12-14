@@ -278,13 +278,13 @@ export function WalletOverviewPage() {
 
   if ((walletNotFound || !wallet) && !loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center p-4">
         <div className="text-center">
           <div className="text-red-500 text-5xl mb-4">❌</div>
-          <h2 className="text-2xl font-bold text-white mb-4">Wallet Not Found</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">Wallet Not Found</h2>
           <button
             onClick={() => navigate('/')}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/20"
+            className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-900/20"
           >
             ← Back to Home
           </button>
@@ -294,13 +294,13 @@ export function WalletOverviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-200">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200">
       {/* Compact Header */}
-      <div className="bg-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-30">
+      <div className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 shadow-sm sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-3 py-1.5 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -309,19 +309,19 @@ export function WalletOverviewPage() {
           </button>
           
           <div className="flex-1 mx-4">
-            <h1 className="text-xl font-bold text-white">Wallet Overview</h1>
+            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Wallet Overview</h1>
             {wallet && (
-              <div className="flex items-center gap-3 text-sm text-slate-400">
-                <span className="font-semibold text-blue-400">{wallet.chain.toUpperCase()}</span>
-                <span className="font-mono text-xs bg-slate-900 px-2 py-0.5 rounded border border-slate-700">{wallet.address.substring(0, 20)}...</span>
+              <div className="flex items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
+                <span className="font-semibold text-blue-600 dark:text-blue-400">{wallet.chain.toUpperCase()}</span>
+                <span className="font-mono text-xs bg-neutral-100 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-700">{wallet.address.substring(0, 20)}...</span>
               </div>
             )}
           </div>
 
           <div className="flex items-center gap-3">
             {/* Limit Input */}
-            <div className="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5">
-              <label htmlFor="limit-input" className="text-sm font-semibold whitespace-nowrap text-slate-400">
+            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-1.5">
+              <label htmlFor="limit-input" className="text-sm font-semibold whitespace-nowrap text-neutral-500 dark:text-neutral-400">
                 Max Items:
               </label>
               <input
@@ -332,13 +332,13 @@ export function WalletOverviewPage() {
                 value={limitInput}
                 onChange={(e) => setLimitInput(e.target.value)}
                 onBlur={handleLimitBlur}
-                className="w-16 px-2 py-1 text-sm text-white bg-slate-800 rounded border border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-16 px-2 py-1 text-sm text-neutral-900 dark:text-white bg-white dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-600 focus:ring-2 focus:ring-amber-500 outline-none"
               />
             </div>
 
             <button
               onClick={handleRefresh}
-              className="flex items-center gap-2 px-3 py-1.5 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
               title="Refresh all data"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -354,8 +354,8 @@ export function WalletOverviewPage() {
       <div className="max-w-7xl mx-auto p-4">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            <span className="ml-3 text-slate-400">Loading...</span>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+            <span className="ml-3 text-neutral-500 dark:text-neutral-400">Loading...</span>
           </div>
         ) : (
           <div className="space-y-6">
@@ -363,9 +363,6 @@ export function WalletOverviewPage() {
             {wallet && (
               <HorizontalWalletCard 
                 wallet={wallet} 
-                virtualAccounts={virtualAccounts.filter(
-                  (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
-                )} 
               />
             )}
 
@@ -377,17 +374,17 @@ export function WalletOverviewPage() {
               
               if (walletVirtualAccounts.length > 0) {
                 return (
-                  <div className="bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700">
+                  <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
                     <button
                       onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
-                      className="w-full flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors"
+                      className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
                     >
-                      <h2 className="text-lg font-bold text-white flex items-center">
-                        <span className="mr-3 p-1.5 bg-purple-500/10 rounded-lg text-purple-400">🏦</span>
+                      <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
+                        <span className="mr-3 p-1.5 bg-purple-500/10 rounded-lg text-purple-600 dark:text-purple-400">🏦</span>
                         Virtual Accounts ({walletVirtualAccounts.length})
                       </h2>
                       <svg
-                        className={`w-5 h-5 text-slate-500 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
+                        className={`w-5 h-5 text-neutral-500 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -397,7 +394,7 @@ export function WalletOverviewPage() {
                     </button>
 
                     {!isVirtualAccountsCollapsed && (
-                      <div className="p-4 border-t border-slate-700 bg-slate-900/30">
+                      <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                           {walletVirtualAccounts.map((account) => (
                             <VirtualAccountCard key={account.id} virtualAccount={account} />
@@ -422,17 +419,17 @@ export function WalletOverviewPage() {
             />
 
             {/* Transactions Section */}
-            <div className="bg-slate-800 rounded-xl shadow-lg border border-slate-700">
+            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700">
               <button
                 onClick={() => setIsTransactionsCollapsed(!isTransactionsCollapsed)}
-                className="w-full flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors"
+                className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
               >
-                <h2 className="text-lg font-bold text-white flex items-center">
-                  <span className="mr-3 p-1.5 bg-blue-500/10 rounded-lg text-blue-400">📊</span>
+                <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
+                  <span className="mr-3 p-1.5 bg-blue-500/10 rounded-lg text-blue-600 dark:text-blue-400">📊</span>
                   Recent Transactions
                 </h2>
                 <svg
-                  className={`w-5 h-5 text-slate-500 transition-transform ${isTransactionsCollapsed ? 'rotate-180' : ''}`}
+                  className={`w-5 h-5 text-neutral-500 transition-transform ${isTransactionsCollapsed ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -442,7 +439,7 @@ export function WalletOverviewPage() {
               </button>
 
               {!isTransactionsCollapsed && (
-                <div className="p-4 space-y-4 border-t border-slate-700 bg-slate-900/30">
+                <div className="p-4 space-y-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
                   {/* Wallet Transactions */}
                   <DynamicTransactionsTable
                     title="Wallet Transactions"

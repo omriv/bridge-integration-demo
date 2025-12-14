@@ -10,7 +10,9 @@ export function TransferDirectionCell({ data, className }: CellTypeProps) {
   
   return (
     <span className={className || `inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${
-      isOutgoing ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'
+      isOutgoing 
+        ? 'bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-400' 
+        : 'bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400'
     }`}>
       {isOutgoing ? (
         <>

@@ -17,10 +17,10 @@ export function TransferSourceCell({ data, className, onCopy }: CellTypeProps) {
   const copiedField = data?.copiedField;
 
   return (
-    <div className={className || (isOutgoing ? 'bg-red-500/10 border-l-2 border-red-500/50 pl-2 py-1' : '')}>
+    <div className={className || (isOutgoing ? 'bg-red-50 dark:bg-red-500/10 border-l-2 border-red-500/50 pl-2 py-1' : '')}>
       <div className="space-y-1">
-        <div className="font-medium text-white">{currency.toUpperCase()}</div>
-        <div className="text-slate-500 text-xs">{paymentRail}</div>
+        <div className="font-medium text-neutral-900 dark:text-white">{currency.toUpperCase()}</div>
+        <div className="text-neutral-500 text-xs">{paymentRail}</div>
         {bridgeWalletId && (
           <CopyableFieldCell
             data={{

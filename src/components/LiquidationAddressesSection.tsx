@@ -74,18 +74,18 @@ export function LiquidationAddressesSection({
   };
 
   return (
-    <div className="bg-slate-800 rounded-xl shadow-lg border border-slate-700">
-      <div className="w-full flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors">
+    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700">
+      <div className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center flex-1"
         >
-          <h2 className="text-lg font-bold text-white flex items-center">
-            <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-400">🏦</span>
+          <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
+            <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400">🏦</span>
             Liquidation Addresses ({liquidationAddresses.length})
           </h2>
           <svg
-            className={`w-5 h-5 text-slate-500 transition-transform ml-3 ${isCollapsed ? 'rotate-180' : ''}`}
+            className={`w-5 h-5 text-neutral-500 dark:text-neutral-400 transition-transform ml-3 ${isCollapsed ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -98,23 +98,23 @@ export function LiquidationAddressesSection({
             e.stopPropagation();
             setIsAddModalOpen(true);
           }}
-          className="ml-4 inline-flex items-center px-3 py-1.5 border border-blue-500/20 text-xs font-medium rounded-lg text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="ml-4 inline-flex items-center px-3 py-1.5 border border-amber-500/20 text-xs font-medium rounded-lg text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
         >
           Add Address
         </button>
       </div>
 
       {!isCollapsed && (
-        <div className="p-4 border-t border-slate-700 bg-slate-900/30">
+        <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30">
           {liquidationAddresses.length === 0 ? (
-            <p className="text-slate-500 text-sm italic text-center py-4">
+            <p className="text-neutral-500 dark:text-neutral-400 text-sm italic text-center py-4">
               No liquidation addresses found for this wallet
             </p>
           ) : (
             <div className="space-y-4">
               {/* Liquidation Flow Graph */}
-              <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700 overflow-hidden">
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Liquidation Flows</h4>
+              <div className="bg-white dark:bg-neutral-900/50 rounded-xl p-4 border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                <h4 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-4">Liquidation Flows</h4>
                 
                 <div className="flex relative" style={{ height: containerHeight }}>
                   {/* Left Column: Sources */}
@@ -123,9 +123,9 @@ export function LiquidationAddressesSection({
                       const [chain, currency] = source.split('|');
                       return (
                         <div key={source} className="h-8 flex items-center justify-end px-3 bg-teal-500/10 border border-teal-500/20 rounded-full shadow-sm">
-                          <span className="text-xs font-bold text-teal-200">{chain.toUpperCase()}</span>
-                          <span className="mx-1 text-slate-600">•</span>
-                          <span className="text-xs text-teal-400">{currency.toUpperCase()}</span>
+                          <span className="text-xs font-bold text-teal-700 dark:text-teal-200">{chain.toUpperCase()}</span>
+                          <span className="mx-1 text-neutral-400 dark:text-neutral-600">•</span>
+                          <span className="text-xs text-teal-600 dark:text-teal-400">{currency.toUpperCase()}</span>
                         </div>
                       );
                     })}
@@ -148,10 +148,10 @@ export function LiquidationAddressesSection({
                             key={i}
                             d={`M 0 ${y1} C 50 ${y1}, 50 ${y2}, 100 ${y2}`}
                             fill="none"
-                            stroke="#475569" // slate-600
+                            stroke="currentColor" 
                             strokeWidth="2"
                             vectorEffect="non-scaling-stroke"
-                            className={`opacity-40 hover:opacity-100 transition-all duration-300 ${getHoverColorClass(i)}`}
+                            className={`text-neutral-300 dark:text-slate-600 opacity-40 hover:opacity-100 transition-all duration-300 ${getHoverColorClass(i)}`}
                           />
                         );
                       })}
@@ -164,9 +164,9 @@ export function LiquidationAddressesSection({
                       const [rail, currency] = dest.split('|');
                       return (
                         <div key={dest} className="h-8 flex items-center px-3 bg-amber-500/10 border border-amber-500/20 rounded-full shadow-sm">
-                          <span className="text-xs font-bold text-amber-200">{rail.toUpperCase()}</span>
-                          <span className="mx-1 text-slate-600">•</span>
-                          <span className="text-xs text-amber-400">{currency.toUpperCase()}</span>
+                          <span className="text-xs font-bold text-amber-700 dark:text-amber-200">{rail.toUpperCase()}</span>
+                          <span className="mx-1 text-neutral-400 dark:text-neutral-600">•</span>
+                          <span className="text-xs text-amber-600 dark:text-amber-400">{currency.toUpperCase()}</span>
                         </div>
                       );
                     })}

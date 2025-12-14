@@ -8,6 +8,7 @@ import { BankAccountCard } from '../components/BankAccountCard'
 import { AddBankModal } from '../components/AddBankModal'
 import { AddWalletModal } from '../components/AddWalletModal'
 import { MockToggle } from '../components/MockToggle'
+import { ThemeToggle } from '../components/ThemeToggle'
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -45,25 +46,25 @@ export function HomePage() {
   };
 
   const getStatusColor = (status?: string) => {
-    if (!status) return 'bg-slate-700 text-slate-300 border border-slate-600';
+    if (!status) return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600';
     switch (status.toLowerCase()) {
       case 'active':
       case 'complete':
-        return 'bg-green-500/10 text-green-400 border border-green-500/20';
+        return 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20';
       case 'pending':
       case 'under_review':
-        return 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20';
+        return 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20';
       case 'rejected':
       case 'incomplete':
-        return 'bg-red-500/10 text-red-400 border border-red-500/20';
+        return 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20';
       default:
-        return 'bg-slate-700 text-slate-300 border border-slate-600';
+        return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600';
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 p-4 md:p-8">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8 transition-colors duration-300">
         <div className="max-w-6xl mx-auto">
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
@@ -74,8 +75,8 @@ export function HomePage() {
                   disabled={useMock}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
                     useMock
-                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                      : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-900/20'
+                      ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
+                      : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
                   }`}
                   title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
                 >
@@ -83,21 +84,22 @@ export function HomePage() {
                   <span>Developer Account</span>
                 </button>
               </div>
-              <h1 className="text-4xl font-bold text-white flex-1">
-                Bridge Integration <span className="text-blue-500">Demo</span>
+              <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
+                Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
               </h1>
-              <div className="flex-1 flex justify-end">
+              <div className="flex-1 flex justify-end gap-3">
+                <ThemeToggle />
                 <MockToggle useMock={useMock} onToggle={handleMockToggle} />
               </div>
             </div>
-            <p className="text-slate-400">Customer Details & Wallet Management</p>
+            <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
           </div>
 
           {/* Loading State */}
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-4"></div>
-              <p className="text-slate-400 text-lg">Loading customer data...</p>
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-amber-500 mx-auto mb-4"></div>
+              <p className="text-neutral-500 dark:text-neutral-400 text-lg">Loading customer data...</p>
             </div>
           </div>
         </div>
@@ -107,7 +109,7 @@ export function HomePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-900 p-4 md:p-8">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8 transition-colors duration-300">
         <div className="max-w-6xl mx-auto">
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
@@ -118,8 +120,8 @@ export function HomePage() {
                   disabled={useMock}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
                     useMock
-                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                      : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-900/20'
+                      ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
+                      : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
                   }`}
                   title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
                 >
@@ -127,29 +129,30 @@ export function HomePage() {
                   <span>Developer Account</span>
                 </button>
               </div>
-              <h1 className="text-4xl font-bold text-white flex-1">
-                Bridge Integration <span className="text-blue-500">Demo</span>
+              <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
+                Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
               </h1>
-              <div className="flex-1 flex justify-end">
+              <div className="flex-1 flex justify-end gap-3">
+                <ThemeToggle />
                 <MockToggle useMock={useMock} onToggle={handleMockToggle} />
               </div>
             </div>
-            <p className="text-slate-400">Customer Details & Wallet Management</p>
+            <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
           </div>
 
           {/* Error State */}
-          <div className="max-w-md mx-auto bg-slate-800 rounded-xl shadow-lg p-8 border border-slate-700">
+          <div className="max-w-md mx-auto bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-8 border border-neutral-200 dark:border-neutral-700">
             <div className="text-center mb-6">
               <div className="text-red-500 text-5xl mb-4">⚠️</div>
-              <h2 className="text-2xl font-bold text-white mb-2">Error Loading Data</h2>
-              <p className="text-slate-300 mb-4">{error}</p>
-              <p className="text-sm text-slate-500 mb-6">
+              <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">Error Loading Data</h2>
+              <p className="text-neutral-600 dark:text-neutral-300 mb-4">{error}</p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
                 Please make sure you've configured your API key and customer ID in the config.ts file.
               </p>
             </div>
             <button
               onClick={refreshAll}
-              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/20"
+              className="w-full bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors shadow-sm"
             >
               Retry
             </button>
@@ -162,7 +165,7 @@ export function HomePage() {
   // Show customer selector if no customer is loaded but we have customers list
   if (!customer && customers.length > 0) {
     return (
-      <div className="min-h-screen bg-slate-900 p-4 md:p-8">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8 transition-colors duration-300">
         <div className="max-w-6xl mx-auto">
           {/* Header - Always Visible */}
           <div className="text-center mb-8">
@@ -173,8 +176,8 @@ export function HomePage() {
                   disabled={useMock}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
                     useMock
-                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                      : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-900/20'
+                      ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
+                      : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
                   }`}
                   title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
                 >
@@ -182,37 +185,38 @@ export function HomePage() {
                   <span>Developer Account</span>
                 </button>
               </div>
-              <h1 className="text-4xl font-bold text-white flex-1">
-                Bridge Integration <span className="text-blue-500">Demo</span>
+              <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
+                Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
               </h1>
-              <div className="flex-1 flex justify-end">
+              <div className="flex-1 flex justify-end gap-3">
+                <ThemeToggle />
                 <MockToggle useMock={useMock} onToggle={handleMockToggle} />
               </div>
             </div>
-            <p className="text-slate-400">Customer Details & Wallet Management</p>
+            <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
           </div>
 
           {/* Customer Selector */}
-          <div className="max-w-2xl mx-auto bg-slate-800 rounded-xl shadow-lg p-8 border border-slate-700">
+          <div className="max-w-2xl mx-auto bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-8 border border-neutral-200 dark:border-neutral-700">
             <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-white mb-2">Select a Customer</h2>
-              <p className="text-slate-400 mb-6">
+              <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-2">Select a Customer</h2>
+              <p className="text-neutral-500 dark:text-neutral-400 mb-6">
                 Choose a customer from the list below to view their details and wallets.
               </p>
             </div>
-            <div className="max-h-96 overflow-y-auto border-2 border-slate-700 rounded-lg bg-slate-900/50">
+            <div className="max-h-96 overflow-y-auto border-2 border-neutral-200 dark:border-neutral-700 rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
             {customers.map((cust) => (
               <button
                 key={cust.id}
                 onClick={() => handleCustomerChange(cust.id)}
-                className="w-full px-4 py-3 text-left hover:bg-slate-700/50 transition-colors border-b border-slate-700 last:border-b-0"
+                className="w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-slate-200 truncate">
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
                       {cust.full_name || cust.email || 'Unnamed Customer'}
                     </div>
-                    <div className="font-mono text-xs text-slate-500 truncate">
+                    <div className="font-mono text-xs text-neutral-500 truncate">
                       {cust.id}
                     </div>
                   </div>
@@ -239,7 +243,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 p-4 md:p-8">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-4 md:p-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
@@ -250,8 +254,8 @@ export function HomePage() {
                 disabled={useMock}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
                   useMock
-                    ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-900/20'
+                    ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-300 dark:border-neutral-700'
+                    : 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
                 }`}
                 title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
               >
@@ -259,22 +263,23 @@ export function HomePage() {
                 <span>Developer Account</span>
               </button>
             </div>
-            <h1 className="text-4xl font-bold text-white flex-1">
-              Bridge Integration <span className="text-blue-500">Demo</span>
+            <h1 className="text-4xl font-bold text-neutral-900 dark:text-white flex-1">
+              Bridge Integration <span className="text-amber-600 dark:text-amber-500">Demo</span>
             </h1>
-            <div className="flex-1 flex justify-end">
+            <div className="flex-1 flex justify-end gap-3">
+              <ThemeToggle />
               <MockToggle useMock={useMock} onToggle={handleMockToggle} />
             </div>
           </div>
-          <p className="text-slate-400">Customer Details & Wallet Management</p>
+          <p className="text-neutral-500 dark:text-neutral-400">Customer Details & Wallet Management</p>
 
           {/* Mode Transition Notification */}
           {showModeTransition && (
             <div className="mt-4 max-w-md mx-auto">
               <div className={`px-4 py-3 rounded-lg border flex items-center gap-3 animate-pulse ${
                 useMock 
-                  ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' 
-                  : 'bg-green-500/10 border-green-500/20 text-green-400'
+                  ? 'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400' 
+                  : 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400'
               }`}>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
                 <span className="font-semibold">
@@ -289,13 +294,13 @@ export function HomePage() {
             <div className="mt-4 max-w-md mx-auto relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 flex items-center justify-between hover:border-blue-500 transition-colors shadow-sm"
+                className="w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-4 py-3 flex items-center justify-between hover:border-amber-500 transition-colors shadow-sm"
               >
                 <div className="flex items-center gap-3 flex-1 text-left">
-                  <span className="text-sm font-semibold text-slate-400">Current Customer:</span>
+                  <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">Current Customer:</span>
                   {customer && (
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-sm text-slate-200">
+                      <span className="font-mono text-sm text-neutral-900 dark:text-neutral-200">
                         {customer.full_name || customer.email || customer.id.substring(0, 12) + '...'}
                       </span>
                       {customer.status && (
@@ -312,7 +317,7 @@ export function HomePage() {
                   )}
                 </div>
                 <svg
-                  className={`w-5 h-5 text-slate-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  className={`w-5 h-5 text-neutral-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -323,21 +328,21 @@ export function HomePage() {
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute z-20 w-full mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-xl max-h-96 overflow-y-auto">
+                <div className="absolute z-20 w-full mt-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-xl max-h-96 overflow-y-auto">
                   {customers.map((cust) => (
                     <button
                       key={cust.id}
                       onClick={() => handleCustomerChange(cust.id)}
-                      className={`w-full px-4 py-3 text-left hover:bg-slate-700/50 transition-colors border-b border-slate-700 last:border-b-0 ${
-                        cust.id === currentCustomerId ? 'bg-blue-500/10' : ''
+                      className={`w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-colors border-b border-neutral-200 dark:border-neutral-700 last:border-b-0 ${
+                        cust.id === currentCustomerId ? 'bg-amber-500/10' : ''
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-slate-200 truncate">
+                          <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
                             {cust.full_name || cust.email || 'Unnamed Customer'}
                           </div>
-                          <div className="font-mono text-xs text-slate-500 truncate">
+                          <div className="font-mono text-xs text-neutral-500 truncate">
                             {cust.id}
                           </div>
                         </div>
@@ -371,12 +376,12 @@ export function HomePage() {
         {customer && <CustomerDetails customer={customer} />}
 
         {/* Wallets Section */}
-        <div className="mb-6 bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700">
-          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-700/50 transition-colors cursor-pointer" onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}>
-            <h2 className="text-2xl font-bold text-white flex items-center">
-              <span className="text-blue-500 mr-2 p-1.5 bg-blue-500/10 rounded-lg">💼</span>
+        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}>
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
+              <span className="text-amber-600 dark:text-amber-500 mr-2 p-1.5 bg-amber-500/10 rounded-lg">💼</span>
               Customer Wallets
-              <span className="ml-3 text-sm font-normal text-slate-400">
+              <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'})
               </span>
             </h2>
@@ -386,12 +391,12 @@ export function HomePage() {
                   e.stopPropagation();
                   setIsAddWalletModalOpen(true);
                 }}
-                className="px-3 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg shadow-blue-900/20"
+                className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 shadow-sm"
               >
                 <span>➕</span> Add Wallet
               </button>
               <svg
-                className={`w-6 h-6 text-slate-500 transition-transform ${isWalletsCollapsed ? 'rotate-180' : ''}`}
+                className={`w-6 h-6 text-neutral-500 transition-transform ${isWalletsCollapsed ? 'rotate-180' : ''}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -402,11 +407,11 @@ export function HomePage() {
           </div>
 
           {!isWalletsCollapsed && (
-            <div className="p-6 border-t border-slate-700 bg-slate-900/30">
+            <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
               {wallets.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-slate-600 text-5xl mb-4">📭</div>
-                  <p className="text-slate-500">No wallets found for this customer</p>
+                  <div className="text-neutral-400 text-5xl mb-4">📭</div>
+                  <p className="text-neutral-500">No wallets found for this customer</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -420,20 +425,20 @@ export function HomePage() {
         </div>
 
         {/* Virtual Accounts Section */}
-        <div className="mb-6 bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700">
+        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
           <button 
             onClick={() => setIsVirtualAccountsCollapsed(!isVirtualAccountsCollapsed)}
-            className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-700/50 transition-colors"
+            className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
           >
-            <h2 className="text-2xl font-bold text-white flex items-center">
-              <span className="text-purple-500 mr-2 p-1.5 bg-purple-500/10 rounded-lg">🏦</span>
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
+              <span className="text-amber-600 dark:text-amber-500 mr-2 p-1.5 bg-amber-500/10 rounded-lg">🏦</span>
               Virtual Accounts
-              <span className="ml-3 text-sm font-normal text-slate-400">
+              <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({virtualAccounts.length} {virtualAccounts.length === 1 ? 'account' : 'accounts'})
               </span>
             </h2>
             <svg
-              className={`w-6 h-6 text-slate-500 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
+              className={`w-6 h-6 text-neutral-500 transition-transform ${isVirtualAccountsCollapsed ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -443,16 +448,16 @@ export function HomePage() {
           </button>
 
           {!isVirtualAccountsCollapsed && (
-            <div className="p-6 border-t border-slate-700 bg-slate-900/30">
+            <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
               {virtualAccountsLoading ? (
                 <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-                  <p className="text-slate-500">Loading virtual accounts...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto mb-4"></div>
+                  <p className="text-neutral-500">Loading virtual accounts...</p>
                 </div>
               ) : virtualAccounts.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-slate-600 text-5xl mb-4">📭</div>
-                  <p className="text-slate-500">No virtual accounts found for this customer</p>
+                  <div className="text-neutral-400 text-5xl mb-4">📭</div>
+                  <p className="text-neutral-500">No virtual accounts found for this customer</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -466,12 +471,12 @@ export function HomePage() {
         </div>
 
         {/* Bank Accounts Section */}
-        <div className="mb-6 bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700">
-          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-700/50 transition-colors cursor-pointer" onClick={() => setIsBankAccountsCollapsed(!isBankAccountsCollapsed)}>
-            <h2 className="text-2xl font-bold text-white flex items-center">
-              <span className="text-emerald-500 mr-2 p-1.5 bg-emerald-500/10 rounded-lg">🏛️</span>
+        <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
+          <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsBankAccountsCollapsed(!isBankAccountsCollapsed)}>
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
+              <span className="text-amber-600 dark:text-amber-500 mr-2 p-1.5 bg-amber-500/10 rounded-lg">🏛️</span>
               Bank Accounts
-              <span className="ml-3 text-sm font-normal text-slate-400">
+              <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({externalAccounts.length} {externalAccounts.length === 1 ? 'account' : 'accounts'})
               </span>
             </h2>
@@ -481,12 +486,12 @@ export function HomePage() {
                   e.stopPropagation();
                   setIsAddBankModalOpen(true);
                 }}
-                className="px-3 py-1.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-lg shadow-emerald-900/20"
+                className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 shadow-sm"
               >
                 <span>➕</span> Add Bank
               </button>
               <svg
-                className={`w-6 h-6 text-slate-500 transition-transform ${isBankAccountsCollapsed ? 'rotate-180' : ''}`}
+                className={`w-6 h-6 text-neutral-500 transition-transform ${isBankAccountsCollapsed ? 'rotate-180' : ''}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -497,11 +502,11 @@ export function HomePage() {
           </div>
 
           {!isBankAccountsCollapsed && (
-            <div className="p-6 border-t border-slate-700 bg-slate-900/30">
+            <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
               {externalAccounts.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-slate-600 text-5xl mb-4">📭</div>
-                  <p className="text-slate-500">No bank accounts found for this customer</p>
+                  <div className="text-neutral-400 text-5xl mb-4">📭</div>
+                  <p className="text-neutral-500">No bank accounts found for this customer</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -518,7 +523,7 @@ export function HomePage() {
         <div className="text-center">
           <button
             onClick={refreshAll}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-900/20"
+            className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
           >
             🔄 Refresh Data
           </button>

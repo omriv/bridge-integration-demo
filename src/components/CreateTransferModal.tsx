@@ -339,15 +339,15 @@ export function CreateTransferModal({
 
   return (
     <>
-      <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-        <div className="bg-slate-800 rounded-lg shadow-xl max-w-4xl w-full my-8 border border-slate-700">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-4xl w-full my-8 border border-neutral-200 dark:border-neutral-700">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-lg">
+          <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6 rounded-t-lg">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">Create Transfer</h2>
               <button
                 onClick={onClose}
-                className="text-white hover:text-slate-200 text-2xl font-bold"
+                className="text-white hover:text-neutral-200 text-2xl font-bold"
               >
                 ×
               </button>
@@ -359,11 +359,11 @@ export function CreateTransferModal({
           <form onSubmit={handleSubmit} className="p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
             <div className="space-y-6">
               {/* Amount Section */}
-              <div className="border-b border-slate-700 pb-4">
-                <h3 className="text-lg font-semibold text-white mb-3">Transfer Amount</h3>
+              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Transfer Amount</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Amount
                     </label>
                     <input
@@ -372,18 +372,18 @@ export function CreateTransferModal({
                       value={formData.amount}
                       onChange={handleChange}
                       disabled={formData.flexible_amount}
-                      className={`w-full px-3 py-2 bg-slate-900 text-white border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.amount ? 'border-red-500' : 'border-slate-600'}`}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.amount ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
                       placeholder="10.50"
                     />
                     {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
                     {availableBalance > 0 && (
-                      <p className="text-sm text-slate-400 mt-1">
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
                         💰 Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Client Reference ID
                     </label>
                     <input
@@ -391,7 +391,7 @@ export function CreateTransferModal({
                       name="client_reference_id"
                       value={formData.client_reference_id}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-slate-900 text-white border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.client_reference_id ? 'border-red-500' : 'border-slate-600'}`}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.client_reference_id ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
                       placeholder="Optional (1-256 chars)"
                     />
                     {errors.client_reference_id && <p className="text-red-500 text-xs mt-1">{errors.client_reference_id}</p>}
@@ -400,32 +400,32 @@ export function CreateTransferModal({
               </div>
 
               {/* Source Section */}
-              <div className="border-b border-slate-700 pb-4">
-                <h3 className="text-lg font-semibold text-white mb-3">Source</h3>
+              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Source</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Payment Rail <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="source_payment_rail"
                       value={formData.source_payment_rail}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
                     >
                       <option value="bridge_wallet">Bridge Wallet</option>
                       <option value="solana">Solana</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Currency <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="source_currency"
                       value={formData.source_currency}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 max-h-40 overflow-y-auto"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
                       size={1}
                       disabled={availableCurrencies.length === 0}
                     >
@@ -441,7 +441,7 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Bridge Wallet ID {formData.source_payment_rail === 'bridge_wallet' && <span className="text-red-500">*</span>}
                     </label>
                     <input
@@ -450,17 +450,17 @@ export function CreateTransferModal({
                       value={formData.source_bridge_wallet_id}
                       onChange={handleChange}
                       disabled={formData.source_payment_rail !== 'bridge_wallet'}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm ${
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 font-mono text-sm ${
                         formData.source_payment_rail !== 'bridge_wallet' 
-                          ? 'bg-slate-700 text-slate-500 cursor-not-allowed border-slate-600' 
-                          : `bg-slate-900 text-white ${errors.source_bridge_wallet_id ? 'border-red-500' : 'border-slate-600'}`
+                          ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border-neutral-300 dark:border-neutral-600' 
+                          : `bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white ${errors.source_bridge_wallet_id ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`
                       }`}
                       placeholder={walletId}
                     />
                     {errors.source_bridge_wallet_id && <p className="text-red-500 text-xs mt-1">{errors.source_bridge_wallet_id}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       External Account ID
                     </label>
                     <input
@@ -468,11 +468,11 @@ export function CreateTransferModal({
                       name="source_external_account_id"
                       value={formData.source_external_account_id}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       From Address {formData.source_payment_rail === 'solana' && <span className="text-red-500">*</span>}
                     </label>
                     <input
@@ -481,10 +481,10 @@ export function CreateTransferModal({
                       value={formData.source_from_address}
                       onChange={handleChange}
                       disabled={formData.source_payment_rail !== 'solana'}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm ${
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 font-mono text-sm ${
                         formData.source_payment_rail !== 'solana'
-                          ? 'bg-slate-700 text-slate-500 cursor-not-allowed border-slate-600'
-                          : `bg-slate-900 text-white ${errors.source_from_address ? 'border-red-500' : 'border-slate-600'}`
+                          ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 cursor-not-allowed border-neutral-300 dark:border-neutral-600'
+                          : `bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white ${errors.source_from_address ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`
                       }`}
                       placeholder={walletAddress}
                     />
@@ -494,23 +494,23 @@ export function CreateTransferModal({
               </div>
 
               {/* Destination Section */}
-              <div className="border-b border-slate-700 pb-4">
-                <h3 className="text-lg font-semibold text-white mb-3">Destination</h3>
+              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Destination</h3>
                 {destinationRails.length === 0 && (
-                  <p className="text-sm text-amber-400 mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded">
+                  <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded">
                     ⚠️ No available routes found for {formData.source_payment_rail.toUpperCase()} {formData.source_currency.toUpperCase()}
                   </p>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Payment Rail <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="destination_payment_rail"
                       value={formData.destination_payment_rail}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 max-h-40 overflow-y-auto"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
                       size={1}
                       disabled={destinationRails.length === 0}
                     >
@@ -526,14 +526,14 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Currency <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="destination_currency"
                       value={formData.destination_currency}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 max-h-40 overflow-y-auto"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
                       size={1}
                       disabled={destinationCurrencies.length === 0}
                     >
@@ -549,7 +549,7 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       To Address (for crypto destinations) <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -557,13 +557,13 @@ export function CreateTransferModal({
                       name="destination_to_address"
                       value={formData.destination_to_address}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-slate-900 text-white border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.destination_to_address ? 'border-red-500' : 'border-slate-600'}`}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.destination_to_address ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
                       placeholder={walletAddress}
                     />
                     {errors.destination_to_address && <p className="text-red-500 text-xs mt-1">{errors.destination_to_address}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Bridge Wallet ID
                     </label>
                     <input
@@ -571,11 +571,11 @@ export function CreateTransferModal({
                       name="destination_bridge_wallet_id"
                       value={formData.destination_bridge_wallet_id}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       External Account ID
                     </label>
                     <input
@@ -583,11 +583,11 @@ export function CreateTransferModal({
                       name="destination_external_account_id"
                       value={formData.destination_external_account_id}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Wire Message
                     </label>
                     <input
@@ -595,11 +595,11 @@ export function CreateTransferModal({
                       name="destination_wire_message"
                       value={formData.destination_wire_message}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Blockchain Memo
                     </label>
                     <input
@@ -607,18 +607,18 @@ export function CreateTransferModal({
                       name="destination_blockchain_memo"
                       value={formData.destination_blockchain_memo}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-slate-900 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Developer Fee Section */}
-              <div className="border-b border-slate-700 pb-4">
-                <h3 className="text-lg font-semibold text-white mb-3">Developer Fee</h3>
+              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Developer Fee</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Fixed Fee (amount)
                     </label>
                     <input
@@ -627,13 +627,13 @@ export function CreateTransferModal({
                       value={formData.developer_fee}
                       onChange={handleChange}
                       disabled={formData.flexible_amount}
-                      className={`w-full px-3 py-2 bg-slate-900 text-white border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.developer_fee ? 'border-red-500' : 'border-slate-600'}`}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.developer_fee ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
                       placeholder="0.50"
                     />
                     {errors.developer_fee && <p className="text-red-500 text-xs mt-1">{errors.developer_fee}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                       Percentage Fee (0.0-100.0)
                     </label>
                     <input
@@ -641,7 +641,7 @@ export function CreateTransferModal({
                       name="developer_fee_percent"
                       value={formData.developer_fee_percent}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-slate-900 text-white border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.developer_fee_percent ? 'border-red-500' : 'border-slate-600'}`}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.developer_fee_percent ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
                       placeholder="1.0"
                     />
                     {errors.developer_fee_percent && <p className="text-red-500 text-xs mt-1">{errors.developer_fee_percent}</p>}
@@ -651,7 +651,7 @@ export function CreateTransferModal({
 
               {/* Features Section */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Features & Options</h3>
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Features & Options</h3>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input
@@ -659,9 +659,9 @@ export function CreateTransferModal({
                       name="flexible_amount"
                       checked={formData.flexible_amount}
                       onChange={handleChange}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-600 rounded bg-slate-900"
+                      className="mr-2 h-4 w-4 text-amber-600 focus:ring-amber-500 border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900"
                     />
-                    <span className="text-sm text-slate-300">Flexible Amount (matches any amount deposited)</span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">Flexible Amount (matches any amount deposited)</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -669,9 +669,9 @@ export function CreateTransferModal({
                       name="allow_any_from_address"
                       checked={formData.allow_any_from_address}
                       onChange={handleChange}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-600 rounded bg-slate-900"
+                      className="mr-2 h-4 w-4 text-amber-600 focus:ring-amber-500 border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900"
                     />
-                    <span className="text-sm text-slate-300">Allow Any From Address (recommended for crypto deposits)</span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">Allow Any From Address (recommended for crypto deposits)</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -679,9 +679,9 @@ export function CreateTransferModal({
                       name="static_template"
                       checked={formData.static_template}
                       onChange={handleChange}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-600 rounded bg-slate-900"
+                      className="mr-2 h-4 w-4 text-amber-600 focus:ring-amber-500 border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900"
                     />
-                    <span className="text-sm text-slate-300">Static Template</span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">Static Template</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -689,9 +689,9 @@ export function CreateTransferModal({
                       name="dry_run"
                       checked={formData.dry_run}
                       onChange={handleChange}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-600 rounded bg-slate-900"
+                      className="mr-2 h-4 w-4 text-amber-600 focus:ring-amber-500 border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900"
                     />
-                    <span className="text-sm text-slate-300">Dry Run (validate without creating)</span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">Dry Run (validate without creating)</span>
                   </label>
                 </div>
               </div>
@@ -699,21 +699,21 @@ export function CreateTransferModal({
               {/* Messages */}
               {successMessage && (
                 <div className="bg-green-500/10 border-l-4 border-green-500 p-4 rounded">
-                  <p className="text-green-400 font-semibold">{successMessage}</p>
+                  <p className="text-green-600 dark:text-green-400 font-semibold">{successMessage}</p>
                 </div>
               )}
               {errorMessage && (
                 <div className="bg-red-500/10 border-l-4 border-red-500 p-4 rounded">
-                  <p className="text-red-400 font-semibold">{errorMessage}</p>
+                  <p className="text-red-600 dark:text-red-400 font-semibold">{errorMessage}</p>
                 </div>
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-slate-700">
+              <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-500 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed"
+                  className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-500 transition-colors disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Creating...' : 'Send Transfer'}
                 </button>
@@ -721,7 +721,7 @@ export function CreateTransferModal({
                   <button
                     type="button"
                     onClick={() => setShowJsonModal(true)}
-                    className="bg-slate-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-500 transition-colors"
+                    className="bg-neutral-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-neutral-500 transition-colors"
                   >
                     View JSON
                   </button>
@@ -729,7 +729,7 @@ export function CreateTransferModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="bg-slate-700 text-slate-300 px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors"
+                  className="bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
                 >
                   Close
                 </button>

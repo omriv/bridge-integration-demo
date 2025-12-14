@@ -9,7 +9,7 @@ export function FeeCell({ data, className }: CellTypeProps) {
   const fee = data?.fee || '';
   
   return (
-    <span className={className || "text-white"}>
+    <span className={className || "text-neutral-900 dark:text-white"}>
       {fee}
     </span>
   );

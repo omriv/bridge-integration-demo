@@ -10,20 +10,20 @@ export function JsonViewerModal({ isOpen, onClose, title, data }: JsonViewerModa
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div 
-        className="bg-slate-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-700"
+        className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-neutral-200 dark:border-neutral-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-6 text-white border-b border-slate-700">
+        <div className="bg-gradient-to-r from-white to-neutral-50 dark:from-neutral-900 dark:to-neutral-950 p-6 text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-800">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 hover:bg-neutral-100 dark:hover:bg-white/10 rounded-lg transition-colors"
               title="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,25 +34,25 @@ export function JsonViewerModal({ isOpen, onClose, title, data }: JsonViewerModa
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] bg-slate-950">
-          <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap break-words">
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] bg-neutral-50 dark:bg-black">
+          <pre className="text-sm text-green-600 dark:text-green-400 font-mono whitespace-pre-wrap break-words">
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>
 
         {/* Footer */}
-        <div className="border-t border-slate-700 p-4 bg-slate-800 flex gap-3">
+        <div className="border-t border-neutral-200 dark:border-neutral-800 p-4 bg-white dark:bg-neutral-900 flex gap-3">
           <button
             onClick={() => {
               navigator.clipboard.writeText(JSON.stringify(data, null, 2));
             }}
-            className="flex-1 bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors border border-slate-600"
+            className="flex-1 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-white px-6 py-3 rounded-lg font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors border border-neutral-200 dark:border-neutral-700"
           >
             📋 Copy JSON
           </button>
           <button
             onClick={onClose}
-            className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-500 transition-colors"
+            className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
           >
             Close
           </button>

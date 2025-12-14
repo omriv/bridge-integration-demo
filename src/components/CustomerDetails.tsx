@@ -41,16 +41,16 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
       case 'approved':
       case 'complete':
       case 'active':
-        return 'bg-green-500/10 text-green-400 border border-green-500/20';
+        return 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20';
       case 'pending':
       case 'under_review':
-        return 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20';
+        return 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20';
       case 'rejected':
       case 'incomplete':
       case 'inactive':
-        return 'bg-red-500/10 text-red-400 border border-red-500/20';
+        return 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20';
       default:
-        return 'bg-slate-700 text-slate-300 border border-slate-600';
+        return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600';
     }
   };
 
@@ -58,9 +58,9 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
     if (!value) return null;
     
     return (
-      <div className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg border border-slate-700/50">
+      <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-700/50">
         <div className="flex items-center gap-3">
-          <p className="text-sm text-slate-400 font-medium">{label}</p>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">{label}</p>
           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(value)}`}>
             {value.replace(/_/g, ' ').toUpperCase()}
           </span>
@@ -73,18 +73,18 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
     if (!value) return null;
     
     return (
-      <div className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-800 transition-colors group">
+      <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-700/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group">
         <div className="flex-1">
-          <p className="text-sm text-slate-400 font-medium mb-1">{label}</p>
-          <p className="text-slate-200 break-all font-mono text-sm">{value}</p>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 font-medium mb-1">{label}</p>
+          <p className="text-neutral-900 dark:text-neutral-200 break-all font-mono text-sm">{value}</p>
         </div>
         <button
           onClick={() => copyToClipboard(value, fieldKey)}
-          className="ml-3 p-2 text-slate-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+          className="ml-3 p-2 text-neutral-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
           title="Copy to clipboard"
         >
           {copiedField === fieldKey ? (
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           ) : (
@@ -98,18 +98,18 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
   };
 
   return (
-    <div className="bg-slate-800 rounded-xl shadow-xl border border-slate-700 p-6 mb-6">
+    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 p-6 mb-6">
       <div className="w-full flex items-center justify-between mb-6">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center hover:opacity-80 transition-opacity group"
         >
-          <h2 className="text-xl font-bold text-white flex items-center">
-            <span className="text-blue-500 mr-3 p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">👤</span>
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center">
+            <span className="text-amber-600 dark:text-amber-500 mr-3 p-2 bg-amber-500/10 rounded-lg group-hover:bg-amber-500/20 transition-colors">👤</span>
             Customer Details
           </h2>
           <svg
-            className={`w-5 h-5 text-slate-500 transition-transform ml-3 ${isCollapsed ? 'rotate-180' : ''}`}
+            className={`w-5 h-5 text-neutral-500 transition-transform ml-3 ${isCollapsed ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -123,7 +123,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             e.stopPropagation();
             setDeleteStep(1);
           }}
-          className="px-3 py-1.5 bg-red-500/10 text-red-400 text-sm font-medium rounded-lg hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2"
+          className="px-3 py-1.5 bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2"
         >
           <span>🗑️</span> Delete
         </button>
@@ -154,18 +154,18 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
       )}
 
       {deleteStep > 0 && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className={`bg-slate-800 rounded-xl shadow-2xl border border-slate-700 w-full p-6 transition-all duration-300 ${
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-neutral-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className={`bg-white dark:bg-neutral-800 rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-700 w-full p-6 transition-all duration-300 ${
             deleteStep === 1 ? 'max-w-md' : deleteStep === 2 ? 'max-w-lg' : 'max-w-xl'
           }`}>
-            <h3 className="text-xl font-bold text-white mb-4">
+            <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-4">
               {deleteStep === 1 && 'Delete Customer'}
               {deleteStep === 2 && 'Are you really sure?'}
               {deleteStep === 3 && 'Are you absolutely sure?'}
             </h3>
-            <p className="text-slate-300 mb-6">
+            <p className="text-neutral-600 dark:text-neutral-300 mb-6">
               {deleteStep === 1 && (
-                <>Are you sure you want to delete customer <span className="font-semibold text-white">{customer.full_name || customer.email || customer.id}</span>? This action cannot be undone.</>
+                <>Are you sure you want to delete customer <span className="font-semibold text-neutral-900 dark:text-white">{customer.full_name || customer.email || customer.id}</span>? This action cannot be undone.</>
               )}
               {deleteStep === 2 && 'Are you sure that you are sure? This will permanently remove all data associated with this customer.'}
               {deleteStep === 3 && `Listen, I am not joking here!`}
@@ -180,7 +180,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteStep(0)}
-                className="px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg font-medium transition-colors"
+                className="px-4 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg font-medium transition-colors"
                 disabled={isDeleting}
               >
                 Cancel
@@ -193,7 +193,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                     handleDelete();
                   }
                 }}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-red-900/20"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm"
                 disabled={isDeleting}
               >
                 {isDeleting ? (

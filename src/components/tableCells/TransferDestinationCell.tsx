@@ -16,10 +16,10 @@ export function TransferDestinationCell({ data, className, onCopy }: CellTypePro
   const copiedField = data?.copiedField;
 
   return (
-    <div className={className || (!isOutgoing ? 'bg-green-500/10 border-l-2 border-green-500/50 pl-2 py-1' : '')}>
+    <div className={className || (!isOutgoing ? 'bg-green-50 dark:bg-green-500/10 border-l-2 border-green-500/50 pl-2 py-1' : '')}>
       <div className="space-y-1">
-        <div className="font-medium text-white">{currency.toUpperCase()}</div>
-        <div className="text-slate-500 text-xs">{paymentRail}</div>
+        <div className="font-medium text-neutral-900 dark:text-white">{currency.toUpperCase()}</div>
+        <div className="text-neutral-500 text-xs">{paymentRail}</div>
         {toAddress && (
           <CopyableFieldCell
             data={{
