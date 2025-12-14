@@ -1,17 +1,91 @@
 import type { Customer } from '../types';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useData } from '../context/DataContext';
 
 interface CustomerDetailsProps {
   customer: Customer;
 }
 
+interface RequirementListPopoverProps {
+  items: string[];
+  colorClass: string;
+  onClose: () => void;
+  onCopy: (text: string, fieldName: string) => void;
+}
+
+function RequirementListPopover({ items, colorClass, onClose, onCopy }: RequirementListPopoverProps) {
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
+  if (items.length === 0) {
+    return (
+      <div ref={popoverRef} className="absolute z-20 left-0 right-0 mt-1 bg-white dark:bg-neutral-800 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 p-1.5 text-[10px] text-neutral-400 italic">
+        No items
+      </div>
+    );
+  }
+
+  return (
+    <div ref={popoverRef} className="absolute z-20 left-0 right-0 mt-1 bg-white dark:bg-neutral-800 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 p-1 max-h-60 overflow-y-auto">
+      <div className="flex justify-between items-center mb-0.5 pb-0.5 pl-2 border-b border-neutral-100 dark:border-neutral-700">
+        <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Requirements</span>
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 p-0.5"
+        >
+          <i className="fas fa-times text-[10px]"></i>
+        </button>
+      </div>
+      <div className="space-y-0">
+        {items.map((item, idx) => (
+          <div key={idx} className="flex items-center justify-between group hover:bg-neutral-50 dark:hover:bg-neutral-700/50 px-3 py-0 rounded transition-colors">
+            <span className={`text-[12px] font-mono ${colorClass} break-all leading-tight`}>{item}</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onCopy(item, `req-${item}`);
+              }}
+              className="opacity-0 group-hover:opacity-100 p-0.5 text-neutral-400 hover:text-amber-600 transition-all ml-1"
+            >
+              <i className="fas fa-copy text-[9px]"></i>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function CustomerDetails({ customer }: CustomerDetailsProps) {
-  const { deleteCustomer } = useData();
+  const { deleteCustomer, getTosLink } = useData();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [deleteStep, setDeleteStep] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isTosLoading, setIsTosLoading] = useState(false);
+  const [expandedRequirements, setExpandedRequirements] = useState<Record<string, string | null>>({});
+
+  const toggleRequirement = (endorsementName: string, type: string) => {
+    setExpandedRequirements(prev => ({
+      ...prev,
+      [endorsementName]: prev[endorsementName] === type ? null : type
+    }));
+  };
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -25,6 +99,31 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
       setIsDeleting(false);
     }
   };
+
+  const handleTosClick = async () => {
+    setIsTosLoading(true);
+    try {
+      const { url } = await getTosLink(customer.id);
+      window.open(url, '_blank');
+    } catch (error) {
+      console.error('Failed to get ToS link:', error);
+      alert('Failed to get ToS link');
+    } finally {
+      setIsTosLoading(false);
+    }
+  };
+
+  const showTosButton = customer.endorsements?.some(endorsement => {
+    if (endorsement.status === 'approved') return false;
+    
+    const missing = endorsement.requirements.missing;
+    if (!missing) return false;
+    
+    const allOf = (missing as any).all_of;
+    if (!Array.isArray(allOf) || allOf.length === 0) return false;
+    
+    return allOf.some((req: string) => req.startsWith('terms_of_service'));
+  });
 
   const copyToClipboard = async (text: string, fieldName: string) => {
     try {
@@ -52,6 +151,12 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
       default:
         return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-600';
     }
+  };
+
+  const getMissingItems = (missing: any): string[] => {
+    if (!missing) return [];
+    if (Array.isArray(missing.all_of)) return missing.all_of;
+    return Object.keys(missing); // Fallback
   };
 
   const renderCompactField = (label: string, value: string | undefined, fieldKey: string, isCopyable = true) => {
@@ -138,7 +243,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
               </h4>
               <div className="bg-neutral-50 dark:bg-neutral-900/50 rounded-lg p-3 border border-neutral-200 dark:border-neutral-700/50 space-y-3">
                 {renderCompactField('Customer ID', customer.id, 'id')}
-                {renderCompactField('Full Name', customer.full_name, 'full_name')}
+                {renderCompactField('Full Name', customer.first_name, 'full_name')}
                 {renderCompactField('Email', customer.email, 'email')}
                 {renderCompactField('Type', customer.type, 'type', false)}
                 {renderCompactField('Created At', new Date(customer.created_at).toLocaleString(), 'created_at', false)}
@@ -197,7 +302,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                 </h4>
                 <div className="bg-neutral-50 dark:bg-neutral-900/50 rounded-lg p-3 border border-neutral-200 dark:border-neutral-700/50 space-y-3">
                   {customer.endorsements.map((endorsement) => (
-                    <div key={endorsement.name} className="border-b border-neutral-200 dark:border-neutral-700/50 last:border-0 pb-3 last:pb-0">
+                    <div key={endorsement.name} className="border-b border-neutral-200 dark:border-neutral-700/50 last:border-0 pb-3 last:pb-0 relative">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-sm font-medium text-neutral-900 dark:text-white">
                           {endorsement.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -209,31 +314,64 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
                       
                       {/* Requirements Info */}
                       <div className="grid grid-cols-3 gap-2 text-xs">
-                        <div className="text-green-600 dark:text-green-400">
-                          <span className="font-semibold">{endorsement.requirements.complete.length}</span> Complete
-                        </div>
-                        <div className="text-yellow-600 dark:text-yellow-400">
-                          <span className="font-semibold">{endorsement.requirements.pending.length}</span> Pending
-                        </div>
-                        <div className="text-red-600 dark:text-red-400">
-                          <span className="font-semibold">
-                            {endorsement.requirements.missing 
-                              ? (Array.isArray(endorsement.requirements.missing.all_of) 
-                                  ? endorsement.requirements.missing.all_of.length 
-                                  : Object.keys(endorsement.requirements.missing).length)
-                              : 0}
-                          </span> Missing
-                        </div>
+                        <button 
+                          onClick={() => toggleRequirement(endorsement.name, 'complete')}
+                          className={`text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 p-1 rounded transition-colors ${expandedRequirements[endorsement.name] === 'complete' ? 'bg-neutral-100 dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700' : ''}`}
+                        >
+                          <div className="text-green-600 dark:text-green-400">
+                            <span className="font-semibold">{endorsement.requirements.complete.length}</span> Complete
+                          </div>
+                        </button>
+                        
+                        <button 
+                          onClick={() => toggleRequirement(endorsement.name, 'pending')}
+                          className={`text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 p-1 rounded transition-colors ${expandedRequirements[endorsement.name] === 'pending' ? 'bg-neutral-100 dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700' : ''}`}
+                        >
+                          <div className="text-yellow-600 dark:text-yellow-400">
+                            <span className="font-semibold">{endorsement.requirements.pending.length}</span> Pending
+                          </div>
+                        </button>
+
+                        <button 
+                          onClick={() => toggleRequirement(endorsement.name, 'missing')}
+                          className={`text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 p-1 rounded transition-colors ${expandedRequirements[endorsement.name] === 'missing' ? 'bg-neutral-100 dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700' : ''}`}
+                        >
+                          <div className="text-red-600 dark:text-red-400">
+                            <span className="font-semibold">
+                              {endorsement.requirements.missing 
+                                ? (Array.isArray(endorsement.requirements.missing.all_of) 
+                                    ? endorsement.requirements.missing.all_of.length 
+                                    : Object.keys(endorsement.requirements.missing).length)
+                                : 0}
+                            </span> Missing
+                          </div>
+                        </button>
                       </div>
-                      
-                      {/* Missing Items Detail */}
-                      {endorsement.requirements.missing && (
-                        <div className="mt-2 text-xs text-red-500 dark:text-red-400 bg-red-500/5 p-2 rounded">
-                          <span className="font-semibold">Missing: </span>
-                          {Array.isArray((endorsement.requirements.missing as any).all_of) 
-                            ? (endorsement.requirements.missing as any).all_of.join(', ').replace(/_/g, ' ')
-                            : JSON.stringify(endorsement.requirements.missing)}
-                        </div>
+
+                      {/* Expanded List */}
+                      {expandedRequirements[endorsement.name] === 'complete' && (
+                        <RequirementListPopover
+                          items={endorsement.requirements.complete}
+                          colorClass="text-green-600 dark:text-green-400"
+                          onClose={() => setExpandedRequirements(prev => ({ ...prev, [endorsement.name]: null }))}
+                          onCopy={copyToClipboard}
+                        />
+                      )}
+                      {expandedRequirements[endorsement.name] === 'pending' && (
+                        <RequirementListPopover
+                          items={endorsement.requirements.pending}
+                          colorClass="text-yellow-600 dark:text-yellow-400"
+                          onClose={() => setExpandedRequirements(prev => ({ ...prev, [endorsement.name]: null }))}
+                          onCopy={copyToClipboard}
+                        />
+                      )}
+                      {expandedRequirements[endorsement.name] === 'missing' && (
+                        <RequirementListPopover
+                          items={getMissingItems(endorsement.requirements.missing)}
+                          colorClass="text-red-600 dark:text-red-400"
+                          onClose={() => setExpandedRequirements(prev => ({ ...prev, [endorsement.name]: null }))}
+                          onCopy={copyToClipboard}
+                        />
                       )}
                     </div>
                   ))}
@@ -241,6 +379,28 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {showTosButton && !isCollapsed && (
+        <div className="mt-6 flex justify-end border-t border-neutral-200 dark:border-neutral-700 pt-4">
+          <button
+            onClick={handleTosClick}
+            disabled={isTosLoading}
+            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500/20 transition-all shadow-sm flex items-center justify-center gap-1 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isTosLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-amber-600 dark:border-amber-400"></div>
+                Generating Link...
+              </>
+            ) : (
+              <>
+                <i className="fas fa-file-contract"></i>
+                Sign Terms of Service
+              </>
+            )}
+          </button>
         </div>
       )}
 

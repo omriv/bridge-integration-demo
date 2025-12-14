@@ -155,9 +155,9 @@ export function HomePage() {
       <div className="max-w-6xl mx-auto">
         {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
-            <div className="mt-4 max-w-3xl mx-auto relative flex gap-2">
+            <div className="mt-4 max-w-3xl mx-auto relative">
               {customers.length > 0 && (
-              <div className="relative flex-1">
+              <div className="relative w-full">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="w-full bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-4 py-3 flex items-center justify-between hover:border-amber-500 transition-colors shadow-sm"
@@ -242,12 +242,21 @@ export function HomePage() {
                   </div>
                 )}
               </div>
-              )}    
+              )}
+            </div>
+
+            <div className="mt-4 flex justify-center gap-4">
               <button
                 onClick={() => setIsAddCustomerModalOpen(true)}
                 className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg font-semibold hover:bg-amber-500/20 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
               >
                 <i className="fas fa-plus"></i> Add Customer
+              </button>
+              <button
+                onClick={refreshAll}
+                className="bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 px-4 py-2 rounded-lg font-semibold hover:bg-teal-500/20 transition-all transform hover:scale-105 active:scale-95 shadow-sm inline-flex items-center gap-2 whitespace-nowrap"
+              >
+                <i className="fas fa-sync-alt"></i> Refresh Data
               </button>
             </div>
           
@@ -274,16 +283,6 @@ export function HomePage() {
           accounts={externalAccounts} 
           onAddBank={() => setIsAddBankModalOpen(true)} 
         />
-
-        {/* Refresh Button */}
-        <div className="text-center">
-          <button
-            onClick={refreshAll}
-            className="bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-teal-500/20 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
-          >
-            <i className="fas fa-sync-alt mr-2"></i> Refresh Data
-          </button>
-        </div>
       </div>
 
       {/* Add Bank Modal */}

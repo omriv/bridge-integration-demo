@@ -933,6 +933,13 @@
   {
     "sourceRail": "Bridge Wallet",
     "sourceCurrency": "USDB",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDB",
     "destinationRail": "SPEI",
     "destinationCurrency": "MXN",
     "transactionMinimum": "2 USDB"
@@ -1054,6 +1061,13 @@
     "sourceCurrency": "USDC",
     "destinationRail": "Solana",
     "destinationCurrency": "USDB",
+    "transactionMinimum": "1 USDC"
+  },
+  {
+    "sourceRail": "Bridge Wallet",
+    "sourceCurrency": "USDC",
+    "destinationRail": "Solana",
+    "destinationCurrency": "USDC",
     "transactionMinimum": "1 USDC"
   },
   {

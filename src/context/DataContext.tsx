@@ -340,6 +340,7 @@ interface DataContextType {
   createWallet: (customerId: string, walletData: Record<string, unknown>) => Promise<unknown>;
   createLiquidationAddress: (customerId: string, addressData: Record<string, unknown>) => Promise<unknown>;
   deleteCustomer: (customerId: string) => Promise<void>;
+  getTosLink: (customerId: string) => Promise<{ url: string }>;
   
   // Composite Functions (With state updates)
   loadCustomerData: (customerId?: string) => Promise<void>;
@@ -511,6 +512,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
     await loadCustomers();
   }, [customer, loadCustomers]);
 
+  const getTosLink = useCallback(async (customerId: string) => {
+    return await bridgeAPI.getTosLink(customerId);
+  }, []);
+
   const toggleMock = useCallback(() => {
     const newUseMock = !useMock;
     setUseMock(newUseMock);
@@ -560,6 +565,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         createWallet,
         createLiquidationAddress,
         deleteCustomer,
+        getTosLink,
         
         // Composite Functions
         loadCustomerData,

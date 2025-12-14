@@ -11,7 +11,7 @@ interface AddCustomerModalProps {
 export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
   const { refreshAll } = useData();
   const [customerType, setCustomerType] = useState<'individual' | 'business'>('individual');
-  const [isReliance, setIsReliance] = useState(false);
+  const [isReliance, setIsReliance] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -30,7 +30,7 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
       setResponseData(null);
       setFormData({});
       setCustomerType('individual');
-      setIsReliance(false);
+      setIsReliance(true);
     }
   }, [isOpen]);
 

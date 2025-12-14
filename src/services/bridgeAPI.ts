@@ -264,4 +264,19 @@ export const bridgeAPI = {
 
     return response.json();
   },
+
+  async getTosLink(customerId: string): Promise<{ url: string }> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/tos_link`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
 };
