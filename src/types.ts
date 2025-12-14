@@ -1,5 +1,25 @@
 // TypeScript types for Bridge API responses
 
+export interface Endorsement {
+  name: string;
+  status: string;
+  requirements: {
+    complete: string[];
+    pending: string[];
+    missing: Record<string, unknown> | null;
+    issues: unknown[];
+  };
+  additional_requirements?: string[];
+}
+
+export interface Capabilities {
+  payin_crypto?: string;
+  payout_crypto?: string;
+  payin_fiat?: string;
+  payout_fiat?: string;
+  [key: string]: string | undefined;
+}
+
 export interface Customer {
   id: string;
   type: string;
@@ -10,7 +30,12 @@ export interface Customer {
   created_at: string;
   kyc_link?: string;
   tos_link?: string;
+  first_name?: string;
+  last_name?: string;
   full_name?: string;
+  endorsements?: Endorsement[];
+  capabilities?: Capabilities;
+  requirements_due?: string[];
   [key: string]: unknown;
 }
 

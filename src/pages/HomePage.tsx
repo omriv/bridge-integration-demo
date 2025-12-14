@@ -122,7 +122,7 @@ export function HomePage() {
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
-                      {cust.full_name || cust.email || 'Unnamed Customer'}
+                      {`${cust.email} 1(${cust.full_name})` || cust.full_name || 'Unnamed Customer'}
                     </div>
                     <div className="font-mono text-xs text-neutral-500 truncate">
                       {cust.id}
@@ -155,7 +155,7 @@ export function HomePage() {
       <div className="max-w-6xl mx-auto">
         {/* Header with Mock Toggle */}
         <div className="text-center mb-8">
-            <div className="mt-4 max-w-2xl mx-auto relative flex gap-2">
+            <div className="mt-4 max-w-3xl mx-auto relative flex gap-2">
               {customers.length > 0 && (
               <div className="relative flex-1">
                 <button
@@ -165,25 +165,32 @@ export function HomePage() {
                   <div className="flex items-center gap-3 flex-1 text-left">
                     <span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">Current Customer:</span>
                     {customer && (
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-sm text-neutral-900 dark:text-neutral-200">
-                          {customer.full_name || customer.email || customer.id.substring(0, 12) + '...'}
-                        </span>
-                        {customer.status && (
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(customer.status)}`}>
-                            {customer.status.replace(/_/g, ' ').toUpperCase()}
-                          </span>
-                        )}
-                        {customer.kyc_status && (
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(customer.kyc_status)}`}>
-                            KYC: {customer.kyc_status.replace(/_/g, ' ').toUpperCase()}
-                          </span>
-                        )}
+                      <div className="flex-1 flex items-center justify-between gap-2 min-w-0">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
+                            {customer.email}
+                          </div>
+                          <div className="font-mono text-xs text-neutral-500 truncate">
+                            {customer.id}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0 justify-end">
+                          {customer.status && (
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(customer.status)}`}>
+                              {customer.status.replace(/_/g, ' ').toUpperCase()}
+                            </span>
+                          )}
+                          {customer.kyc_status && (
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getStatusColor(customer.kyc_status)}`}>
+                              KYC: {customer.kyc_status.replace(/_/g, ' ').toUpperCase()}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
                   <svg
-                    className={`w-5 h-5 text-neutral-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 ml-2 text-neutral-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -206,7 +213,7 @@ export function HomePage() {
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-neutral-900 dark:text-neutral-200 truncate">
-                              {cust.full_name || cust.email || 'Unnamed Customer'}
+                              {`${cust.email} (${cust.full_name})` || cust.full_name || 'Unnamed Customer'}
                             </div>
                             <div className="font-mono text-xs text-neutral-500 truncate">
                               {cust.id}

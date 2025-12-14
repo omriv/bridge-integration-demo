@@ -14,6 +14,7 @@ import type { Customer, Wallet, LiquidationAddress, WalletTransaction, Transfer,
  */
 async function fetchCustomer(customerId: string): Promise<Customer> {
   const response = await bridgeAPI.getCustomer(customerId);
+  response.full_name = `${response.first_name} ${response.last_name}`;
   return response;
 }
 
@@ -23,7 +24,10 @@ async function fetchCustomer(customerId: string): Promise<Customer> {
  */
 export async function fetchAllCustomers(): Promise<Customer[]> {
   const response = await bridgeAPI.getAllCustomers();
-  return response.data;
+  return response.data.map(customer => {
+    customer.full_name = `${customer.first_name} ${customer.last_name}`;
+    return customer;
+  });
 }
 
 /**
@@ -352,7 +356,24 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: ReactNode }) {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [currentCustomerId, setCurrentCustomerId] = useState<string>(config.customerId);
+  
+  // Initialize currentCustomerId from sessionStorage or config
+  const [currentCustomerId, setCurrentCustomerIdState] = useState<string>(() => {
+    const storedId = sessionStorage.getItem('selectedCustomerId');
+    // If stored ID exists, use it. Otherwise use config default ONLY if it's not the placeholder
+    if (storedId) return storedId;
+    return config.customerId !== 'your-customer-id-here' ? config.customerId : '';
+  });
+
+  const setCurrentCustomerId = useCallback((id: string) => {
+    setCurrentCustomerIdState(id);
+    if (id) {
+      sessionStorage.setItem('selectedCustomerId', id);
+    } else {
+      sessionStorage.removeItem('selectedCustomerId');
+    }
+  }, []);
+
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [liquidationAddresses, setLiquidationAddresses] = useState<LiquidationAddress[]>([]);
   const [virtualAccounts, setVirtualAccounts] = useState<VirtualAccount[]>([]);
@@ -413,6 +434,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       // If customer not found (404), load customers list instead of showing error
       if (errorMessage.includes('404') || errorMessage.includes('Not Found') || errorMessage.includes('Failed to fetch customer')) {
         console.log('Customer not found, loading customers list...');
+        // Clear invalid customer ID from storage
+        sessionStorage.removeItem('selectedCustomerId');
         setCustomer(null);
         setWallets([]);
         setLiquidationAddresses([]);
@@ -478,7 +501,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     // If we deleted the current customer, clear the current customer state
     if (customer && customer.id === customerId) {
       setCustomer(null);
-      setCurrentCustomerId('');
+      setCurrentCustomerId(''); // This will also clear sessionStorage via the wrapper
       setWallets([]);
       setLiquidationAddresses([]);
       setVirtualAccounts([]);
@@ -495,6 +518,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     
     // Clear all cached data when switching modes
     setCustomer(null);
+    setCurrentCustomerId(''); // Clear selected customer when switching modes
     setWallets([]);
     setLiquidationAddresses([]);
     setVirtualAccounts([]);
@@ -503,9 +527,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     
     // Reload data with new mode
     setTimeout(() => {
-      loadCustomerData();
+      loadCustomerData(''); // Pass empty string to force list load
     }, 100);
-  }, [useMock, loadCustomerData]);
+  }, [useMock, loadCustomerData, setCurrentCustomerId]);
 
   return (
     <DataContext.Provider

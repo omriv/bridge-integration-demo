@@ -14,7 +14,7 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
   const { customer } = useData();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [showCreateTransferModal, setShowCreateTransferModal] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const copyToClipboard = async (text: string, fieldId: string) => {
     try {

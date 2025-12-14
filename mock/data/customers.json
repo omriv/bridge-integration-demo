@@ -9,7 +9,37 @@
       "kyc_status": "approved",
       "tos_status": "accepted",
       "created_at": "2024-01-15T10:30:00Z",
-      "full_name": "Alice Johnson"
+      "full_name": "Alice Johnson",
+      "capabilities": {
+        "payin_crypto": "active",
+        "payout_crypto": "active",
+        "payin_fiat": "inactive",
+        "payout_fiat": "active"
+      },
+      "endorsements": [
+        {
+          "name": "fiat_standard",
+          "status": "approved",
+          "requirements": {
+            "complete": ["tos_signed", "kyc_verified"],
+            "pending": [],
+            "missing": null,
+            "issues": []
+          }
+        },
+        {
+          "name": "crypto_advanced",
+          "status": "pending",
+          "requirements": {
+            "complete": ["wallet_linked"],
+            "pending": ["risk_assessment"],
+            "missing": {
+              "all_of": ["advanced_kyc"]
+            },
+            "issues": []
+          }
+        }
+      ]
     },
     {
       "id": "cust_mock_002",
