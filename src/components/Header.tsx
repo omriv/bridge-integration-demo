@@ -41,11 +41,11 @@ export function Header() {
                 className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
                   useMock
                     ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 cursor-not-allowed'
-                    : 'bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20'
+                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700'
                 }`}
                 title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
               >
-                <span>👤</span>
+                <span><i className="fas fa-user"></i></span>
                 <span>Dev Account</span>
               </button>
             <ThemeToggle />

@@ -75,7 +75,7 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
       >
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-            <span className="mr-3 p-1.5 bg-amber-500/10 rounded-lg text-amber-600">💼</span>
+            <span className="mr-3 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-700 dark:text-neutral-300"><i className="fas fa-wallet"></i></span>
             Wallet Details
           </h2>
           <div className="flex items-center gap-2">
@@ -162,10 +162,10 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
                 </div>
                 
                 {/* Total USD Value */}
-                <div className="mt-3 p-3 bg-green-500/10 border border-green-500/20 rounded-lg inline-block min-w-[200px]">
+                <div className="mt-3 p-3 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg inline-block min-w-[200px]">
                   <div className="flex items-center justify-between gap-4">
-                    <span className="text-sm font-semibold text-green-600 dark:text-green-400">💵 Total Value</span>
-                    <span className="text-lg font-bold text-green-700 dark:text-green-200">
+                    <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-300"><i className="fas fa-money-bill-wave mr-2"></i>Total Value</span>
+                    <span className="text-lg font-bold text-neutral-900 dark:text-neutral-200">
                       ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
@@ -177,7 +177,7 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
                     onClick={() => setShowCreateTransferModal(true)}
                     className="bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-amber-500 transition-all shadow-lg shadow-amber-900/20 flex items-center gap-2"
                   >
-                    <span>💸</span> Create Transfer
+                    <span><i className="fas fa-paper-plane"></i></span> Create Transfer
                   </button>
                 </div>
               </div>
@@ -186,7 +186,7 @@ export function HorizontalWalletCard({ wallet }: HorizontalWalletCardProps) {
             {/* Right Column: Balances */}
             <div className="flex-1 border-t lg:border-t-0 lg:border-l border-neutral-200 dark:border-neutral-700 pt-4 lg:pt-0 lg:pl-6">
               <h4 className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-3 flex items-center">
-                <span className="mr-2">💰</span>
+                <span className="mr-2"><i className="fas fa-coins"></i></span>
                 Wallet Balances
               </h4>
               

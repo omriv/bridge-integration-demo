@@ -118,7 +118,7 @@ export function VirtualAccountCard({ virtualAccount }: VirtualAccountCardProps) 
       {isExpanded && (
         <div className="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 p-3">
           <h4 className="text-sm font-semibold text-neutral-600 dark:text-neutral-300 mb-2 flex items-center">
-            <span className="mr-2">🏦</span>
+            <span className="mr-2"><i className="fas fa-university"></i></span>
             Bank Deposit Instructions
           </h4>
           

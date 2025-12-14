@@ -378,7 +378,7 @@ export function CreateTransferModal({
                     {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
                     {availableBalance > 0 && (
                       <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-                        💰 Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
+                        <i className="fas fa-coins mr-1"></i> Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
                       </p>
                     )}
                   </div>
@@ -497,8 +497,9 @@ export function CreateTransferModal({
               <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
                 <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Destination</h3>
                 {destinationRails.length === 0 && (
-                  <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded">
-                    ⚠️ No available routes found for {formData.source_payment_rail.toUpperCase()} {formData.source_currency.toUpperCase()}
+                  <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded flex items-center gap-2">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    No available routes found for {formData.source_payment_rail.toUpperCase()} {formData.source_currency.toUpperCase()}
                   </p>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -105,7 +105,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
           className="flex items-center hover:opacity-80 transition-opacity group"
         >
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white flex items-center">
-            <span className="text-amber-600 dark:text-amber-500 mr-3 p-2 bg-amber-500/10 rounded-lg group-hover:bg-amber-500/20 transition-colors">👤</span>
+            <span className="text-neutral-700 dark:text-neutral-300 mr-3 p-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg group-hover:bg-neutral-200 dark:group-hover:bg-neutral-700 transition-colors"><i className="fas fa-user"></i></span>
             Customer Details
           </h2>
           <svg
@@ -123,9 +123,9 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             e.stopPropagation();
             setDeleteStep(1);
           }}
-          className="px-3 py-1.5 bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2"
+          className="px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-sm font-medium rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 transition-all flex items-center gap-2"
         >
-          <span>🗑️</span> Delete
+          <span><i className="fas fa-trash"></i></span> Delete
         </button>
       </div>
       

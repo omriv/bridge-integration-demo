@@ -5,7 +5,7 @@ export type { CellTypeProps, ColumnConfig, DynamicTransactionsTableProps } from 
 
 export function DynamicTransactionsTable<T>({
   title,
-  icon = '📊',
+  icon = <i className="fas fa-table text-neutral-500 dark:text-neutral-400"></i>,
   items,
   columns,
   onReload,

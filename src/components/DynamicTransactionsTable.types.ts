@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 export interface CellTypeProps {
   data?: Record<string, any>;
@@ -21,7 +21,7 @@ export interface ColumnConfig<T> {
 
 export interface DynamicTransactionsTableProps<T> {
   title: string;
-  icon?: string;
+  icon?: ReactNode;
   items: T[];
   columns: ColumnConfig<T>[];
   onReload?: () => void | Promise<void>;

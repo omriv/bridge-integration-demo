@@ -280,7 +280,7 @@ export function WalletOverviewPage() {
     return (
       <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="text-red-500 text-5xl mb-4">❌</div>
+          <div className="text-red-500 text-5xl mb-4"><i className="fas fa-times-circle"></i></div>
           <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">Wallet Not Found</h2>
           <button
             onClick={() => navigate('/')}
@@ -380,7 +380,7 @@ export function WalletOverviewPage() {
                       className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
                     >
                       <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-                        <span className="mr-3 p-1.5 bg-purple-500/10 rounded-lg text-purple-600 dark:text-purple-400">🏦</span>
+                        <span className="mr-3 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-700 dark:text-neutral-300"><i className="fas fa-university"></i></span>
                         Virtual Accounts ({walletVirtualAccounts.length})
                       </h2>
                       <svg
@@ -425,7 +425,7 @@ export function WalletOverviewPage() {
                 className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
               >
                 <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-                  <span className="mr-3 p-1.5 bg-blue-500/10 rounded-lg text-blue-600 dark:text-blue-400">📊</span>
+                  <span className="mr-3 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-neutral-700 dark:text-neutral-300"><i className="fas fa-chart-bar"></i></span>
                   Recent Transactions
                 </h2>
                 <svg
@@ -443,7 +443,7 @@ export function WalletOverviewPage() {
                   {/* Wallet Transactions */}
                   <DynamicTransactionsTable
                     title="Wallet Transactions"
-                    icon="💳"
+                    icon={<i className="fas fa-credit-card"></i>}
                     items={walletTransactions}
                     columns={createWalletTransactionsTableColumns(openJsonModal)}
                     onReload={async () => {
@@ -469,7 +469,7 @@ export function WalletOverviewPage() {
                   {/* Transfers */}
                   <DynamicTransactionsTable
                     title="Transfers"
-                    icon="🔄"
+                    icon={<i className="fas fa-exchange-alt"></i>}
                     items={filterWalletTransfers(transfers, walletId, wallet?.address)}
                     columns={createTransfersTableColumns(
                       walletId,
@@ -502,7 +502,7 @@ export function WalletOverviewPage() {
                   {/* Liquidation History */}
                   <DynamicTransactionsTable
                     title="Liquidation History"
-                    icon="💧"
+                    icon={<i className="fas fa-tint"></i>}
                     items={liquidationHistory}
                     columns={createLiquidationHistoryTableColumns(openJsonModal)}
                     onReload={async () => {
@@ -528,7 +528,7 @@ export function WalletOverviewPage() {
                   {/* Virtual Account Activity */}
                   <DynamicTransactionsTable
                     title="Virtual Account Activity"
-                    icon="🏦"
+                    icon={<i className="fas fa-university"></i>}
                     items={virtualAccountActivity}
                     columns={createVirtualAccountActivityTableColumns(copiedField, copyToClipboard, openJsonModal)}
                     onReload={async () => {

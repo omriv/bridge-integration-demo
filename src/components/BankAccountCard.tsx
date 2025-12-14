@@ -63,7 +63,9 @@ export function BankAccountCard({ account }: BankAccountCardProps) {
     <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🏦</span>
+          <span className="text-2xl text-neutral-500 dark:text-neutral-400">
+            <i className="fas fa-university"></i>
+          </span>
           <div>
             <h3 className="font-semibold text-neutral-900 dark:text-white">{account.bank_name || 'Unknown Bank'}</h3>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 uppercase">{account.type.replace(/_/g, ' ')}</p>

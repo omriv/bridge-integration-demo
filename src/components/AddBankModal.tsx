@@ -281,7 +281,9 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
           <div className="p-6">
             {success ? (
               <div className="text-center py-8">
-                <div className="text-green-500 text-5xl mb-4">✅</div>
+                <div className="text-green-500 text-5xl mb-4">
+                  <i className="fas fa-check-circle"></i>
+                </div>
                 <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Account Created Successfully!</h3>
                 <p className="text-neutral-500 dark:text-neutral-400 mb-6">The external account has been added to the customer's profile.</p>
                 <div className="flex justify-center gap-4">
@@ -314,23 +316,24 @@ export function AddBankModal({ isOpen, onClose, customerId }: AddBankModalProps)
                   <label className="block text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-2">Account Type</label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {[
-                      { id: 'us', label: '🇺🇸 US (ACH/Wire)' },
-                      { id: 'iban', label: '🇪🇺 IBAN' },
-                      { id: 'swift', label: '🌐 SWIFT' },
-                      { id: 'clabe', label: '🇲🇽 CLABE' },
-                      { id: 'pix_key', label: '🇧🇷 Pix Key' },
-                      { id: 'pix_br_code', label: '🇧🇷 Pix BR Code' },
+                      { id: 'us', label: 'US (ACH/Wire)', icon: 'fa-dollar-sign' },
+                      { id: 'iban', label: 'IBAN', icon: 'fa-euro-sign' },
+                      { id: 'swift', label: 'SWIFT', icon: 'fa-globe' },
+                      { id: 'clabe', label: 'CLABE', icon: 'fa-money-bill-wave' },
+                      { id: 'pix_key', label: 'Pix Key', icon: 'fa-key' },
+                      { id: 'pix_br_code', label: 'Pix BR Code', icon: 'fa-qrcode' },
                     ].map((type) => (
                       <button
                         key={type.id}
                         type="button"
                         onClick={() => handleTypeChange(type.id as AccountType)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
+                        className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all flex items-center justify-center gap-2 ${
                           accountType === type.id
                             ? 'bg-amber-500/10 border-amber-500 text-amber-700 dark:text-amber-400 ring-1 ring-amber-500'
                             : 'bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700'
                         }`}
                       >
+                        <i className={`fas ${type.icon}`}></i>
                         {type.label}
                       </button>
                     ))}

@@ -163,7 +163,9 @@ export function AddLiquidationAddressModal({
           <div className="p-6">
             {success ? (
               <div className="text-center py-8">
-                <div className="text-green-500 text-5xl mb-4">✅</div>
+                <div className="text-green-500 text-5xl mb-4">
+                  <i className="fas fa-check-circle"></i>
+                </div>
                 <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Address Created Successfully!</h3>
                 <p className="text-neutral-500 dark:text-neutral-400 mb-6">The new liquidation address has been added.</p>
                 <div className="flex justify-center gap-4">

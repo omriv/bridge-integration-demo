@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import { CustomerDetails } from '../components/CustomerDetails'
 import { WalletCard } from '../components/WalletCard'
@@ -9,8 +8,7 @@ import { AddBankModal } from '../components/AddBankModal'
 import { AddWalletModal } from '../components/AddWalletModal'
 
 export function HomePage() {
-  const navigate = useNavigate();
-  const { customer, customers, currentCustomerId, wallets, loading, error, useMock, loadCustomerData, setCurrentCustomerId, refreshAll, virtualAccounts, virtualAccountsLoading, externalAccounts } = useData();
+  const { customer, customers, currentCustomerId, wallets, loading, error, loadCustomerData, setCurrentCustomerId, refreshAll, virtualAccounts, virtualAccountsLoading, externalAccounts } = useData();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
   // Collapse states
@@ -84,7 +82,7 @@ export function HomePage() {
           {/* Error State */}
           <div className="max-w-md mx-auto bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-8 border border-neutral-200 dark:border-neutral-700">
             <div className="text-center mb-6">
-              <div className="text-red-500 text-5xl mb-4">⚠️</div>
+              <div className="text-red-500 text-5xl mb-4"><i className="fas fa-exclamation-triangle"></i></div>
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">Error Loading Data</h2>
               <p className="text-neutral-600 dark:text-neutral-300 mb-4">{error}</p>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
@@ -250,7 +248,7 @@ export function HomePage() {
         <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
           <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsWalletsCollapsed(!isWalletsCollapsed)}>
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="text-amber-600 dark:text-amber-500 mr-2 p-1.5 bg-amber-500/10 rounded-lg">💼</span>
+              <span className="text-neutral-700 dark:text-neutral-300 mr-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg"><i className="fas fa-wallet"></i></span>
               Customer Wallets
               <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({wallets.length} {wallets.length === 1 ? 'wallet' : 'wallets'})
@@ -264,7 +262,7 @@ export function HomePage() {
                 }}
                 className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 shadow-sm"
               >
-                <span>➕</span> Add Wallet
+                <span><i className="fas fa-plus"></i></span> Add Wallet
               </button>
               <svg
                 className={`w-6 h-6 text-neutral-500 transition-transform ${isWalletsCollapsed ? 'rotate-180' : ''}`}
@@ -281,7 +279,7 @@ export function HomePage() {
             <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
               {wallets.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-neutral-400 text-5xl mb-4">📭</div>
+                  <div className="text-neutral-400 text-5xl mb-4"><i className="fas fa-inbox"></i></div>
                   <p className="text-neutral-500">No wallets found for this customer</p>
                 </div>
               ) : (
@@ -302,7 +300,7 @@ export function HomePage() {
             className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
           >
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="text-amber-600 dark:text-amber-500 mr-2 p-1.5 bg-amber-500/10 rounded-lg">🏦</span>
+              <span className="text-neutral-700 dark:text-neutral-300 mr-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg"><i className="fas fa-university"></i></span>
               Virtual Accounts
               <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({virtualAccounts.length} {virtualAccounts.length === 1 ? 'account' : 'accounts'})
@@ -327,7 +325,7 @@ export function HomePage() {
                 </div>
               ) : virtualAccounts.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-neutral-400 text-5xl mb-4">📭</div>
+                  <div className="text-neutral-400 text-5xl mb-4"><i className="fas fa-inbox"></i></div>
                   <p className="text-neutral-500">No virtual accounts found for this customer</p>
                 </div>
               ) : (
@@ -345,7 +343,7 @@ export function HomePage() {
         <div className="mb-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
           <div className="w-full px-6 py-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" onClick={() => setIsBankAccountsCollapsed(!isBankAccountsCollapsed)}>
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center">
-              <span className="text-amber-600 dark:text-amber-500 mr-2 p-1.5 bg-amber-500/10 rounded-lg">🏛️</span>
+              <span className="text-neutral-700 dark:text-neutral-300 mr-2 p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-lg"><i className="fas fa-landmark"></i></span>
               Bank Accounts
               <span className="ml-3 text-sm font-normal text-neutral-500 dark:text-neutral-400">
                 ({externalAccounts.length} {externalAccounts.length === 1 ? 'account' : 'accounts'})
@@ -359,7 +357,7 @@ export function HomePage() {
                 }}
                 className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 shadow-sm"
               >
-                <span>➕</span> Add Bank
+                <span><i className="fas fa-plus"></i></span> Add Bank
               </button>
               <svg
                 className={`w-6 h-6 text-neutral-500 transition-transform ${isBankAccountsCollapsed ? 'rotate-180' : ''}`}
@@ -376,7 +374,7 @@ export function HomePage() {
             <div className="p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">
               {externalAccounts.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-neutral-400 text-5xl mb-4">📭</div>
+                  <div className="text-neutral-400 text-5xl mb-4"><i className="fas fa-inbox"></i></div>
                   <p className="text-neutral-500">No bank accounts found for this customer</p>
                 </div>
               ) : (
@@ -396,7 +394,7 @@ export function HomePage() {
             onClick={refreshAll}
             className="bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-all transform hover:scale-105 active:scale-95 shadow-sm"
           >
-            🔄 Refresh Data
+            <i className="fas fa-sync-alt mr-2"></i> Refresh Data
           </button>
         </div>
       </div>

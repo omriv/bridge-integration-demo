@@ -37,7 +37,7 @@ export function DeveloperAccountPage() {
           <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/50 dark:to-emerald-900/50 border-b border-green-500/20 text-neutral-900 dark:text-white px-6 py-4">
               <h2 className="text-2xl font-bold flex items-center gap-2 text-green-600 dark:text-green-400">
-                <span>💰</span>
+                <span><i className="fas fa-coins"></i></span>
                 Developer Fees
               </h2>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">View and manage your transaction fees</p>
@@ -69,7 +69,7 @@ export function DeveloperAccountPage() {
           <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/50 dark:to-pink-900/50 border-b border-purple-500/20 text-neutral-900 dark:text-white px-6 py-4">
               <h2 className="text-2xl font-bold flex items-center gap-2 text-purple-600 dark:text-purple-400">
-                <span>💱</span>
+                <span><i className="fas fa-exchange-alt"></i></span>
                 Exchange Rates
               </h2>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Current cryptocurrency exchange rates</p>
@@ -105,7 +105,7 @@ export function DeveloperAccountPage() {
           <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm overflow-hidden border border-neutral-200 dark:border-neutral-700">
             <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/50 dark:to-red-900/50 border-b border-orange-500/20 text-neutral-900 dark:text-white px-6 py-4">
               <h2 className="text-2xl font-bold flex items-center gap-2 text-orange-600 dark:text-orange-400">
-                <span>🔔</span>
+                <span><i className="fas fa-bell"></i></span>
                 Webhooks
               </h2>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Configure event notifications and callbacks</p>
@@ -131,7 +131,9 @@ export function DeveloperAccountPage() {
           {/* Info Box */}
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/50 dark:to-indigo-900/50 border border-blue-500/20 text-neutral-900 dark:text-white rounded-lg p-6 shadow-sm">
             <div className="flex items-start gap-4">
-              <div className="text-4xl">ℹ️</div>
+              <div className="text-4xl text-blue-500 dark:text-blue-400">
+                <i className="fas fa-info-circle"></i>
+              </div>
               <div>
                 <h3 className="text-xl font-bold mb-2 text-blue-600 dark:text-blue-400">Developer Account Features</h3>
                 <p className="text-sm text-neutral-600 dark:text-neutral-300">

@@ -81,7 +81,9 @@ export function LiquidationAddressesSection({
           className="flex items-center flex-1"
         >
           <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
-            <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400">🏦</span>
+            <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400">
+              <i className="fas fa-university"></i>
+            </span>
             Liquidation Addresses ({liquidationAddresses.length})
           </h2>
           <svg

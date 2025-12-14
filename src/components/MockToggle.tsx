@@ -18,12 +18,12 @@ export function MockToggle({ useMock, onToggle }: MockToggleProps) {
   return (
     <div className="flex items-center gap-3 relative">
       {/* Mode Badge */}
-      <div className={`px-3 py-1.5 rounded-lg font-semibold text-sm transition-all ${
+      <div className={`px-3 py-1.5 rounded-lg font-semibold text-sm transition-all flex items-center ${
         useMock 
-          ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-2 border-orange-500/30' 
-          : 'bg-green-500/10 text-green-600 dark:text-green-400 border-2 border-green-500/30'
+          ? 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400 border-2 border-neutral-200 dark:border-neutral-700' 
+          : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400 border-2 border-neutral-200 dark:border-neutral-700'
       }`}>
-        {useMock ? '🎭 Mock Data' : '🌐 Real Data'}
+        {useMock ? <><i className="fas fa-mask mr-2"></i>Mock Data</> : <><i className="fas fa-globe mr-2"></i>Real Data</>}
       </div>
 
       {/* Toggle Switch with Tooltip */}
@@ -36,8 +36,8 @@ export function MockToggle({ useMock, onToggle }: MockToggleProps) {
           onClick={handleToggle}
           className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 ${
             useMock 
-              ? 'bg-orange-500 focus:ring-orange-500' 
-              : 'bg-green-500 focus:ring-green-500'
+              ? 'bg-neutral-500 focus:ring-neutral-500' 
+              : 'bg-neutral-700 focus:ring-neutral-700'
           } ${isAnimating ? 'scale-95' : 'scale-100'}`}
           role="switch"
           aria-checked={useMock}

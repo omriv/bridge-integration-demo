@@ -150,7 +150,9 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
               {/* Total USD Value */}
               <div className="mt-2 p-2 bg-green-500/10 border border-green-500/30 rounded">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-green-600 dark:text-green-400">💵 Total Value</span>
+                  <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                    <i className="fas fa-money-bill-wave mr-1"></i> Total Value
+                  </span>
                   <span className="text-sm font-bold text-neutral-900 dark:text-white">
                     ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
@@ -166,18 +168,18 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
                       navigate(`/${customer.id}/${wallet.id}`, { state: { virtualAccounts } });
                     }
                   }}
-                  className="flex-1 bg-amber-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-amber-700 transition-all shadow-sm"
+                  className="flex-1 bg-amber-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-amber-700 transition-all shadow-sm flex items-center justify-center gap-1"
                 >
-                  📋 Overview
+                  <i className="fas fa-clipboard-list"></i> Overview
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowCreateTransferModal(true);
                   }}
-                  className="flex-1 bg-emerald-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-emerald-700 transition-all shadow-sm"
+                  className="flex-1 bg-emerald-600 text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-emerald-700 transition-all shadow-sm flex items-center justify-center gap-1"
                 >
-                  💸 Create Transfer
+                  <i className="fas fa-paper-plane"></i> Create Transfer
                 </button>
               </div>
             </div>
@@ -199,7 +201,7 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
       {isExpanded && (
         <div className="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 p-3">
           <h4 className="text-sm font-semibold text-neutral-600 dark:text-neutral-300 mb-2 flex items-center">
-            <span className="mr-2">💰</span>
+            <span className="mr-2"><i className="fas fa-coins"></i></span>
             Wallet Balances
           </h4>
           
