@@ -38,7 +38,7 @@ These are standalone asynchronous functions that wrap `bridgeAPI` calls. They ar
 The main component that holds the application state:
 *   **State**: `customer`, `customers`, `wallets`, `liquidationAddresses`, `loading`, `error`, `useMock`.
 *   **`loadCustomerData`**: The primary effect function. It fetches customer data, wallets, and liquidation addresses in parallel. It handles 404 errors by falling back to the customer list.
-*   **`toggleMock`**: Switches between mock and real data, persisting the choice to `localStorage` and reloading the page context.
+*   **`toggleMock`**: Switches between mock and real data, persisting the choice to `sessionStorage` and reloading the page context.
 
 ## Issues & Recommendations
 

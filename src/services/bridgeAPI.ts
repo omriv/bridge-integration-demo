@@ -19,8 +19,8 @@ const headers = {
 
 // Helper to get current base URL (supports dynamic mock toggling)
 const getCurrentBaseUrl = () => {
-  // Check localStorage for useMock preference
-  const storedUseMock = localStorage.getItem('useMock');
+  // Check sessionStorage for useMock preference
+  const storedUseMock = sessionStorage.getItem('useMock');
   const useMock = storedUseMock !== null ? storedUseMock === 'true' : config.useMock;
   return getBaseUrl(useMock);
 };

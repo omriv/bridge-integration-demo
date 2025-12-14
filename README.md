@@ -83,7 +83,7 @@ A modern, feature-rich web application built with React, TypeScript, and Tailwin
   - No API key required for mock mode
   - Realistic test data with connected relationships
   - Instant switching via UI toggle
-  - Persistent mode selection (localStorage)
+  - Persistent mode selection (sessionStorage)
 - **JSON Viewer** - View full API responses for any data element
   - Syntax-highlighted JSON
   - Dedicated modal for easy inspection
@@ -356,7 +356,7 @@ The mock server (`mock/server/mockServer.js`) runs on port 3002 and provides:
 3. **Mode Indicator**: 
    - 🎭 Mock (orange badge) - Using local mock data
    - 🌐 Real (green badge) - Using Bridge API
-4. **Persistence**: Mode selection saved to localStorage
+4. **Persistence**: Mode selection saved to sessionStorage
 5. **No API Key Required**: Mock mode works without BRIDGE_API_KEY
 
 ## 🎨 Color-Coded Status System
@@ -417,7 +417,7 @@ This reduces API calls by ~70% during normal usage while maintaining data freshn
 - **Mock data not loading**: Verify `mock/data/` directory contains all JSON files
 - **Mock server won't start**: Ensure `mock/server/mockServer.js` exists
 - **Data not updating after toggle**: Wait for the mode transition animation to complete (2 seconds)
-- **Toggle not persisting**: Check browser localStorage is enabled
+- **Toggle not persisting**: Check browser sessionStorage is enabled
 
 ### Frontend Can't Connect to Backend
 - Verify backend is running on `http://localhost:3001`

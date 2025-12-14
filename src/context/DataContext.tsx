@@ -361,9 +361,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Mock mode state - initialize from localStorage or config
+  // Mock mode state - initialize from sessionStorage or config
   const [useMock, setUseMock] = useState<boolean>(() => {
-    const stored = localStorage.getItem('useMock');
+    const stored = sessionStorage.getItem('useMock');
     return stored !== null ? stored === 'true' : config.useMock;
   });
 
@@ -491,7 +491,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const toggleMock = useCallback(() => {
     const newUseMock = !useMock;
     setUseMock(newUseMock);
-    localStorage.setItem('useMock', String(newUseMock));
+    sessionStorage.setItem('useMock', String(newUseMock));
     
     // Clear all cached data when switching modes
     setCustomer(null);

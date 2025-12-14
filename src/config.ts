@@ -7,7 +7,7 @@ export const config = {
   mockBaseUrl: 'http://localhost:3002/api',
   
   // Mock mode flag (defaults to false - real data)
-  // Can be toggled via UI, persisted in localStorage
+  // Can be toggled via UI, persisted in sessionStorage
   useMock: false,
   
   // Your default Bridge customer ID for testing
