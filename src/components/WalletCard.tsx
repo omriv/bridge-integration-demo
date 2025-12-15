@@ -116,9 +116,9 @@ export function WalletCard({ wallet, virtualAccounts = [] }: WalletCardProps) {
               </div>
               
               {/* Total USD Value */}
-              <div className="mt-2 p-2 bg-green-500/10 border border-green-500/30 rounded">
+              <div className="mt-2 p-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                  <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
                     <i className="fas fa-money-bill-wave mr-1"></i> Total Value
                   </span>
                   <span className="text-sm font-bold text-neutral-900 dark:text-white">

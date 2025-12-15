@@ -248,7 +248,7 @@ export function HomePage() {
             <div className="mt-4 flex justify-center gap-4">
               <button
                 onClick={() => setIsAddCustomerModalOpen(true)}
-                className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg font-semibold hover:bg-amber-500/20 transition-colors inline-flex items-center gap-2 whitespace-nowrap"
+                className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg font-semibold hover:bg-amber-500/20 transition-all transform hover:scale-105 active:scale-95 shadow-sm inline-flex items-center gap-2 whitespace-nowrap"
               >
                 <i className="fas fa-plus"></i> Add Customer
               </button>

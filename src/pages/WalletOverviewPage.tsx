@@ -360,25 +360,31 @@ export function WalletOverviewPage() {
           </button>
           
           <div className="flex-1 mx-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Wallet Overview</h1>
-              {wallet && <ChainBadge chain={wallet.chain} />}
-              {customerId && (
-                <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700/50 px-2 py-1 rounded text-xs font-mono text-neutral-500 dark:text-neutral-400">
-                  <span>{customerId.substring(0, 12)}...</span>
-                  <button
-                    onClick={() => copyToClipboard(customerId, 'header-customer-id')}
-                    className="p-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
-                    title="Copy Customer ID"
-                  >
-                    {copiedField === 'header-customer-id' ? (
-                      <i className="fas fa-check text-green-500"></i>
-                    ) : (
-                      <i className="fas fa-copy"></i>
-                    )}
-                  </button>
+            <div className="flex flex-col">
+              {customer && (
+                <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
+                  {customer.email && <span>{customer.email}</span>}
+                  {customer.email && <span className="text-neutral-300 dark:text-neutral-600">•</span>}
+                  <div className="flex items-center gap-1 font-mono">
+                    <span>{customer.id}</span>
+                    <button
+                      onClick={() => copyToClipboard(customer.id, 'header-customer-id')}
+                      className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                      title="Copy Customer ID"
+                    >
+                      {copiedField === 'header-customer-id' ? (
+                        <i className="fas fa-check text-green-500 text-[10px]"></i>
+                      ) : (
+                        <i className="fas fa-copy text-[10px]"></i>
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
+              <div className="flex items-center gap-3">
+                <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Wallet Overview</h1>
+                {wallet && <ChainBadge chain={wallet.chain} />}
+              </div>
             </div>
             {wallet && (
               <div className="text-lg font-bold text-neutral-900 dark:text-white">
@@ -388,23 +394,6 @@ export function WalletOverviewPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Limit Input */}
-            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-1.5">
-              <label htmlFor="limit-input" className="text-sm font-semibold whitespace-nowrap text-neutral-500 dark:text-neutral-400">
-                Max Items:
-              </label>
-              <input
-                id="limit-input"
-                type="number"
-                min="10"
-                max="100"
-                value={limitInput}
-                onChange={(e) => setLimitInput(e.target.value)}
-                onBlur={handleLimitBlur}
-                className="w-16 px-2 py-1 text-sm text-neutral-900 dark:text-white bg-white dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-600 focus:ring-2 focus:ring-amber-500 outline-none"
-              />
-            </div>
-
             <button
               onClick={handleRefresh}
               className="flex items-center gap-2 px-3 py-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-white rounded-lg transition-colors"
@@ -459,23 +448,42 @@ export function WalletOverviewPage() {
 
             {/* Transactions Section */}
             <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700">
-              <button
+              <div
                 onClick={() => setIsTransactionsCollapsed(!isTransactionsCollapsed)}
-                className="w-full flex items-center p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
+                className="w-full flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer"
               >
                 <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center">
                   <span className="mr-3 p-1.5 bg-teal-500/10 rounded-lg text-teal-600 dark:text-teal-400"><i className="fas fa-chart-bar"></i></span>
                   Recent Transactions
                 </h2>
-                <svg
-                  className={`w-5 h-5 text-neutral-500 transition-transform ml-3 ${isTransactionsCollapsed ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <label htmlFor="limit-input" className="text-sm font-semibold whitespace-nowrap text-neutral-500 dark:text-neutral-400">
+                      Max Items:
+                    </label>
+                    <input
+                      id="limit-input"
+                      type="number"
+                      min="10"
+                      max="100"
+                      value={limitInput}
+                      onChange={(e) => setLimitInput(e.target.value)}
+                      onBlur={handleLimitBlur}
+                      className="w-16 px-2 py-1 text-sm text-neutral-900 dark:text-white bg-white dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-600 focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                  </div>
+
+                  <svg
+                    className={`w-5 h-5 text-neutral-500 transition-transform ${isTransactionsCollapsed ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
 
               {!isTransactionsCollapsed && (
                 <div className="p-4 space-y-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/30">

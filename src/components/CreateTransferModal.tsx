@@ -417,11 +417,11 @@ export function CreateTransferModal({
               </div>
 
               {/* Source Section */}
-              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Source</h3>
+              <div className="bg-neutral-50 dark:bg-neutral-800/50 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700 space-y-4">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-700 pb-2">Source</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Payment Rail <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -435,7 +435,7 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Currency <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -458,7 +458,7 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Bridge Wallet ID {formData.source_payment_rail === 'bridge_wallet' && <span className="text-red-500">*</span>}
                     </label>
                     <input
@@ -477,7 +477,7 @@ export function CreateTransferModal({
                     {errors.source_bridge_wallet_id && <p className="text-red-500 text-xs mt-1">{errors.source_bridge_wallet_id}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       External Account ID
                     </label>
                     <input
@@ -489,7 +489,7 @@ export function CreateTransferModal({
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       From Address {formData.source_payment_rail === 'solana' && <span className="text-red-500">*</span>}
                     </label>
                     <input
@@ -511,8 +511,8 @@ export function CreateTransferModal({
               </div>
 
               {/* Destination Section */}
-              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
-                <div className="flex justify-between items-center mb-3">
+              <div className="bg-neutral-50 dark:bg-neutral-800/50 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700 space-y-4">
+                <div className="flex justify-between items-center border-b border-neutral-200 dark:border-neutral-700 pb-2">
                   <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Destination</h3>
                   <button
                     type="button"
@@ -530,7 +530,7 @@ export function CreateTransferModal({
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Payment Rail <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -553,7 +553,7 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Currency <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -576,7 +576,7 @@ export function CreateTransferModal({
                     </select>
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       To Address (for crypto destinations) <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -590,7 +590,7 @@ export function CreateTransferModal({
                     {errors.destination_to_address && <p className="text-red-500 text-xs mt-1">{errors.destination_to_address}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Bridge Wallet ID
                     </label>
                     <input
@@ -602,7 +602,7 @@ export function CreateTransferModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       External Account ID
                     </label>
                     <input
@@ -614,7 +614,7 @@ export function CreateTransferModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Wire Message
                     </label>
                     <input
@@ -626,7 +626,7 @@ export function CreateTransferModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
                       Blockchain Memo
                     </label>
                     <input

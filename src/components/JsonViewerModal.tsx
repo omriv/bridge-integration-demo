@@ -1,3 +1,7 @@
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useTheme } from '../context/ThemeContext';
+
 interface JsonViewerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -6,6 +10,8 @@ interface JsonViewerModalProps {
 }
 
 export function JsonViewerModal({ isOpen, onClose, title, data }: JsonViewerModalProps) {
+  const { theme } = useTheme();
+
   if (!isOpen) return null;
 
   return (
@@ -34,27 +40,36 @@ export function JsonViewerModal({ isOpen, onClose, title, data }: JsonViewerModa
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] bg-neutral-50 dark:bg-black">
-          <pre className="text-sm text-green-600 dark:text-green-400 font-mono whitespace-pre-wrap break-words">
+        <div className="p-0 overflow-auto max-h-[calc(90vh-140px)] bg-neutral-50 dark:bg-neutral-950">
+          <SyntaxHighlighter
+            language="json"
+            style={vscDarkPlus}
+            customStyle={{
+              margin: 0,
+              padding: '1.5rem',
+              fontSize: '0.875rem',
+            }}
+            wrapLongLines={true}
+          >
             {JSON.stringify(data, null, 2)}
-          </pre>
+          </SyntaxHighlighter>
         </div>
 
         {/* Footer */}
-        <div className="border-t border-neutral-200 dark:border-neutral-800 p-4 bg-white dark:bg-neutral-900 flex gap-3">
+        <div className="border-t border-neutral-200 dark:border-neutral-800 p-4 bg-white dark:bg-neutral-900 flex justify-end gap-3">
           <button
             onClick={() => {
               navigator.clipboard.writeText(JSON.stringify(data, null, 2));
             }}
-            className="flex-1 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-white px-6 py-3 rounded-lg font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors border border-neutral-200 dark:border-neutral-700"
+            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-amber-500/20 transition-colors flex items-center justify-center gap-2"
           >
-            📋 Copy JSON
+            <i className="fas fa-copy"></i> Copy JSON
           </button>
           <button
             onClick={onClose}
-            className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+            className="bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20 px-6 py-3 rounded-lg font-semibold hover:bg-neutral-500/20 transition-colors flex items-center justify-center gap-2"
           >
-            Close
+            <i className="fas fa-times"></i> Close
           </button>
         </div>
       </div>
