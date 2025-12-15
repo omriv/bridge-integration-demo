@@ -20,10 +20,11 @@ async function fetchCustomer(customerId: string): Promise<Customer> {
 
 /**
  * Fetches all customers
+ * @param email - Optional email to filter by
  * @returns Array of customers
  */
-export async function fetchAllCustomers(): Promise<Customer[]> {
-  const response = await bridgeAPI.getAllCustomers();
+export async function fetchAllCustomers(email?: string): Promise<Customer[]> {
+  const response = await bridgeAPI.getAllCustomers(email);
   return response.data.map(customer => {
     customer.full_name = `${customer.first_name} ${customer.last_name}`;
     return customer;
@@ -345,7 +346,7 @@ interface DataContextType {
   
   // Composite Functions (With state updates)
   loadCustomerData: (customerId?: string) => Promise<void>;
-  loadCustomers: () => Promise<void>;
+  loadCustomers: (email?: string) => Promise<void>;
   
   // Utility Functions
   setCurrentCustomerId: (customerId: string) => void;
@@ -456,9 +457,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   }, [currentCustomerId, customers.length]);
 
-  const loadCustomers = useCallback(async () => {
+  const loadCustomers = useCallback(async (email?: string) => {
     try {
-      const customers = await fetchAllCustomers();
+      const customers = await fetchAllCustomers(email);
       setCustomers(customers);
     } catch (err) {
       console.error('Error loading customers list:', err);

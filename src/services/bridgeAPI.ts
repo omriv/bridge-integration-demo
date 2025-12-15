@@ -27,8 +27,13 @@ const getCurrentBaseUrl = () => {
 };
 
 export const bridgeAPI = {
-  async getAllCustomers(): Promise<CustomersResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers`, {
+  async getAllCustomers(email?: string): Promise<CustomersResponse> {
+    let url = `${getCurrentBaseUrl()}/customers`;
+    if (email) {
+      url += `?email=${encodeURIComponent(email)}`;
+    }
+    
+    const response = await fetch(url, {
       headers,
     });
 

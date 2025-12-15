@@ -52,8 +52,14 @@ app.post('/api/customers', async (req, res) => {
 // Proxy endpoint for getting all customers
 app.get('/api/customers', async (req, res) => {
   try {
-    const { limit = 50 } = req.query;
-    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers?limit=${limit}`, {
+    const { limit = 50, email } = req.query;
+    let url = `${BRIDGE_BASE_URL}/v0/customers?limit=${limit}`;
+    
+    if (email) {
+      url += `&email=${encodeURIComponent(email)}`;
+    }
+
+    const response = await fetch(url, {
       headers: {
         'Api-Key': BRIDGE_API_KEY,
         'Content-Type': 'application/json',

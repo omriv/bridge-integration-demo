@@ -1,9 +1,9 @@
 export const getChainColor = (chain: string) => {
   const colors: Record<string, string> = {
-    ethereum: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20',
+    ethereum: 'bg-lime-500/10 text-lime-700 dark:text-lime-300 border-lime-500/20',
     polygon: 'bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/20',
-    base: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-500/20',
-    arbitrum: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border-cyan-500/20',
+    base: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border-cyan-500/20',
+    arbitrum: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-500/20',
     optimism: 'bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/20',
     solana: 'bg-violet-500/10 text-violet-700 dark:text-violet-300 border-violet-500/20',
     avalanche: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20',
