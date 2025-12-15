@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { JsonViewerModal } from './JsonViewerModal';
 import type { Wallet, CreateVirtualAccountRequest } from '../types';
@@ -32,6 +32,23 @@ export function AddVirtualAccountModal({ isOpen, onClose, customerId, wallets }:
     destination_address: '',
     bridge_wallet_id: '',
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      setSuccess(false);
+      setError(null);
+      setLoading(false);
+      setResponseData(null);
+      setFormData({
+        source_currency: 'usd',
+        source_payment_rail: 'ach',
+        destination_payment_rail: '',
+        destination_currency: '',
+        destination_address: '',
+        bridge_wallet_id: '',
+      });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

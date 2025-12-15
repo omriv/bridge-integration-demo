@@ -139,6 +139,9 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
           screened_at: new Date().toISOString(),
           result: 'passed'
         };
+        
+        payload.verified_database_at = new Date().toISOString();
+        payload.verified_proof_of_address_at = new Date().toISOString();
 
         // Add identifying info if provided
         if (formData.identification_type && formData.identification_number && formData.issuing_country) {

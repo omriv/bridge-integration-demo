@@ -571,6 +571,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         fetchVirtualAccountActivityParallel,
         fetchExternalAccounts,
         createExternalAccount,
+        createVirtualAccount,
         createWallet,
         createLiquidationAddress,
         deleteCustomer,
