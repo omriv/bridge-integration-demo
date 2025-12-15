@@ -10,7 +10,8 @@ import type {
   LiquidationHistoryResponse,
   VirtualAccountsResponse,
   VirtualAccountActivityResponse,
-  ExternalAccountsResponse
+  ExternalAccountsResponse,
+  CreateVirtualAccountRequest
 } from '../types';
 
 const headers = {
@@ -208,6 +209,21 @@ export const bridgeAPI = {
 
   async createExternalAccount(customerId: string, accountData: Record<string, unknown>): Promise<unknown> {
     const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/external_accounts`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(accountData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    return response.json();
+  },
+
+  async createVirtualAccount(customerId: string, accountData: CreateVirtualAccountRequest): Promise<unknown> {
+    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts`, {
       method: 'POST',
       headers,
       body: JSON.stringify(accountData),

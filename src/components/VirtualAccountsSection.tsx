@@ -5,9 +5,10 @@ import { VirtualAccountCard } from './VirtualAccountCard';
 interface VirtualAccountsSectionProps {
   virtualAccounts: VirtualAccount[];
   loading?: boolean;
+  onAddVirtualAccount?: () => void;
 }
 
-export function VirtualAccountsSection({ virtualAccounts, loading = false }: VirtualAccountsSectionProps) {
+export function VirtualAccountsSection({ virtualAccounts, loading = false, onAddVirtualAccount }: VirtualAccountsSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
@@ -32,6 +33,17 @@ export function VirtualAccountsSection({ virtualAccounts, loading = false }: Vir
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
+        {onAddVirtualAccount && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddVirtualAccount();
+            }}
+            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-500/20 transition-colors flex items-center gap-2"
+          >
+            <i className="fas fa-plus"></i> Add Virtual Account
+          </button>
+        )}
       </div>
 
       {!isCollapsed && (

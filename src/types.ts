@@ -222,6 +222,19 @@ export interface VirtualAccountsResponse {
   data: VirtualAccount[];
 }
 
+export interface CreateVirtualAccountRequest {
+  source: {
+    currency: string;
+    payment_rail: string;
+  };
+  destination: {
+    currency: string;
+    payment_rail: string;
+    to_address?: string;
+    bridge_wallet_id?: string;
+  };
+}
+
 export interface VirtualAccountActivity {
   id: string;
   event_type: string;

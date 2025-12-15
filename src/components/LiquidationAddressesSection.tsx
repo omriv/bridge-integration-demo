@@ -104,7 +104,7 @@ export function LiquidationAddressesSection({
           }}
           className="ml-4 inline-flex items-center px-3 py-1.5 border border-amber-500/20 text-xs font-medium rounded-lg text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
         >
-          Add Address
+          <i className="fas fa-plus mr-2"></i> Add Address
         </button>
       </div>
 

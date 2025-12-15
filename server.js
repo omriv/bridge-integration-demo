@@ -276,6 +276,38 @@ app.get('/api/customers/:customerId/liquidation_addresses/:liquidationAddressId/
   }
 });
 
+// Proxy endpoint for creating a virtual account
+app.post('/api/customers/:customerId/virtual_accounts', async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const accountData = req.body;
+    
+    // Generate a unique idempotency key
+    const idempotencyKey = `va_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    
+    const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts`, {
+      method: 'POST',
+      headers: {
+        'Api-Key': BRIDGE_API_KEY,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(accountData),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+
+    const data = await response.json();
+    res.status(201).json(data);
+  } catch (error) {
+    console.error('Error creating virtual account:', error);
+    res.status(500).json({ error: 'Failed to create virtual account' });
+  }
+});
+
 // Proxy endpoint for getting virtual accounts
 app.get('/api/customers/:customerId/virtual_accounts', async (req, res) => {
   try {

@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { bridgeAPI } from '../services/bridgeAPI';
 import { config } from '../config';
-import type { Customer, Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity, ExternalAccount } from '../types';
+import type { Customer, Wallet, LiquidationAddress, WalletTransaction, Transfer, LiquidationHistory, VirtualAccount, VirtualAccountActivity, ExternalAccount, CreateVirtualAccountRequest } from '../types';
 
 // ============================================================================
 // INDIVIDUAL FETCH FUNCTIONS (No State Updates - Pure Data Fetching)
@@ -337,6 +337,7 @@ interface DataContextType {
   fetchVirtualAccountActivityParallel: (customerId: string, accounts: VirtualAccount[], limit?: number) => Promise<{ data: VirtualAccountActivity[]; raw: unknown }>;
   fetchExternalAccounts: (customerId: string, limit?: number) => Promise<ExternalAccount[]>;
   createExternalAccount: (customerId: string, accountData: Record<string, unknown>) => Promise<unknown>;
+  createVirtualAccount: (customerId: string, accountData: CreateVirtualAccountRequest) => Promise<unknown>;
   createWallet: (customerId: string, walletData: Record<string, unknown>) => Promise<unknown>;
   createLiquidationAddress: (customerId: string, addressData: Record<string, unknown>) => Promise<unknown>;
   deleteCustomer: (customerId: string) => Promise<void>;
@@ -477,6 +478,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
     // Refresh external accounts after creation
     const updatedAccounts = await fetchExternalAccounts(customerId);
     setExternalAccounts(updatedAccounts);
+    return result;
+  }, []);
+
+  const createVirtualAccount = useCallback(async (customerId: string, accountData: CreateVirtualAccountRequest) => {
+    const result = await bridgeAPI.createVirtualAccount(customerId, accountData);
+    // Refresh virtual accounts after creation
+    const updatedAccounts = await fetchVirtualAccounts(customerId);
+    setVirtualAccounts(updatedAccounts);
     return result;
   }, []);
 

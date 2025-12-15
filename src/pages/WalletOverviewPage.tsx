@@ -12,6 +12,7 @@ import { createVirtualAccountActivityTableColumns } from '../components/tableCon
 import { LiquidationAddressesSection } from '../components/LiquidationAddressesSection';
 import { HorizontalWalletCard } from '../components/HorizontalWalletCard';
 import { VirtualAccountsSection } from '../components/VirtualAccountsSection';
+import { AddVirtualAccountModal } from '../components/AddVirtualAccountModal';
 import { ChainBadge } from '../components/ChainBadge';
 
 // Helper function to filter transfers related to a wallet
@@ -90,6 +91,9 @@ export function WalletOverviewPage() {
   const [jsonModalOpen, setJsonModalOpen] = useState(false);
   const [jsonModalTitle, setJsonModalTitle] = useState('');
   const [jsonModalData, setJsonModalData] = useState<unknown>(null);
+  
+  // Add Virtual Account Modal state
+  const [isAddVirtualAccountModalOpen, setIsAddVirtualAccountModalOpen] = useState(false);
   
   // Calculate total USD value
   const totalUSD = wallet ? wallet.balances.reduce((total, balance) => {
@@ -432,6 +436,7 @@ export function WalletOverviewPage() {
                 virtualAccounts={virtualAccounts.filter(
                   (va) => va.destination.address.toLowerCase() === wallet.address.toLowerCase()
                 )} 
+                onAddVirtualAccount={() => setIsAddVirtualAccountModalOpen(true)}
               />
             )}
 
@@ -614,6 +619,16 @@ export function WalletOverviewPage() {
         title={jsonModalTitle}
         data={jsonModalData}
       />
+
+      {/* Add Virtual Account Modal */}
+      {customerId && (
+        <AddVirtualAccountModal
+          isOpen={isAddVirtualAccountModalOpen}
+          onClose={() => setIsAddVirtualAccountModalOpen(false)}
+          customerId={customerId}
+          wallets={wallets}
+        />
+      )}
     </div>
   );
 }
