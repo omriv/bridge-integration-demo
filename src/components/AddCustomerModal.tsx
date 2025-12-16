@@ -21,6 +21,14 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
   const [responseData, setResponseData] = useState<unknown>(null);
 
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [endorsements, setEndorsements] = useState<Record<string, boolean>>({
+    base: true,
+    sepa: true,
+    reliance: true,
+    crypto_to_crypto: true,
+    spei: true,
+    pix: true
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -31,6 +39,14 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
       setFormData({});
       setCustomerType('individual');
       setIsReliance(true);
+      setEndorsements({
+        base: true,
+        sepa: true,
+        reliance: true,
+        crypto_to_crypto: true,
+        spei: true,
+        pix: true
+      });
     }
   }, [isOpen]);
 
@@ -128,7 +144,11 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
 
       // Reliance Logic
       if (isReliance) {
-        payload.endorsements = ['base', 'sepa', 'reliance', 'crypto_to_crypto'];
+        // Filter checked endorsements
+        payload.endorsements = Object.entries(endorsements)
+          .filter(([_, checked]) => checked)
+          .map(([key]) => key);
+          
         payload.has_accepted_terms_of_service = true;
         
         payload.kyc_screen = {
@@ -596,6 +616,28 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
                           onChange={(e) => handleFileChange(e, 'document_front')}
                           className="w-full text-sm text-neutral-500 dark:text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
                         />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Endorsements Section */}
+                  {isReliance && (
+                    <div className="md:col-span-2 border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
+                      <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Endorsements</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {Object.keys(endorsements).map((key) => (
+                          <label key={key} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={endorsements[key]}
+                              onChange={(e) => setEndorsements(prev => ({ ...prev, [key]: e.target.checked }))}
+                              className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900"
+                            />
+                            <span className="text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                              {key.replace(/_/g, ' ')}
+                            </span>
+                          </label>
+                        ))}
                       </div>
                     </div>
                   )}

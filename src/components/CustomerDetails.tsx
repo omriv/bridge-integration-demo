@@ -72,13 +72,19 @@ function RequirementListPopover({ items, colorClass, onClose, onCopy }: Requirem
 }
 
 export function CustomerDetails({ customer }: CustomerDetailsProps) {
-  const { deleteCustomer, getTosLink } = useData();
+  const { deleteCustomer, getTosLink, wallets } = useData();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [deleteStep, setDeleteStep] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isTosLoading, setIsTosLoading] = useState(false);
   const [expandedRequirements, setExpandedRequirements] = useState<Record<string, string | null>>({});
+
+  const totalWalletBalance = wallets.reduce((total, wallet) => {
+    return total + wallet.balances.reduce((walletTotal, balance) => {
+      return walletTotal + (parseFloat(balance.balance) || 0);
+    }, 0);
+  }, 0);
 
   const toggleRequirement = (endorsementName: string, type: string) => {
     setExpandedRequirements(prev => ({
@@ -220,7 +226,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        {customer.id !== 'cfbc5326-25ff-43fb-82c9-6e800566f490' &&
+        {customer.id !== 'cfbc5326-25ff-43fb-82c9-6e800566f490' && totalWalletBalance <= 1 &&
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -273,27 +279,6 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
 
           {/* Right Column: Capabilities & Endorsements */}
           <div className="space-y-4">
-            {/* Capabilities */}
-            {customer.capabilities && (
-              <div>
-                <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-2 flex items-center gap-2">
-                  <i className="fas fa-sliders-h text-neutral-400"></i> Capabilities
-                </h4>
-                <div className="bg-neutral-50 dark:bg-neutral-900/50 rounded-lg p-3 border border-neutral-200 dark:border-neutral-700/50 grid grid-cols-2 gap-3">
-                  {Object.entries(customer.capabilities).map(([key, value]) => (
-                    <div key={key} className="flex flex-col">
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                        {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                      </span>
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded w-fit ${getStatusColor(value || '')}`}>
-                        {(value || '').toUpperCase()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Endorsements */}
             {customer.endorsements && customer.endorsements.length > 0 && (
               <div>

@@ -237,7 +237,6 @@ export function AddLiquidationAddressModal({
                       <option value="dai">DAI</option>
                       <option value="pyusd">PYUSD</option>
                       <option value="eurc">EURC</option>
-                      <option value="any">ANY</option>
                     </select>
                   </div>
                 </div>

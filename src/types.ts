@@ -1,5 +1,11 @@
 // TypeScript types for Bridge API responses
 
+export enum RailType {
+  BridgeWallet = 1,
+  Blockchain = 2,
+  Fiat = 3
+}
+
 export interface Endorsement {
   name: string;
   status: string;
@@ -10,14 +16,6 @@ export interface Endorsement {
     issues: unknown[];
   };
   additional_requirements?: string[];
-}
-
-export interface Capabilities {
-  payin_crypto?: string;
-  payout_crypto?: string;
-  payin_fiat?: string;
-  payout_fiat?: string;
-  [key: string]: string | undefined;
 }
 
 export interface Customer {
@@ -34,7 +32,6 @@ export interface Customer {
   last_name?: string;
   full_name?: string;
   endorsements?: Endorsement[];
-  capabilities?: Capabilities;
   requirements_due?: string[];
   [key: string]: unknown;
 }

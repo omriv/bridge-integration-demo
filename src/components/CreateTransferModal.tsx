@@ -144,7 +144,7 @@ export function CreateTransferModal({
       ...prev,
       destination_to_address: address.address,
       destination_payment_rail: railToApiFormat(address.chain),
-      destination_currency: address.currency !== 'any' ? address.currency.toLowerCase() : prev.destination_currency
+      destination_currency: address.currency.toLowerCase()
     }));
     setShowGetAddressModal(false);
   };
