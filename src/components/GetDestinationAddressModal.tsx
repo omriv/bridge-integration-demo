@@ -65,7 +65,7 @@ export function GetDestinationAddressModal({
         <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl w-full max-w-2xl relative border border-neutral-200 dark:border-neutral-700">
           {/* Header */}
           <div className="p-6 border-b border-neutral-200 dark:border-neutral-700 flex justify-between items-center bg-neutral-50 dark:bg-neutral-800/30 rounded-t-xl">
-            <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Get Destination Customer Addresses</h2>
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Get Customer Liquidation Addresses</h2>
             <button onClick={onClose} className="text-neutral-400 hover:text-neutral-600 dark:hover:text-white transition-colors">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -367,6 +367,11 @@ app.get('/api/customers/:customerId/virtual_accounts/:virtualAccountId/history',
 app.post('/api/transfers', async (req, res) => {
   try {
     const transferData = req.body;
+
+    // Validate amount
+    if (transferData.amount && parseFloat(transferData.amount) > 10) {
+      return res.status(400).json({ error: 'Amount cannot exceed 10' });
+    }
     
     // Generate a unique idempotency key
     const idempotencyKey = `transfer_${Date.now()}_${Math.random().toString(36).substring(7)}`;

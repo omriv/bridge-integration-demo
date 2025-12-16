@@ -164,8 +164,12 @@ export function CreateTransferModal({
     }
 
     // Amount validation
-    if (formData.amount && !/^\d+(\.\d+)?$/.test(formData.amount)) {
-      newErrors.amount = 'Amount must be a valid decimal number';
+    if (formData.amount) {
+      if (!/^\d+(\.\d+)?$/.test(formData.amount)) {
+        newErrors.amount = 'Amount must be a valid decimal number';
+      } else if (parseFloat(formData.amount) > 10) {
+        newErrors.amount = 'Amount cannot exceed 10';
+      }
     }
 
     // Developer fee validation
@@ -210,11 +214,18 @@ export function CreateTransferModal({
       }
     }
 
-    // Destination validation
-    if (formData.destination_payment_rail === 'ethereum' || formData.destination_payment_rail === 'polygon' || formData.destination_payment_rail === 'base') {
-      if (!formData.destination_to_address && !formData.destination_bridge_wallet_id) {
-        newErrors.destination_to_address = 'To address is required for crypto destinations';
-      }
+    // Destination validation - One and only one
+    const destinationFields = [
+      formData.destination_to_address,
+      formData.destination_bridge_wallet_id,
+      formData.destination_external_account_id
+    ].filter(Boolean);
+
+    if (destinationFields.length !== 1) {
+      const errorMsg = 'Exactly one destination target (Address, Wallet ID, or External Account ID) is required';
+      newErrors.destination_to_address = errorMsg;
+      newErrors.destination_bridge_wallet_id = errorMsg;
+      newErrors.destination_external_account_id = errorMsg;
     }
 
     setErrors(newErrors);
@@ -263,9 +274,6 @@ export function CreateTransferModal({
       if (formData.destination_to_address) destination.to_address = formData.destination_to_address;
       
       // Payment rail specific fields
-      if (formData.destination_payment_rail === 'wire' && formData.destination_wire_message) {
-        destination.wire_message = formData.destination_wire_message;
-      }
       if (formData.destination_payment_rail === 'sepa' && formData.destination_sepa_reference) {
         destination.sepa_reference = formData.destination_sepa_reference;
       }
@@ -278,12 +286,6 @@ export function CreateTransferModal({
       }
       if (formData.destination_payment_rail === 'ach' && formData.destination_ach_reference) {
         destination.ach_reference = formData.destination_ach_reference;
-      }
-      
-      // Blockchain-specific fields
-      const blockchainRails = ['ethereum', 'polygon', 'base', 'arbitrum', 'optimism', 'avalanche_c_chain', 'solana', 'stellar', 'tron', 'bitcoin'];
-      if (blockchainRails.includes(formData.destination_payment_rail) && formData.destination_blockchain_memo) {
-        destination.blockchain_memo = formData.destination_blockchain_memo;
       }
       
       // Generic reference field
@@ -339,10 +341,26 @@ export function CreateTransferModal({
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+
+      // Mutual exclusivity for destination fields
+      if (name === 'destination_to_address' && value) {
+        newData.destination_bridge_wallet_id = '';
+        newData.destination_external_account_id = '';
+      } else if (name === 'destination_bridge_wallet_id' && value) {
+        newData.destination_to_address = '';
+        newData.destination_external_account_id = '';
+      } else if (name === 'destination_external_account_id' && value) {
+        newData.destination_to_address = '';
+        newData.destination_bridge_wallet_id = '';
+      }
+
+      return newData;
+    });
     
     // Clear error for this field
     if (errors[name]) {
@@ -353,6 +371,36 @@ export function CreateTransferModal({
       });
     }
   };
+
+  // Filter destination rails based on input fields
+  const filteredDestinationRails = (() => {
+    // Start with available rails
+    const rails = [...destinationRails];
+    
+    // Always add Bridge Wallet if not present
+    if (!rails.includes('Bridge Wallet')) {
+      rails.push('Bridge Wallet');
+    }
+
+    // Filter based on active input
+    if (formData.destination_bridge_wallet_id) {
+      return rails.filter(r => r === 'Bridge Wallet');
+    }
+    
+    if (formData.destination_to_address) {
+      // Filter out fiat/banking rails + Bridge Wallet
+      const excluded = ['Bridge Wallet', 'ACH', 'Wire', 'SEPA', 'SPEI'];
+      return rails.filter(r => !excluded.includes(r));
+    }
+    
+    if (formData.destination_external_account_id) {
+      // Only allow fiat/banking rails
+      const allowed = ['ACH', 'Wire', 'SEPA', 'SPEI'];
+      return rails.filter(r => allowed.includes(r));
+    }
+
+    return rails;
+  })();
 
   return (
     <>
@@ -375,47 +423,6 @@ export function CreateTransferModal({
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
             <div className="space-y-6">
-              {/* Amount Section */}
-              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Transfer Amount</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                      Amount
-                    </label>
-                    <input
-                      type="text"
-                      name="amount"
-                      value={formData.amount}
-                      onChange={handleChange}
-                      disabled={formData.flexible_amount}
-                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.amount ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
-                      placeholder="10.50"
-                    />
-                    {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
-                    {availableBalance > 0 && (
-                      <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-                        <i className="fas fa-coins mr-1"></i> Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                      Client Reference ID
-                    </label>
-                    <input
-                      type="text"
-                      name="client_reference_id"
-                      value={formData.client_reference_id}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.client_reference_id ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
-                      placeholder="Optional (1-256 chars)"
-                    />
-                    {errors.client_reference_id && <p className="text-red-500 text-xs mt-1">{errors.client_reference_id}</p>}
-                  </div>
-                </div>
-              </div>
-
               {/* Source Section */}
               <div className="bg-neutral-50 dark:bg-neutral-800/50 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700 space-y-4">
                 <h3 className="text-lg font-semibold text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-700 pb-2">Source</h3>
@@ -510,17 +517,51 @@ export function CreateTransferModal({
                 </div>
               </div>
 
+              {/* Amount Section */}
+              <div className="border-b border-neutral-200 dark:border-neutral-700 pb-4">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-3">Transfer Amount</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                      Amount
+                    </label>
+                    <input
+                      type="text"
+                      name="amount"
+                      value={formData.amount}
+                      onChange={handleChange}
+                      disabled={formData.flexible_amount}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.amount ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
+                      placeholder="10.50"
+                    />
+                    {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
+                    {availableBalance > 0 && (
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                        <i className="fas fa-coins mr-1"></i> Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                      Client Reference ID
+                    </label>
+                    <input
+                      type="text"
+                      name="client_reference_id"
+                      value={formData.client_reference_id}
+                      onChange={handleChange}
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border rounded-lg focus:ring-2 focus:ring-amber-500 ${errors.client_reference_id ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'}`}
+                      placeholder="Optional (1-256 chars)"
+                    />
+                    {errors.client_reference_id && <p className="text-red-500 text-xs mt-1">{errors.client_reference_id}</p>}
+                  </div>
+                </div>
+              </div>
+
               {/* Destination Section */}
               <div className="bg-neutral-50 dark:bg-neutral-800/50 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700 space-y-4">
                 <div className="flex justify-between items-center border-b border-neutral-200 dark:border-neutral-700 pb-2">
                   <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Destination</h3>
-                  <button
-                    type="button"
-                    onClick={() => setShowGetAddressModal(true)}
-                    className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium flex items-center gap-1"
-                  >
-                    <i className="fas fa-search"></i> Get Destination Customer Addresses
-                  </button>
                 </div>
                 {destinationRails.length === 0 && (
                   <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded flex items-center gap-2">
@@ -529,56 +570,19 @@ export function CreateTransferModal({
                   </p>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
-                      Payment Rail <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      name="destination_payment_rail"
-                      value={formData.destination_payment_rail}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
-                      size={1}
-                      disabled={destinationRails.length === 0}
-                    >
-                      {destinationRails.length > 0 ? (
-                        destinationRails.map((rail) => (
-                          <option key={rail} value={railToApiFormat(rail)}>
-                            {rail}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="">No available routes</option>
-                      )}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
-                      Currency <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      name="destination_currency"
-                      value={formData.destination_currency}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
-                      size={1}
-                      disabled={destinationCurrencies.length === 0}
-                    >
-                      {destinationCurrencies.length > 0 ? (
-                        destinationCurrencies.map((currency) => (
-                          <option key={currency} value={currency.toLowerCase()}>
-                            {currency}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="">Select a payment rail first</option>
-                      )}
-                    </select>
-                  </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
-                      To Address (for crypto destinations) <span className="text-red-500">*</span>
-                    </label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400">
+                        To Address (for crypto destinations) <span className="text-red-500">*</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowGetAddressModal(true)}
+                        className="text-xs text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium flex items-center gap-1"
+                      >
+                        <i className="fas fa-search"></i> Get Destination Liquidation Address
+                      </button>
+                    </div>
                     <input
                       type="text"
                       name="destination_to_address"
@@ -615,27 +619,49 @@ export function CreateTransferModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
-                      Wire Message
+                      Payment Rail <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="destination_wire_message"
-                      value={formData.destination_wire_message}
+                    <select
+                      name="destination_payment_rail"
+                      value={formData.destination_payment_rail}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
-                    />
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
+                      size={1}
+                      disabled={filteredDestinationRails.length === 0}
+                    >
+                      {filteredDestinationRails.length > 0 ? (
+                        filteredDestinationRails.map((rail) => (
+                          <option key={rail} value={railToApiFormat(rail)}>
+                            {rail}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">No available routes</option>
+                      )}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
-                      Blockchain Memo
+                      Currency <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="destination_blockchain_memo"
-                      value={formData.destination_blockchain_memo}
+                    <select
+                      name="destination_currency"
+                      value={formData.destination_currency}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500"
-                    />
+                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-amber-500 max-h-40 overflow-y-auto"
+                      size={1}
+                      disabled={destinationCurrencies.length === 0}
+                    >
+                      {destinationCurrencies.length > 0 ? (
+                        destinationCurrencies.map((currency) => (
+                          <option key={currency} value={currency.toLowerCase()}>
+                            {currency}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">Select a payment rail first</option>
+                      )}
+                    </select>
                   </div>
                 </div>
               </div>
