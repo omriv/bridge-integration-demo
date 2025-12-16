@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { JsonViewerModal } from './JsonViewerModal';
 import { GetDestinationAddressModal } from './GetDestinationAddressModal';
-import type { WalletBalance, LiquidationAddress } from '../types';
+import { GetExternalAccountModal } from './GetExternalAccountModal';
+import type { WalletBalance, LiquidationAddress, ExternalAccount } from '../types';
 import { getAvailableRoutes, getDestinationRails, getDestinationCurrencies, railToApiFormat, type Route } from '../utils/routingHelper';
 import { bridgeAPI } from '../services/bridgeAPI';
 
@@ -69,6 +70,7 @@ export function CreateTransferModal({
   const [responseData, setResponseData] = useState<Record<string, unknown> | null>(null);
   const [showJsonModal, setShowJsonModal] = useState(false);
   const [showGetAddressModal, setShowGetAddressModal] = useState(false);
+  const [showGetExternalAccountModal, setShowGetExternalAccountModal] = useState(false);
   
   // Routing state
   const [availableRoutes, setAvailableRoutes] = useState<Route[]>([]);
@@ -145,6 +147,20 @@ export function CreateTransferModal({
       destination_currency: address.currency !== 'any' ? address.currency.toLowerCase() : prev.destination_currency
     }));
     setShowGetAddressModal(false);
+  };
+
+  const handleExternalAccountSelect = (account: ExternalAccount) => {
+    setFormData(prev => ({
+      ...prev,
+      destination_external_account_id: account.id,
+      // Map account type to payment rail if possible, otherwise default to ach
+      destination_payment_rail: railToApiFormat((account.type || account.account_type || 'ach') as string),
+      destination_currency: account.currency.toLowerCase(),
+      // Clear other destination fields to maintain exclusivity
+      destination_to_address: '',
+      destination_bridge_wallet_id: ''
+    }));
+    setShowGetExternalAccountModal(false);
   };
 
   if (!isOpen) return null;
@@ -606,9 +622,18 @@ export function CreateTransferModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400 mb-1">
-                      External Account ID
-                    </label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-400">
+                        External Account ID
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowGetExternalAccountModal(true)}
+                        className="text-xs text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium flex items-center gap-1"
+                      >
+                        <i className="fas fa-search"></i> Get External Account
+                      </button>
+                    </div>
                     <input
                       type="text"
                       name="destination_external_account_id"
@@ -806,6 +831,13 @@ export function CreateTransferModal({
         onSelectAddress={handleAddressSelect}
         currentChain={walletChain}
         sourceCurrency={formData.source_currency}
+      />
+
+      <GetExternalAccountModal
+        isOpen={showGetExternalAccountModal}
+        onClose={() => setShowGetExternalAccountModal(false)}
+        onSelectAccount={handleExternalAccountSelect}
+        customerId={customerId}
       />
     </>
   );
