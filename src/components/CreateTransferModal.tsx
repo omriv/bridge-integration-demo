@@ -171,6 +171,13 @@ export function CreateTransferModal({
   );
   const availableBalance = selectedBalance ? parseFloat(selectedBalance.balance) : 0;
 
+  // Calculate min amount based on selected route
+  const currentRoute = availableRoutes.find(r => 
+    railToApiFormat(r.destinationRail) === formData.destination_payment_rail &&
+    r.destinationCurrency.toLowerCase() === formData.destination_currency.toLowerCase()
+  );
+  const minAmount = currentRoute ? currentRoute.transactionMinimum : '0.00';
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -181,10 +188,13 @@ export function CreateTransferModal({
 
     // Amount validation
     if (formData.amount) {
+      const amountVal = parseFloat(formData.amount);
       if (!/^\d+(\.\d+)?$/.test(formData.amount)) {
         newErrors.amount = 'Amount must be a valid decimal number';
-      } else if (parseFloat(formData.amount) > 10) {
+      } else if (amountVal > 10) {
         newErrors.amount = 'Amount cannot exceed 10';
+      } else if (amountVal < parseFloat(minAmount)) {
+        newErrors.amount = `Amount must be at least ${minAmount}`;
       }
     }
 
@@ -356,6 +366,11 @@ export function CreateTransferModal({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
+
+    // Prevent entering values > 10 for amount
+    if (name === 'amount' && value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) > 10) {
+      return;
+    }
     
     setFormData(prev => {
       const newData = {
@@ -551,11 +566,16 @@ export function CreateTransferModal({
                       placeholder="10.50"
                     />
                     {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
-                    {availableBalance > 0 && (
-                      <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-                        <i className="fas fa-coins mr-1"></i> Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
+                    <div className="mt-1 space-y-1">
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Min: {minAmount} • Max: 10.00
                       </p>
-                    )}
+                      {availableBalance > 0 && (
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          <i className="fas fa-coins mr-1"></i> Available: {availableBalance.toLocaleString()} {formData.source_currency.toUpperCase()}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
