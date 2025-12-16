@@ -140,6 +140,8 @@ npm install --legacy-peer-deps
 
 > **Note**: We use `--legacy-peer-deps` flag due to React 19 compatibility requirements with some dependencies.
 
+**Important**: After installing Node.js, you should add `NODE_TLS_REJECT_UNAUTHORIZED=0` to your environment variables as a first step to avoid SSL issues during development.
+
 ### Step 3: Configure API Credentials
 
 **Set the Bridge API Key as an Environment Variable:**

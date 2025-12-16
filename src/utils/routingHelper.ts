@@ -1,3 +1,5 @@
+import { RailType } from '../types';
+
 // Helper function to filter routing table based on source payment rail and currency
 
 export interface Route {
@@ -6,6 +8,8 @@ export interface Route {
   destinationRail: string;
   destinationCurrency: string;
   transactionMinimum: string;
+  sourceRailType?: RailType;
+  destinationRailType?: RailType;
 }
 
 // Normalize rail/currency values to match routing table format
@@ -71,6 +75,34 @@ export async function getAvailableRoutes(
     );
     
     return filteredRoutes;
+  } catch (error) {
+    console.error('Error loading routing table:', error);
+    return [];
+  }
+}
+
+/**
+ * Filters the routing table based on source rail type
+ * @param sourceRailType - The source rail type (1=Bridge Wallet, 2=Blockchain, 3=Fiat)
+ * @returns Array of routes matching the source rail type
+ */
+export async function getRoutesBySourceRailType(
+  sourceRailType: RailType
+): Promise<Route[]> {
+  try {
+    // Load routing table
+    const response = await fetch('/routingTable.json');
+    if (!response.ok) {
+      console.error('Failed to load routing table');
+      return [];
+    }
+    
+    const routingTable: Route[] = await response.json();
+    
+    // Filter routes
+    return routingTable.filter(
+      (route) => route.sourceRailType === sourceRailType
+    );
   } catch (error) {
     console.error('Error loading routing table:', error);
     return [];
