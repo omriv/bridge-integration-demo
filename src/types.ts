@@ -1,10 +1,12 @@
 // TypeScript types for Bridge API responses
 
-export enum RailType {
-  BridgeWallet = 1,
-  Blockchain = 2,
-  Fiat = 3
-}
+export const RailType = {
+  BridgeWallet: 1,
+  Blockchain: 2,
+  Fiat: 3
+} as const;
+
+export type RailType = typeof RailType[keyof typeof RailType];
 
 export interface Endorsement {
   name: string;

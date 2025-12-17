@@ -98,7 +98,7 @@ export function GetExternalAccountModal({
                         {account.id}
                       </span>
                       <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full">
-                        {account.account_type || 'Unknown Type'}
+                        {String(account.account_type || 'Unknown Type')}
                       </span>
                     </div>
                   </button>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 import { JsonViewerModal } from './JsonViewerModal';
-import type { Wallet } from '../types';
+import { getRoutesBySourceRailType, railToApiFormat, type Route } from '../utils/routingHelper';
+import { type Wallet, RailType } from '../types';
 
 interface AddLiquidationAddressModalProps {
   isOpen: boolean;
@@ -27,6 +28,13 @@ export function AddLiquidationAddressModal({
   const [responseModalOpen, setResponseModalOpen] = useState(false);
   const [responseData, setResponseData] = useState<unknown>(null);
 
+  // Routing state
+  const [availableChains, setAvailableChains] = useState<string[]>([]);
+  const [availableCurrencies, setAvailableCurrencies] = useState<string[]>([]);
+  const [availableDestinationRails, setAvailableDestinationRails] = useState<string[]>([]);
+  const [availableDestinationCurrencies, setAvailableDestinationCurrencies] = useState<string[]>([]);
+  const [allRoutes, setAllRoutes] = useState<Route[]>([]);
+
   const [formData, setFormData] = useState({
     chain: '',
     currency: '',
@@ -40,7 +48,17 @@ export function AddLiquidationAddressModal({
   });
 
   useEffect(() => {
+    const fetchRoutes = async () => {
+      const routes = await getRoutesBySourceRailType(RailType.Blockchain);
+      setAllRoutes(routes);
+      
+      // Extract unique source rails (chains)
+      const chains = Array.from(new Set(routes.map(r => r.sourceRail))).sort();
+      setAvailableChains(chains);
+    };
+
     if (isOpen) {
+      fetchRoutes();
       setLoading(false);
       setError(null);
       setSuccess(false);
@@ -56,6 +74,9 @@ export function AddLiquidationAddressModal({
         return_address: '',
         custom_developer_fee_percent: '',
       });
+      setAvailableCurrencies([]);
+      setAvailableDestinationRails([]);
+      setAvailableDestinationCurrencies([]);
     }
   }, [isOpen]);
 
@@ -67,6 +88,58 @@ export function AddLiquidationAddressModal({
     setFormData(prev => {
       const newData = { ...prev, [name]: value };
       
+      if (name === 'chain') {
+        // Filter currencies for the selected chain
+        const selectedChainApiFormat = value;
+        const relevantRoutes = allRoutes.filter(r => railToApiFormat(r.sourceRail) === selectedChainApiFormat);
+        const currencies = Array.from(new Set(relevantRoutes.map(r => r.sourceCurrency))).sort();
+        setAvailableCurrencies(currencies);
+        
+        // Reset currency if not in new list
+        if (!currencies.includes(newData.currency)) {
+          newData.currency = '';
+          setAvailableDestinationRails([]);
+          setAvailableDestinationCurrencies([]);
+        }
+      } else if (name === 'currency') {
+        // Filter destination rails based on selected chain and currency
+        const selectedChainApiFormat = newData.chain;
+        const selectedCurrency = value;
+        
+        const relevantRoutes = allRoutes.filter(r => 
+          railToApiFormat(r.sourceRail) === selectedChainApiFormat && 
+          r.sourceCurrency === selectedCurrency
+        );
+        
+        const destinationRails = Array.from(new Set(relevantRoutes.map(r => r.destinationRail))).sort();
+        setAvailableDestinationRails(destinationRails);
+        
+        // Reset destination rail if not in new list
+        if (!destinationRails.map(railToApiFormat).includes(newData.destination_payment_rail)) {
+          newData.destination_payment_rail = '';
+          setAvailableDestinationCurrencies([]);
+        }
+      } else if (name === 'destination_payment_rail') {
+        // Filter destination currencies based on selected chain, currency, and destination rail
+        const selectedChainApiFormat = newData.chain;
+        const selectedCurrency = newData.currency;
+        const selectedDestRailApiFormat = value;
+        
+        const relevantRoutes = allRoutes.filter(r => 
+          railToApiFormat(r.sourceRail) === selectedChainApiFormat && 
+          r.sourceCurrency === selectedCurrency &&
+          railToApiFormat(r.destinationRail) === selectedDestRailApiFormat
+        );
+        
+        const destinationCurrencies = Array.from(new Set(relevantRoutes.map(r => r.destinationCurrency))).sort();
+        setAvailableDestinationCurrencies(destinationCurrencies);
+        
+        // Reset destination currency if not in new list
+        if (!destinationCurrencies.map(c => c.toLowerCase()).includes(newData.destination_currency)) {
+          newData.destination_currency = '';
+        }
+      }
+
       // Mutual exclusivity logic
       if (name === 'bridge_wallet_id') {
         newData.destination_address = ''; // Clear destination address
@@ -75,16 +148,38 @@ export function AddLiquidationAddressModal({
         if (value) {
           const wallet = wallets.find(w => w.id === value);
           if (wallet) {
-            newData.destination_payment_rail = wallet.chain;
+            newData.destination_payment_rail = railToApiFormat(wallet.chain);
             
+            // Filter destination currencies based on selected chain, currency, and destination rail
+            const selectedChainApiFormat = newData.chain;
+            const selectedCurrency = newData.currency;
+            const selectedDestRailApiFormat = newData.destination_payment_rail;
+            
+            const relevantRoutes = allRoutes.filter(r => 
+              railToApiFormat(r.sourceRail) === selectedChainApiFormat && 
+              r.sourceCurrency === selectedCurrency &&
+              railToApiFormat(r.destinationRail) === selectedDestRailApiFormat
+            );
+            
+            const destinationCurrencies = Array.from(new Set(relevantRoutes.map(r => r.destinationCurrency))).sort();
+            
+            // Filter by wallet supported currencies
+            const walletSupportedCurrencies = wallet.balances?.map(b => b.currency.toLowerCase()) || [];
+            const supportedDestinationCurrencies = destinationCurrencies.filter(c => 
+              walletSupportedCurrencies.includes(c.toLowerCase())
+            );
+
+            setAvailableDestinationCurrencies(supportedDestinationCurrencies);
+
             // Try to find USDC or default to first balance or USDC
-            const hasUsdc = wallet.balances?.some(b => b.currency.toLowerCase() === 'usdc');
+            const hasUsdc = supportedDestinationCurrencies.some(c => c.toLowerCase() === 'usdc');
             if (hasUsdc) {
-              newData.destination_currency = 'usdc';
-            } else if (wallet.balances && wallet.balances.length > 0) {
-              newData.destination_currency = wallet.balances[0].currency;
+              const usdc = supportedDestinationCurrencies.find(c => c.toLowerCase() === 'usdc');
+              newData.destination_currency = usdc || 'USDC';
+            } else if (supportedDestinationCurrencies.length > 0) {
+              newData.destination_currency = supportedDestinationCurrencies[0];
             } else {
-              newData.destination_currency = 'usdc'; // Default
+              newData.destination_currency = '';
             }
           }
         }
@@ -138,6 +233,14 @@ export function AddLiquidationAddressModal({
 
     try {
       const payload = removeEmpty(formData) as Record<string, unknown>;
+
+      if (typeof payload.currency === 'string') {
+        payload.currency = railToApiFormat(payload.currency);
+      }
+      if (typeof payload.destination_currency === 'string') {
+        payload.destination_currency = railToApiFormat(payload.destination_currency);
+      }
+
       const result = await createLiquidationAddress(customerId, payload);
       setResponseData(result);
       setSuccess(true);
@@ -210,15 +313,11 @@ export function AddLiquidationAddressModal({
                       className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
                     >
                       <option value="">Select chain...</option>
-                      <option value="arbitrum">Arbitrum</option>
-                      <option value="avalanche_c_chain">Avalanche C-Chain</option>
-                      <option value="base">Base</option>
-                      <option value="ethereum">Ethereum</option>
-                      <option value="optimism">Optimism</option>
-                      <option value="polygon">Polygon</option>
-                      <option value="solana">Solana</option>
-                      <option value="stellar">Stellar</option>
-                      <option value="tron">Tron</option>
+                      {availableChains.map(chain => (
+                        <option key={chain} value={railToApiFormat(chain)}>
+                          {chain}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -228,15 +327,15 @@ export function AddLiquidationAddressModal({
                       value={formData.currency}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
+                      disabled={!formData.chain}
+                      className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <option value="">Select currency...</option>
-                      <option value="usdb">USDB</option>
-                      <option value="usdc">USDC</option>
-                      <option value="usdt">USDT</option>
-                      <option value="dai">DAI</option>
-                      <option value="pyusd">PYUSD</option>
-                      <option value="eurc">EURC</option>
+                      {availableCurrencies.map(currency => (
+                        <option key={currency} value={currency}>
+                          {currency}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -273,24 +372,15 @@ export function AddLiquidationAddressModal({
                         value={formData.destination_payment_rail}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
+                        disabled={!formData.currency}
+                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <option value="">Select chain...</option>
-                        <option value="ach">ACH</option>
-                        <option value="wire">Wire</option>
-                        <option value="sepa">SEPA</option>
-                        <option value="swift">SWIFT</option>
-                        <option value="spei">SPEI</option>
-                        <option value="pix">Pix</option>
-                        <option value="ethereum">Ethereum</option>
-                        <option value="solana">Solana</option>
-                        <option value="polygon">Polygon</option>
-                        <option value="arbitrum">Arbitrum</option>
-                        <option value="optimism">Optimism</option>
-                        <option value="base">Base</option>
-                        <option value="avalanche_c_chain">Avalanche</option>
-                        <option value="stellar">Stellar</option>
-                        <option value="tron">Tron</option>
+                        <option value="">Select rail...</option>
+                        {availableDestinationRails.map(rail => (
+                          <option key={rail} value={railToApiFormat(rail)}>
+                            {rail}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
@@ -300,18 +390,15 @@ export function AddLiquidationAddressModal({
                         value={formData.destination_currency}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none uppercase"
+                        disabled={!formData.destination_payment_rail}
+                        className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <option value="">Select currency...</option>
-                        <option value="usd">USD</option>
-                        <option value="eur">EUR</option>
-                        <option value="mxn">MXN</option>
-                        <option value="brl">BRL</option>
-                        <option value="usdc">USDC</option>
-                        <option value="usdt">USDT</option>
-                        <option value="dai">DAI</option>
-                        <option value="pyusd">PYUSD</option>
-                        <option value="eurc">EURC</option>
+                        {availableDestinationCurrencies.map(currency => (
+                          <option key={currency} value={currency}>
+                            {currency}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>

@@ -1,6 +1,5 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useTheme } from '../context/ThemeContext';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface JsonViewerModalProps {
   isOpen: boolean;
@@ -10,8 +9,6 @@ interface JsonViewerModalProps {
 }
 
 export function JsonViewerModal({ isOpen, onClose, title, data }: JsonViewerModalProps) {
-  const { theme } = useTheme();
-
   if (!isOpen) return null;
 
   return (
