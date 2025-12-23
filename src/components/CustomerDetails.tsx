@@ -128,7 +128,7 @@ export function CustomerDetails({ customer }: CustomerDetailsProps) {
     const allOf = (missing as any).all_of;
     if (!Array.isArray(allOf) || allOf.length === 0) return false;
     
-    return allOf.some((req: string) => req.startsWith('terms_of_service'));
+    return allOf.some((req: unknown) => typeof req === 'string' && req.startsWith('terms_of_service'));
   });
 
   const copyToClipboard = async (text: string, fieldName: string) => {
