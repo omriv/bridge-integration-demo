@@ -11,10 +11,12 @@ interface AddCustomerModalProps {
 export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
   const { refreshAll } = useData();
   const [customerType, setCustomerType] = useState<'individual' | 'business'>('individual');
-  const [isReliance, setIsReliance] = useState(true);
+  const [isReliance, setIsReliance] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [showRelianceTooltip, setShowRelianceTooltip] = useState(false);
   
   // Response viewer state
   const [responseModalOpen, setResponseModalOpen] = useState(false);
@@ -45,7 +47,8 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
       setShouldRefresh(false);
       setFormData({});
       setCustomerType('individual');
-      setIsReliance(true);
+      setIsReliance(false);
+      setEmailError(null);
       setEndorsements({
         base: true,
         sepa: true,
@@ -66,9 +69,90 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
     });
   };
 
+  const generateRandomData = () => {
+    const firstNames = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'Robert', 'Lisa'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis'];
+    const streets = ['123 Main St', '456 Oak Ave', '789 Pine Rd', '321 Elm Dr', '654 Maple Ln'];
+    const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'];
+    const states = ['NY', 'CA', 'IL', 'TX', 'AZ'];
+    
+    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const randomEmail = `${randomFirstName.toLowerCase()}.${randomLastName.toLowerCase()}${Math.floor(Math.random() * 1000)}@example.com`;
+    
+    const randomDate = new Date(1970 + Math.floor(Math.random() * 35), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+    const formattedDate = randomDate.toISOString().split('T')[0];
+    
+    const randomStreet = streets[Math.floor(Math.random() * streets.length)];
+    const randomCity = cities[Math.floor(Math.random() * cities.length)];
+    const randomState = states[Math.floor(Math.random() * states.length)];
+    const randomZip = String(10000 + Math.floor(Math.random() * 90000));
+    
+    if (customerType === 'individual') {
+      setFormData({
+        email: randomEmail,
+        signed_agreement_id: generateGuid(),
+        first_name: randomFirstName,
+        last_name: randomLastName,
+        birth_date: formattedDate,
+        phone: `+1${Math.floor(Math.random() * 9000000000) + 1000000000}`,
+        nationality: 'USA',
+        residential_address: {
+          street_line_1: randomStreet,
+          city: randomCity,
+          subdivision: randomState,
+          postal_code: randomZip,
+          country: 'USA'
+        },
+        identification_type: 'drivers_license',
+        identification_number: `DL${Math.floor(Math.random() * 90000000) + 10000000}`,
+        issuing_country: 'USA'
+      });
+    } else {
+      const businessNames = ['Tech Solutions Inc', 'Global Industries LLC', 'Innovation Corp', 'Enterprise Systems'];
+      const randomBusiness = businessNames[Math.floor(Math.random() * businessNames.length)];
+      
+      setFormData({
+        email: randomEmail,
+        signed_agreement_id: generateGuid(),
+        business_legal_name: randomBusiness,
+        business_type: 'llc',
+        ein: `${Math.floor(Math.random() * 90) + 10}-${Math.floor(Math.random() * 9000000) + 1000000}`,
+        primary_website: `https://www.${randomBusiness.toLowerCase().replace(/\s+/g, '')}.com`,
+        registered_address: {
+          street_line_1: randomStreet,
+          city: randomCity,
+          subdivision: randomState,
+          postal_code: randomZip,
+          country: 'USA'
+        }
+      });
+    }
+    setEmailError(null);
+  };
+
+  const validateEmail = (email: string): boolean => {
+    if (!email) {
+      setEmailError('Email is required');
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return false;
+    }
+    setEmailError(null);
+    return true;
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     let finalValue: any = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+
+    // Validate email on change
+    if (name === 'email') {
+      validateEmail(value);
+    }
 
     // Capitalize country fields
     if ((name.includes('country') || name === 'nationality' || name === 'issuing_country') && typeof finalValue === 'string') {
@@ -129,6 +213,12 @@ export function AddCustomerModal({ isOpen, onClose }: AddCustomerModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate email before submission
+    if (!validateEmail(formData.email)) {
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     setSuccess(false);
@@ -285,16 +375,42 @@ const handleClose = () => {
                     isReliance ? 'bg-blue-500/10' : 'bg-neutral-100 dark:bg-neutral-800'
                   }`}>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-neutral-900 dark:text-white">
-                    KYC Reliance
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-neutral-900 dark:text-white">
+                      KYC Reliance
+                    </span>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onMouseEnter={() => setShowRelianceTooltip(true)}
+                        onMouseLeave={() => setShowRelianceTooltip(false)}
+                        className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      {showRelianceTooltip && (
+                        <div className="absolute left-0 top-6 z-10 w-64 p-3 bg-neutral-800 dark:bg-neutral-700 text-white text-xs rounded-lg shadow-lg">
+                          Reliance mode will create a customer with all capabilities auto approved. Use this mode only for testing purposes only! Keep in mind - real customers will not be created in full reliance mode.
+                          <div className="absolute -top-1 left-4 w-2 h-2 bg-neutral-800 dark:bg-neutral-700 transform rotate-45"></div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   <span className="text-xs text-neutral-500 dark:text-neutral-400">
                     {isReliance ? 'You are responsible for KYC verification' : 'Bridge handles KYC verification'}
                   </span>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setIsReliance(!isReliance)}
+                  onClick={() => {
+                    const newRelianceState = !isReliance;
+                    setIsReliance(newRelianceState);
+                    if (newRelianceState) {
+                      generateRandomData();
+                    }
+                  }}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 ${
                     isReliance ? 'bg-blue-500' : 'bg-neutral-400'
                   }`}
@@ -349,13 +465,22 @@ const handleClose = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Common Fields */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Email</label>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                      Email <span className="text-red-500">*</span>
+                    </label>
                     <input
-                      type="text"
+                      type="email"
                       name="email"
+                      value={formData.email || ''}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
+                      required
+                      className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 border ${
+                        emailError ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'
+                      } rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500`}
                     />
+                    {emailError && (
+                      <p className="mt-1 text-xs text-red-500">{emailError}</p>
+                    )}
                   </div>
 
                   <div className="md:col-span-2">
@@ -387,6 +512,7 @@ const handleClose = () => {
                         <input
                           type="text"
                           name="first_name"
+                          value={formData.first_name || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
@@ -396,6 +522,7 @@ const handleClose = () => {
                         <input
                           type="text"
                           name="last_name"
+                          value={formData.last_name || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
@@ -405,6 +532,7 @@ const handleClose = () => {
                         <input
                           type="date"
                           name="birth_date"
+                          value={formData.birth_date || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
@@ -414,6 +542,7 @@ const handleClose = () => {
                         <input
                           type="tel"
                           name="phone"
+                          value={formData.phone || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
@@ -439,6 +568,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="residential_address.street_line_1"
+                              value={formData.residential_address?.street_line_1 || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -448,6 +578,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="residential_address.city"
+                              value={formData.residential_address?.city || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -457,6 +588,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="residential_address.subdivision"
+                              value={formData.residential_address?.subdivision || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -466,6 +598,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="residential_address.postal_code"
+                              value={formData.residential_address?.postal_code || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -541,6 +674,7 @@ const handleClose = () => {
                         <input
                           type="text"
                           name="business_legal_name"
+                          value={formData.business_legal_name || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
@@ -549,6 +683,7 @@ const handleClose = () => {
                         <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Business Type</label>
                         <select
                           name="business_type"
+                          value={formData.business_type || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         >
@@ -567,6 +702,7 @@ const handleClose = () => {
                         <input
                           type="text"
                           name="ein"
+                          value={formData.ein || ''}
                           onChange={handleInputChange}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
@@ -576,6 +712,7 @@ const handleClose = () => {
                         <input
                           type="text"
                           name="primary_website"
+                          value={formData.primary_website || ''}
                           onChange={handleInputChange}
                           placeholder="https://..."
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
@@ -591,6 +728,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="registered_address.street_line_1"
+                              value={formData.registered_address?.street_line_1 || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -600,6 +738,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="registered_address.city"
+                              value={formData.registered_address?.city || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -609,6 +748,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="registered_address.subdivision"
+                              value={formData.registered_address?.subdivision || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
@@ -618,6 +758,7 @@ const handleClose = () => {
                             <input
                               type="text"
                               name="registered_address.postal_code"
+                              value={formData.registered_address?.postal_code || ''}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
