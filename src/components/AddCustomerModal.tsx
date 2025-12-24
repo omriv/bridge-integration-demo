@@ -889,9 +889,9 @@ const handleClose = () => {
                   </div>
                   
                   {/* Debug Buttons (Visible if data exists) */}
-                  {(requestData || responseData) && (
+                  {(Boolean(requestData) || Boolean(responseData)) && (
                     <div className="flex gap-3 justify-center mt-2">
-                      {requestData && (
+                      {Boolean(requestData) && (
                         <button
                           type="button"
                           onClick={() => setRequestModalOpen(true)}
@@ -900,7 +900,7 @@ const handleClose = () => {
                           View Last Request
                         </button>
                       )}
-                      {responseData && (
+                      {Boolean(responseData) && (
                         <button
                           type="button"
                           onClick={() => setResponseModalOpen(true)}

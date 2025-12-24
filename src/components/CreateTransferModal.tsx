@@ -27,6 +27,7 @@ export function CreateTransferModal({
   walletBalances,
   onSuccess,
 }: CreateTransferModalProps) {
+  
   // Get currencies with balance > 0
   const availableCurrencies = walletBalances
     .filter(balance => parseFloat(balance.balance) > 0)

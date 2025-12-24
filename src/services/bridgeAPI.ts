@@ -14,24 +14,46 @@ import type {
   CreateVirtualAccountRequest
 } from '../types';
 
-const headers = {
-  'Content-Type': 'application/json',
-};
+type Environment = 'sandbox' | 'qa';
 
-// Helper to get current base URL
-const getCurrentBaseUrl = () => {
-  return config.baseUrl;
-};
+class BridgeAPI {
+  private environment: Environment = 'sandbox';
 
-export const bridgeAPI = {
+  constructor() {
+    // Initialize from localStorage if available
+    const stored = localStorage.getItem('bridgeEnvironment') as Environment;
+    if (stored) {
+      this.environment = stored;
+    }
+  }
+
+  setEnvironment(env: Environment) {
+    this.environment = env;
+    localStorage.setItem('bridgeEnvironment', env);
+  }
+
+  getEnvironment(): Environment {
+    return this.environment;
+  }
+
+  private get headers() {
+    return {
+      'Content-Type': 'application/json',
+    };
+  }
+
+  private buildUrl(path: string) {
+    const separator = path.includes('?') ? '&' : '?';
+    return `${config.baseUrl}${path}${separator}env=${this.environment}`;
+  }
   async getAllCustomers(email?: string): Promise<CustomersResponse> {
-    let url = `${getCurrentBaseUrl()}/customers`;
+    let path = '/customers';
     if (email) {
-      url += `?email=${encodeURIComponent(email)}`;
+      path += `?email=${encodeURIComponent(email)}`;
     }
     
-    const response = await fetch(url, {
-      headers,
+    const response = await fetch(this.buildUrl(path), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -39,11 +61,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getCustomer(customerId: string): Promise<Customer> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/customers/${customerId}`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -51,11 +73,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getCustomerWallets(customerId: string): Promise<WalletsResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/wallets?customer_id=${customerId}`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/wallets?customer_id=${customerId}`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -63,11 +85,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getWallet(customerId: string, walletId: string): Promise<Wallet> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/wallets/${walletId}`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/wallets/${walletId}`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -75,17 +97,17 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getLiquidationAddresses(customerId: string, limit: number = 10, startingAfter?: string): Promise<LiquidationAddressesResponse> {
-    let url = `${getCurrentBaseUrl()}/liquidation-addresses?customer_id=${customerId}&limit=${limit}`;
+    let path = `/liquidation-addresses?customer_id=${customerId}&limit=${limit}`;
     
     if (startingAfter !== undefined) {
-      url += `&starting_after=${startingAfter}`;
+      path += `&starting_after=${startingAfter}`;
     }
     
-    const response = await fetch(url, {
-      headers,
+    const response = await fetch(this.buildUrl(path), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -93,11 +115,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getWalletTransactions(walletId: string, limit: number = 10): Promise<WalletTransactionsResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/wallets/${walletId}/transactions?limit=${limit}`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/wallets/${walletId}/transactions?limit=${limit}`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -105,17 +127,17 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getTransfers(customerId: string, limit: number = 10, startingAfter?: string): Promise<TransfersResponse> {
-    let url = `${getCurrentBaseUrl()}/transfers?customer_id=${customerId}&limit=${limit}`;
+    let path = `/transfers?customer_id=${customerId}&limit=${limit}`;
     
     if (startingAfter !== undefined) {
-      url += `&starting_after=${startingAfter}`;
+      path += `&starting_after=${startingAfter}`;
     }
     
-    const response = await fetch(url, {
-      headers,
+    const response = await fetch(this.buildUrl(path), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -123,11 +145,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getLiquidationHistory(customerId: string, liquidationAddressId: string, limit: number = 10): Promise<LiquidationHistoryResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=${limit}`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=${limit}`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -135,11 +157,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getVirtualAccounts(customerId: string): Promise<VirtualAccountsResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/virtual_accounts`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -147,11 +169,11 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getVirtualAccountActivity(customerId: string, virtualAccountId: string, limit: number = 10): Promise<VirtualAccountActivityResponse> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts/${virtualAccountId}/history?limit=${limit}`, {
-      headers,
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/virtual_accounts/${virtualAccountId}/history?limit=${limit}`), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -159,17 +181,17 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getExternalAccounts(customerId: string, limit: number = 10, startingAfter?: string): Promise<ExternalAccountsResponse> {
-    let url = `${getCurrentBaseUrl()}/customers/${customerId}/external_accounts?limit=${limit}`;
+    let path = `/customers/${customerId}/external_accounts?limit=${limit}`;
     
     if (startingAfter !== undefined) {
-      url += `&starting_after=${startingAfter}`;
+      path += `&starting_after=${startingAfter}`;
     }
     
-    const response = await fetch(url, {
-      headers,
+    const response = await fetch(this.buildUrl(path), {
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -177,12 +199,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async createTransfer(transferData: Record<string, unknown>): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/transfers`, {
+    const response = await fetch(this.buildUrl('/transfers'), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(transferData),
     });
 
@@ -192,12 +214,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async createWallet(customerId: string, walletData: Record<string, unknown>): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/wallets`, {
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/wallets`), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(walletData),
     });
 
@@ -207,12 +229,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async createExternalAccount(customerId: string, accountData: Record<string, unknown>): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/external_accounts`, {
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/external_accounts`), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(accountData),
     });
 
@@ -222,12 +244,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async createVirtualAccount(customerId: string, accountData: CreateVirtualAccountRequest): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/virtual_accounts`, {
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/virtual_accounts`), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(accountData),
     });
 
@@ -237,12 +259,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async createLiquidationAddress(customerId: string, addressData: Record<string, unknown>): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/liquidation_addresses`, {
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/liquidation_addresses`), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(addressData),
     });
 
@@ -252,12 +274,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async deleteCustomer(customerId: string): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}`, {
+    const response = await fetch(this.buildUrl(`/customers/${customerId}`), {
       method: 'DELETE',
-      headers,
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -266,12 +288,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async createCustomer(customerData: Record<string, unknown>): Promise<unknown> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers`, {
+    const response = await fetch(this.buildUrl('/customers'), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify(customerData),
     });
 
@@ -281,12 +303,12 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
+  }
 
   async getTosLink(customerId: string): Promise<{ url: string }> {
-    const response = await fetch(`${getCurrentBaseUrl()}/customers/${customerId}/tos_link`, {
+    const response = await fetch(this.buildUrl(`/customers/${customerId}/tos_link`), {
       method: 'POST',
-      headers,
+      headers: this.headers,
       body: JSON.stringify({}),
     });
 
@@ -296,5 +318,8 @@ export const bridgeAPI = {
     }
 
     return response.json();
-  },
-};
+  }
+}
+
+// Export singleton instance
+export const bridgeAPI = new BridgeAPI();

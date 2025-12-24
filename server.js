@@ -5,18 +5,39 @@ const app = express();
 const PORT = 3001;
 
 // Bridge API configuration
-const BRIDGE_API_KEY = process.env.BRIDGE_API_KEY;
+const BRIDGE_API_KEY_SANDBOX = process.env.BRIDGE_API_KEY_SANDBOX;
+const BRIDGE_API_KEY_QA = process.env.BRIDGE_API_KEY_QA;
 const BRIDGE_BASE_URL = 'https://api.bridge.xyz';
 
-// Validate API key is loaded
-if (!BRIDGE_API_KEY) {
-  console.error('❌ ERROR: BRIDGE_API_KEY environment variable is not set!');
-  console.error('Please set the BRIDGE_API_KEY environment variable and restart the server.');
+// Validate both API keys are loaded
+if (!BRIDGE_API_KEY_SANDBOX || !BRIDGE_API_KEY_QA) {
+  console.error('❌ ERROR: Both BRIDGE_API_KEY_SANDBOX and BRIDGE_API_KEY_QA environment variables must be set!');
+  console.error('Please set both environment variables and restart the server.');
   process.exit(1);
 }
 
+// Helper to get API key based on environment
+const getApiKey = (env) => {
+  if (env === 'qa')
+    return BRIDGE_API_KEY_QA;
+  if (env === 'sandbox')
+    return BRIDGE_API_KEY_SANDBOX;
+  console.error(`Environment ${env} is not supported..`);
+  return null;
+};
+
 app.use(cors());
 app.use(express.json());
+
+// Middleware to extract and validate environment
+app.use((req, res, next) => {
+  const env = req.query.env || 'sandbox'; // Default to sandbox
+  if (env !== 'sandbox' && env !== 'qa') {
+    return res.status(400).json({ error: 'Invalid environment. Use sandbox or qa.' });
+  }
+  req.bridgeEnv = env;
+  next();
+});
 
 // Proxy endpoint for creating a customer
 app.post('/api/customers', async (req, res) => {
@@ -29,7 +50,7 @@ app.post('/api/customers', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers`, {
       method: 'POST',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
@@ -61,7 +82,7 @@ app.get('/api/customers', async (req, res) => {
 
     const response = await fetch(url, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -85,7 +106,7 @@ app.get('/api/customers/:customerId', async (req, res) => {
     const { customerId } = req.params;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -110,7 +131,7 @@ app.delete('/api/customers/:customerId', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}`, {
       method: 'DELETE',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -134,7 +155,7 @@ app.get('/api/wallets', async (req, res) => {
     const { customer_id } = req.query;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/wallets?customer_id=${customer_id}&limit=50`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -158,7 +179,7 @@ app.get('/api/customers/:customerId/wallets/:walletId', async (req, res) => {
     const { customerId, walletId } = req.params;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/wallets/${walletId}`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -186,7 +207,7 @@ app.get('/api/liquidation-addresses', async (req, res) => {
     }
     const response = await fetch(url, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -211,7 +232,7 @@ app.get('/api/wallets/:walletId/transactions', async (req, res) => {
     const { limit = 10 } = req.query;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/wallets/${walletId}/history?limit=${limit}`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -239,7 +260,7 @@ app.get('/api/transfers', async (req, res) => {
     }
     const response = await fetch(url, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -264,7 +285,7 @@ app.get('/api/customers/:customerId/liquidation_addresses/:liquidationAddressId/
     const { limit = 10 } = req.query;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/liquidation_addresses/${liquidationAddressId}/drains?limit=${limit}`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -294,7 +315,7 @@ app.post('/api/customers/:customerId/virtual_accounts', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts`, {
       method: 'POST',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
@@ -320,7 +341,7 @@ app.get('/api/customers/:customerId/virtual_accounts', async (req, res) => {
     const { customerId } = req.params;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts?limit=10`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -345,7 +366,7 @@ app.get('/api/customers/:customerId/virtual_accounts/:virtualAccountId/history',
     const { limit = 10 } = req.query;
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/virtual_accounts/${virtualAccountId}/history?limit=${limit}&event_type=payment_processed`, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -379,7 +400,7 @@ app.post('/api/transfers', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/transfers`, {
       method: 'POST',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
@@ -411,7 +432,7 @@ app.post('/api/customers/:customerId/wallets', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/wallets`, {
       method: 'POST',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
@@ -443,7 +464,7 @@ app.post('/api/customers/:customerId/external_accounts', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/external_accounts`, {
       method: 'POST',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
@@ -475,7 +496,7 @@ app.post('/api/customers/:customerId/liquidation_addresses', async (req, res) =>
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/liquidation_addresses`, {
       method: 'POST',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
         'Idempotency-Key': idempotencyKey,
       },
@@ -506,7 +527,7 @@ app.get('/api/customers/:customerId/external_accounts', async (req, res) => {
     }
     const response = await fetch(url, {
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       },
     });
@@ -532,7 +553,7 @@ app.post('/api/customers/:customerId/tos_link', async (req, res) => {
     const response = await fetch(`${BRIDGE_BASE_URL}/v0/customers/${customerId}/tos_acceptance_link`, {
       method: 'GET',
       headers: {
-        'Api-Key': BRIDGE_API_KEY,
+        'Api-Key': getApiKey(req.bridgeEnv),
         'Content-Type': 'application/json',
       }
     });

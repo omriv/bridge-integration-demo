@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useData } from '../context/DataContext';
 
 export function DeveloperAccountPage() {
   const navigate = useNavigate();

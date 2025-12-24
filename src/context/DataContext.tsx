@@ -55,7 +55,7 @@ async function fetchWallet(customerId: string, walletId: string): Promise<Wallet
  * @returns Array of liquidation addresses
  */
 async function fetchCustomerLiquidationAddresses(customerId: string, limit: number = 50): Promise<LiquidationAddress[]> {
-  const response = await bridgeAPI.getLiquidationAddresses(customerId, limit);
+  const response = await bridgeAPI.getLiquidationAddresses(customerId, limit, undefined);
   return response.data;
 }
 
@@ -131,7 +131,7 @@ export async function fetchVirtualAccounts(customerId: string): Promise<VirtualA
  */
 export async function fetchExternalAccounts(customerId: string, limit: number = 50): Promise<ExternalAccount[]> {
   try {
-    const response = await bridgeAPI.getExternalAccounts(customerId, limit);
+    const response = await bridgeAPI.getExternalAccounts(customerId, limit, undefined);
     return response.data;
   } catch (error) {
     console.error('Error fetching external accounts:', error);
@@ -408,9 +408,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const [customerData, walletsData, liquidationData, virtualAccountsData, externalAccountsData] = await Promise.all([
         fetchCustomer(customerIdToUse),
         fetchCustomerWallets(customerIdToUse),
-        fetchCustomerLiquidationAddresses(customerIdToUse),
+        fetchCustomerLiquidationAddresses(customerIdToUse, 50),
         fetchVirtualAccounts(customerIdToUse),
-        fetchExternalAccounts(customerIdToUse)
+        fetchExternalAccounts(customerIdToUse, 50)
       ]);
 
       setCustomer(customerData);
@@ -469,7 +469,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const createExternalAccount = useCallback(async (customerId: string, accountData: Record<string, unknown>) => {
     const result = await bridgeAPI.createExternalAccount(customerId, accountData);
     // Refresh external accounts after creation
-    const updatedAccounts = await fetchExternalAccounts(customerId);
+    const updatedAccounts = await fetchExternalAccounts(customerId, 50);
     setExternalAccounts(updatedAccounts);
     return result;
   }, []);
@@ -494,7 +494,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const createLiquidationAddress = useCallback(async (customerId: string, addressData: Record<string, unknown>) => {
     const result = await bridgeAPI.createLiquidationAddress(customerId, addressData);
     // Refresh liquidation addresses after creation
-    const updatedAddresses = await fetchCustomerLiquidationAddresses(customerId);
+    const updatedAddresses = await fetchCustomerLiquidationAddresses(customerId, 50);
     setLiquidationAddresses(updatedAddresses);
     return result;
   }, []);
