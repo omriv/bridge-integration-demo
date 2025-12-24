@@ -3,13 +3,6 @@ import { useData } from '../context/DataContext';
 
 export function DeveloperAccountPage() {
   const navigate = useNavigate();
-  const { useMock } = useData();
-
-  // Redirect to home if in mock mode
-  if (useMock) {
-    navigate('/');
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200">

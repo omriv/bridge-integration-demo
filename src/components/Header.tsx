@@ -1,21 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { useData } from '../context/DataContext';
-import { MockToggle } from './MockToggle';
 import { ThemeToggle } from './ThemeToggle';
-import { useState } from 'react';
 
 export function Header() {
   const navigate = useNavigate();
-  const { useMock, toggleMock } = useData();
-  const [showModeTransition, setShowModeTransition] = useState(false);
-
-  const handleMockToggle = () => {
-    setShowModeTransition(true);
-    toggleMock();
-    setTimeout(() => {
-      setShowModeTransition(false);
-    }, 2000);
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 shadow-sm">
@@ -28,22 +15,12 @@ export function Header() {
             </h1>
           </div>
 
-          {/* Middle: Data Mode Toggle */}
-          <div className="flex items-center justify-center flex-1">
-             <MockToggle useMock={useMock} onToggle={handleMockToggle} />
-          </div>
-
           {/* Right: Theme Toggle & Dev Account */}
           <div className="flex items-center gap-3">
              <button
                 onClick={() => navigate('/account')}
-                disabled={useMock}
-                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
-                  useMock
-                    ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 cursor-not-allowed'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700'
-                }`}
-                title={useMock ? 'Developer Account is only available in real data mode' : 'View Developer Account'}
+                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                title="View Developer Account"
               >
                 <span><i className="fas fa-user"></i></span>
                 <span>Dev Account</span>
@@ -51,22 +28,6 @@ export function Header() {
             <ThemeToggle />
           </div>
         </div>
-        
-        {/* Mode Transition Notification */}
-        {showModeTransition && (
-            <div className="absolute top-16 left-0 right-0 flex justify-center pointer-events-none">
-              <div className={`mt-2 px-4 py-2 rounded-full shadow-lg border flex items-center gap-2 animate-in slide-in-from-top-2 fade-in duration-300 ${
-                useMock 
-                  ? 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-neutral-800 dark:border-amber-900 dark:text-amber-400' 
-                  : 'bg-green-50 border-green-200 text-green-700 dark:bg-neutral-800 dark:border-green-900 dark:text-green-400'
-              }`}>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-                <span className="text-sm font-medium">
-                  {useMock ? 'Switching to Mock Data...' : 'Switching to Real Data...'}
-                </span>
-              </div>
-            </div>
-          )}
       </div>
     </header>
   );

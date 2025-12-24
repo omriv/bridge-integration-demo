@@ -1,4 +1,4 @@
-import { config, getBaseUrl } from '../config';
+import { config } from '../config';
 import type { 
   Customer,
   Wallet,
@@ -18,12 +18,9 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-// Helper to get current base URL (supports dynamic mock toggling)
+// Helper to get current base URL
 const getCurrentBaseUrl = () => {
-  // Check sessionStorage for useMock preference
-  const storedUseMock = sessionStorage.getItem('useMock');
-  const useMock = storedUseMock !== null ? storedUseMock === 'true' : config.useMock;
-  return getBaseUrl(useMock);
+  return config.baseUrl;
 };
 
 export const bridgeAPI = {

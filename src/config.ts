@@ -2,13 +2,8 @@
 // Copy this file to config.ts and update with your actual customer ID
 
 export const config = {
-  // Backend proxy server URLs
+  // Backend proxy server URL
   baseUrl: 'http://localhost:3001/api',
-  mockBaseUrl: 'http://localhost:3002/api',
-  
-  // Mock mode flag (defaults to false - real data)
-  // Can be toggled via UI, persisted in sessionStorage
-  useMock: false,
   
   // Your default Bridge customer ID for testing
   // You can find this in your Bridge dashboard or API responses
@@ -68,9 +63,4 @@ export const config = {
     'usdc',
     'usdt',
   ] as const,
-};
-
-// Helper function to get the appropriate base URL based on mock mode
-export const getBaseUrl = (useMock: boolean = config.useMock): string => {
-  return useMock ? config.mockBaseUrl : config.baseUrl;
 };

@@ -326,7 +326,6 @@ interface DataContextType {
   virtualAccountsLoading: boolean;
   loading: boolean;
   error: string | null;
-  useMock: boolean;
   
   // Individual Fetch Functions (No state updates)
   fetchWallet: (customerId: string, walletId: string) => Promise<Wallet>;
@@ -350,7 +349,6 @@ interface DataContextType {
   
   // Utility Functions
   setCurrentCustomerId: (customerId: string) => void;
-  toggleMock: () => void;
   refreshAll: () => Promise<void>;
 }
 
@@ -384,12 +382,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [virtualAccountsLoading, setVirtualAccountsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Mock mode state - initialize from sessionStorage or config
-  const [useMock, setUseMock] = useState<boolean>(() => {
-    const stored = sessionStorage.getItem('useMock');
-    return stored !== null ? stored === 'true' : config.useMock;
-  });
 
   const loadCustomerData = useCallback(async (customerId?: string) => {
     const customerIdToUse = customerId || currentCustomerId;
@@ -526,26 +518,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return await bridgeAPI.getTosLink(customerId);
   }, []);
 
-  const toggleMock = useCallback(() => {
-    const newUseMock = !useMock;
-    setUseMock(newUseMock);
-    sessionStorage.setItem('useMock', String(newUseMock));
-    
-    // Clear all cached data when switching modes
-    setCustomer(null);
-    setCurrentCustomerId(''); // Clear selected customer when switching modes
-    setWallets([]);
-    setLiquidationAddresses([]);
-    setVirtualAccounts([]);
-    setExternalAccounts([]);
-    setCustomers([]);
-    
-    // Reload data with new mode
-    setTimeout(() => {
-      loadCustomerData(''); // Pass empty string to force list load
-    }, 100);
-  }, [useMock, loadCustomerData, setCurrentCustomerId]);
-
   return (
     <DataContext.Provider
       value={{
@@ -560,7 +532,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
         virtualAccountsLoading,
         loading,
         error,
-        useMock,
         
         // Individual Fetch Functions
         fetchWallet,
@@ -584,7 +555,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
         
         // Utility Functions
         setCurrentCustomerId,
-        toggleMock,
         refreshAll,
       }}
     >
