@@ -484,7 +484,9 @@ const handleClose = () => {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Signed Agreement ID</label>
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                      Signed Agreement ID {!isReliance && <span className="text-red-500">*</span>}
+                    </label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -492,6 +494,7 @@ const handleClose = () => {
                         value={formData.signed_agreement_id || ''}
                         onChange={handleInputChange}
                         placeholder="UUID of the signed agreement"
+                        required={!isReliance}
                         className="flex-1 px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                       />
                       <button
@@ -508,32 +511,41 @@ const handleClose = () => {
                   {customerType === 'individual' && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">First Name</label>
+                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                          First Name {!isReliance && <span className="text-red-500">*</span>}
+                        </label>
                         <input
                           type="text"
                           name="first_name"
                           value={formData.first_name || ''}
                           onChange={handleInputChange}
+                          required={!isReliance}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Last Name</label>
+                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                          Last Name {!isReliance && <span className="text-red-500">*</span>}
+                        </label>
                         <input
                           type="text"
                           name="last_name"
                           value={formData.last_name || ''}
                           onChange={handleInputChange}
+                          required={!isReliance}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Date of Birth</label>
+                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                          Date of Birth {!isReliance && <span className="text-red-500">*</span>}
+                        </label>
                         <input
                           type="date"
                           name="birth_date"
                           value={formData.birth_date || ''}
                           onChange={handleInputChange}
+                          required={!isReliance}
                           className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                         />
                       </div>
@@ -561,25 +573,33 @@ const handleClose = () => {
                       
                       {/* Residential Address */}
                       <div className="md:col-span-2 border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
-                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Residential Address</h4>
+                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                          Residential Address {!isReliance && <span className="text-red-500">*</span>}
+                        </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="md:col-span-2">
-                            <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Street Line 1</label>
+                            <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                              Street Line 1 {!isReliance && <span className="text-red-500">*</span>}
+                            </label>
                             <input
                               type="text"
                               name="residential_address.street_line_1"
                               value={formData.residential_address?.street_line_1 || ''}
                               onChange={handleInputChange}
+                              required={!isReliance}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">City</label>
+                            <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                              City {!isReliance && <span className="text-red-500">*</span>}
+                            </label>
                             <input
                               type="text"
                               name="residential_address.city"
                               value={formData.residential_address?.city || ''}
                               onChange={handleInputChange}
+                              required={!isReliance}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
                           </div>
@@ -604,13 +624,16 @@ const handleClose = () => {
                             />
                           </div>
                           <div>
-                            <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Country (ISO 3)</label>
+                            <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                              Country (ISO 3) {!isReliance && <span className="text-red-500">*</span>}
+                            </label>
                             <input
                               type="text"
                               name="residential_address.country"
                               value={formData.residential_address?.country || ''}
                               onChange={handleInputChange}
                               placeholder="USA"
+                              required={!isReliance}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
                           </div>
@@ -619,14 +642,19 @@ const handleClose = () => {
 
                       {/* Identifying Info */}
                       <div className="md:col-span-2 border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
-                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Identification</h4>
+                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                          Identification {!isReliance && <span className="text-red-500">*</span>}
+                        </h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Type</label>
+                            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                              Type {!isReliance && <span className="text-red-500">*</span>}
+                            </label>
                             <select
                               name="identification_type"
                               value={formData.identification_type || ''}
                               onChange={handleInputChange}
+                              required={!isReliance}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             >
                               <option value="">Select...</option>
@@ -641,23 +669,29 @@ const handleClose = () => {
                             </select>
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Number</label>
+                            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                              Number {!isReliance && <span className="text-red-500">*</span>}
+                            </label>
                             <input
                               type="text"
                               name="identification_number"
                               value={formData.identification_number || ''}
                               onChange={handleInputChange}
+                              required={!isReliance}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Issuing Country (ISO 3)</label>
+                            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                              Issuing Country (ISO 3) {!isReliance && <span className="text-red-500">*</span>}
+                            </label>
                             <input
                               type="text"
                               name="issuing_country"
                               value={formData.issuing_country || ''}
                               onChange={handleInputChange}
                               placeholder="USA"
+                              required={!isReliance}
                               className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 rounded-lg text-neutral-900 dark:text-white focus:ring-2 focus:ring-amber-500"
                             />
                           </div>
@@ -780,24 +814,34 @@ const handleClose = () => {
                   )}
 
                   {/* Documents (Only if NOT Reliance) */}
-                  {!isReliance && (
+                  {!isReliance && customerType === 'individual' && (
                     <div className="md:col-span-2 border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
-                      <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Documents</h4>
+                      <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                        Documents <span className="text-red-500">*</span>
+                      </h4>
                       <div>
-                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">ID Document (Front)</label>
+                        <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                          ID Document (Front) <span className="text-red-500">*</span>
+                        </label>
                         <input
                           type="file"
                           accept="image/*"
                           onChange={(e) => handleFileChange(e, 'document_front')}
+                          required={!isReliance && customerType === 'individual'}
                           className="w-full text-sm text-neutral-500 dark:text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
                         />
+                        {formData.document_front && (
+                          <p className="mt-1 text-xs text-green-600 dark:text-green-400">✓ Document uploaded</p>
+                        )}
                       </div>
                     </div>
                   )}
 
                   {/* Endorsements Section (Always Visible) */}
                   <div className="md:col-span-2 border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-2">
-                    <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">Endorsements</h4>
+                    <h4 className="text-sm font-semibold text-neutral-900 dark:text-white mb-3">
+                      Endorsements {!isReliance && <span className="text-red-500">*</span>}
+                    </h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {Object.keys(endorsements).map((key) => (
                         <label key={key} className="flex items-center gap-2 cursor-pointer">
@@ -813,6 +857,9 @@ const handleClose = () => {
                         </label>
                       ))}
                     </div>
+                    {!isReliance && !Object.values(endorsements).some(v => v) && (
+                      <p className="mt-2 text-xs text-red-500">At least one endorsement must be selected</p>
+                    )}
                   </div>
                 </div>
 
