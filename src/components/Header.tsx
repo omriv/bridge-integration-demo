@@ -17,6 +17,10 @@ export function Header() {
     ? 'bg-lime-500/80 dark:bg-lime-600/80' 
     : 'bg-amber-500/80 dark:bg-amber-600/80';
 
+  const toggleBgClass = environment === 'qa' 
+    ? 'bg-lime-600/80 dark:bg-lime-500/80' 
+    : 'bg-amber-600/80 dark:bg-amber-500/80';
+
   return (
     <header className={`sticky top-0 z-50 ${headerBgClass} backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 shadow-sm`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,23 +33,24 @@ export function Header() {
           </div>
 
           {/* Center: Environment Toggle */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-            <span className="text-sm font-semibold text-white">
-              {environment === 'sandbox' ? '🧪 Sandbox' : '🔧 QA'}
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-3">
+            <span className={`text-lg ${environment == 'qa' && 'font-bold opacity-100'} text-white opacity-75`}>
+              QA
             </span>
             <button
               onClick={handleEnvironmentToggle}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 ${
-                environment === 'qa' ? 'bg-lime-700' : 'bg-amber-700'
-              }`}
+              className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2  ${toggleBgClass}`}
               title={`Switch to ${environment === 'sandbox' ? 'QA' : 'Sandbox'}`}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  environment === 'qa' ? 'translate-x-6' : 'translate-x-1'
+                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                  environment === 'qa' ? 'translate-x-1' : 'translate-x-7'
                 }`}
               />
             </button>
+            <span className={`text-lg ${environment == 'sandbox' && 'font-bold opacity-100' } text-white opacity-75`}>
+              Sandbox
+            </span>
           </div>
 
           {/* Right: Theme Toggle & Dev Account */}
